@@ -1,0 +1,18 @@
+apiVersion: client.checkly.crossplane.io/v1alpha1
+kind: Certificate
+metadata:
+  annotations:
+    meta.upbound.io/example-id: client/v1alpha1/certificate
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+spec:
+  forProvider:
+    certificate: ${file("${path.module}/cert.pem")}
+    host: '*.acme.com'
+    passphraseSecretRef:
+      key: example-key
+      name: example-secret
+      namespace: upbound-system
+    privateKey: ${file("${path.module}/key.pem")}
+    trustedCa: ${file("${path.module}/ca.pem")}

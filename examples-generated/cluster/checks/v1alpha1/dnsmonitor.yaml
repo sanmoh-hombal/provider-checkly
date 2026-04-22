@@ -1,0 +1,26 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: DNSMonitor
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/dnsmonitor
+  labels:
+    testing.upbound.io/example-name: example-dns-monitor
+  name: example-dns-monitor
+spec:
+  forProvider:
+    activated: true
+    frequency: 2
+    locations:
+    - eu-west-1
+    name: Example DNS monitor
+    request:
+    - assertion:
+      - comparison: EQUALS
+        source: RESPONSE_CODE
+        target: NOERROR
+      nameServer:
+      - host: 1.1.1.1
+        port: 53
+      query: welcome.checklyhq.com
+      recordType: A
+    useGlobalAlertSettings: true

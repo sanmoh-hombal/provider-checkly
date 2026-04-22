@@ -1,0 +1,116 @@
+apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+kind: CheckGroup
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroup
+  labels:
+    testing.upbound.io/example-name: test_group1
+  name: test-group1
+  namespace: upbound-system
+spec:
+  forProvider:
+    activated: true
+    alertSettings:
+    - escalationType: RUN_BASED
+      reminders:
+      - amount: 2
+        interval: 5
+      runBasedEscalation:
+      - failedRunThreshold: 1
+    apiCheckDefaults:
+    - assertion:
+      - comparison: EQUALS
+        property: ""
+        source: STATUS_CODE
+        target: "200"
+      - comparison: CONTAINS
+        property: ""
+        source: TEXT_BODY
+        target: welcome
+      basicAuth:
+      - password: pass
+        username: user
+      headers:
+        X-Test: foo
+      queryParameters:
+        query: foo
+      url: http://example.com/
+    concurrency: 3
+    environmentVariable:
+    - key: TEST_ENV_VAR
+      locked: false
+      valueSecretRef:
+        key: example-key
+        name: example-secret
+    - key: ADDITIONAL_ENV_VAR
+      locked: true
+      valueSecretRef:
+        key: example-key
+        name: example-secret
+    localSetupScript: setup-test
+    localTeardownScript: teardown-test
+    locations:
+    - eu-west-1
+    muted: false
+    name: My test group 1
+    tags:
+    - auto
+    useGlobalAlertSettings: false
+
+---
+
+apiVersion: alerts.checkly.m.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroup
+  labels:
+    testing.upbound.io/example-name: email_ac1
+  name: email-ac1
+  namespace: upbound-system
+spec:
+  forProvider:
+    email:
+    - address: info@example.com
+
+---
+
+apiVersion: alerts.checkly.m.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroup
+  labels:
+    testing.upbound.io/example-name: email_ac2
+  name: email-ac2
+  namespace: upbound-system
+spec:
+  forProvider:
+    email:
+    - address: info2@example.com
+
+---
+
+apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroup
+  labels:
+    testing.upbound.io/example-name: test_check1
+  name: test-check1
+  namespace: upbound-system
+spec:
+  forProvider:
+    activated: true
+    frequency: 1
+    groupIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: test_group1
+    groupOrder: 1
+    locations:
+    - us-west-1
+    name: My test check 1
+    request:
+    - url: https://api.example.com/
+    type: API

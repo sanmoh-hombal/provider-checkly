@@ -1,0 +1,25 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: ICMPMonitor
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/icmpmonitor
+  labels:
+    testing.upbound.io/example-name: example-icmp-monitor
+  name: example-icmp-monitor
+spec:
+  forProvider:
+    activated: true
+    frequency: 10
+    locations:
+    - eu-west-1
+    name: Example ICMP monitor
+    request:
+    - assertion:
+      - comparison: LESS_THAN
+        property: avg
+        source: LATENCY
+        target: "200"
+      hostname: example.com
+      ipFamily: IPv4
+      pingCount: 10
+    useGlobalAlertSettings: true

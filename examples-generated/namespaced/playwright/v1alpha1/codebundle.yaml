@@ -1,0 +1,13 @@
+apiVersion: playwright.checkly.m.crossplane.io/v1alpha1
+kind: CodeBundle
+metadata:
+  annotations:
+    meta.upbound.io/example-id: playwright/v1alpha1/codebundle
+  labels:
+    testing.upbound.io/example-name: example-1
+  name: example-1
+  namespace: upbound-system
+spec:
+  forProvider:
+    prebuiltArchive:
+    - file: ${data.archive_file.playwright-bundle.output_path}

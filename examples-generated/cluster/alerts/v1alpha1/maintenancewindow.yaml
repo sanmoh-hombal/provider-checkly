@@ -1,0 +1,18 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: MaintenanceWindow
+metadata:
+  annotations:
+    meta.upbound.io/example-id: alerts/v1alpha1/maintenancewindow
+  labels:
+    testing.upbound.io/example-name: maintenance-1
+  name: maintenance-1
+spec:
+  forProvider:
+    endsAt: "2014-08-25T00:00:00.000Z"
+    name: Maintenance Windows
+    repeatEndsAt: "2014-08-24T00:00:00.000Z"
+    repeatInterval: 1
+    repeatUnit: MONTH
+    startsAt: "2014-08-24T00:00:00.000Z"
+    tags:
+    - production

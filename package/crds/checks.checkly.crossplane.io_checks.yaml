@@ -1,0 +1,2099 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: checks.checks.checkly.crossplane.io
+spec:
+  group: checks.checkly.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - checkly
+    kind: Check
+    listKind: CheckList
+    plural: checks
+    singular: check
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Check is the Schema for the Checks API. Checks allows you to
+          monitor key webapp flows, backend API's and set up alerting, so you get
+          a notification when things break or slow down.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CheckSpec defines the desired state of Check
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  activated:
+                    description: |-
+                      (Boolean) Determines if the check is running or not. Possible values true, and false.
+                      Determines if the check is running or not. Possible values `true`, and `false`.
+                    type: boolean
+                  alertChannelSubscription:
+                    description: |-
+                      (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+                      An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
+                    items:
+                      properties:
+                        activated:
+                          description: |-
+                            (Boolean) Determines if the check is running or not. Possible values true, and false.
+                            Whether an alert should be sent to this channel.
+                          type: boolean
+                        channelId:
+                          description: |-
+                            (Number) The ID of the alert channel.
+                            The ID of the alert channel.
+                          type: number
+                        channelIdRef:
+                          description: Reference to a AlertChannel in alerts to populate
+                            channelId.
+                          properties:
+                            name:
+                              description: Name of the referenced object.
+                              type: string
+                            policy:
+                              description: Policies for referencing.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        channelIdSelector:
+                          description: Selector for a AlertChannel in alerts to populate
+                            channelId.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                  alertSettings:
+                    description: |-
+                      (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
+                      Determines the alert escalation policy for the check.
+                    items:
+                      properties:
+                        escalationType:
+                          description: |-
+                            (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+                            Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+                          type: string
+                        parallelRunFailureThreshold:
+                          description: |-
+                            (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+                            Configuration for parallel run failure threshold.
+                          items:
+                            properties:
+                              enabled:
+                                description: |-
+                                  (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+                                  Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+                                type: boolean
+                              percentage:
+                                description: |-
+                                  (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+                                  Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+                                type: number
+                            type: object
+                          type: array
+                        reminders:
+                          description: |-
+                            (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+                            Defines how often to send reminder notifications after initial alert.
+                          items:
+                            properties:
+                              amount:
+                                description: |-
+                                  (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+                                  Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+                                type: number
+                              interval:
+                                description: |-
+                                  (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+                                  Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                type: number
+                            type: object
+                          type: array
+                        runBasedEscalation:
+                          description: |-
+                            based escalation. (see below for nested schema)
+                            Configuration for run-based escalation.
+                          items:
+                            properties:
+                              failedRunThreshold:
+                                description: |-
+                                  (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+                                  Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+                                type: number
+                            type: object
+                          type: array
+                        sslCertificates:
+                          description: (Block Set, Deprecated) (see below for nested
+                            schema)
+                          items:
+                            properties:
+                              alertThreshold:
+                                description: |-
+                                  (Number) No longer available.
+                                  No longer available.
+                                type: number
+                              enabled:
+                                description: |-
+                                  (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+                                  No longer available.
+                                type: boolean
+                            type: object
+                          type: array
+                        timeBasedEscalation:
+                          description: |-
+                            based escalation. (see below for nested schema)
+                            Configuration for time-based escalation.
+                          items:
+                            properties:
+                              minutesFailingThreshold:
+                                description: |-
+                                  (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+                                  Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                type: number
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  degradedResponseTime:
+                    description: |-
+                      (Number) The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 30000. (Default 15000).
+                      The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 30000. (Default `15000`).
+                    type: number
+                  description:
+                    description: |-
+                      (String) A description of the check.
+                      A description of the check.
+                    type: string
+                  doubleCheck:
+                    description: |-
+                      (Boolean, Deprecated) Setting this to true will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default false).
+                      Setting this to `true` will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default `false`).
+                    type: boolean
+                  environmentVariable:
+                    description: |-
+                      (Block List) Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible. (see below for nested schema)
+                      Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible.
+                    items:
+                      properties:
+                        key:
+                          description: |-
+                            (String) The name of the environment variable or secret.
+                            The name of the environment variable or secret.
+                          type: string
+                        locked:
+                          description: |-
+                            (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+                            If true, the value is not shown by default, but it can be accessed. (Default `false`).
+                          type: boolean
+                        secret:
+                          description: |-
+                            (Boolean) If true, the value will never be visible. (Default false).
+                            If true, the value will never be visible. (Default `false`).
+                          type: boolean
+                        value:
+                          description: |-
+                            (String) The value of the environment variable or secret.
+                            The value of the environment variable or secret.
+                          type: string
+                      type: object
+                    type: array
+                  environmentVariables:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      (Map of String, Deprecated) Key/value pairs of environment variables to insert into the runtime environment.
+                      Key/value pairs of environment variables to insert into the runtime environment.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  frequency:
+                    description: |-
+                      use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+                      Controls how often the check should run. Defined in minutes. The allowed values are `0` (high frequency - use `frequency_offset` to define the actual frequency), `1` (1 minute), `2` (2 minutes), `5` (5 minutes), `10` (10 minutes), `15` (15 minutes), `30` (30 minutes), `60` (1 hour), `120` (2 hours), `180` (3 hours), `360` (6 hours), `720` (12 hours) and `1440` (24 hours).
+                    type: number
+                  frequencyOffset:
+                    description: |-
+                      use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+                      Only relevant when `type` is `API`. When `frequency` is `0` (high frequency), `frequency_offset` is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are `0` (disabled - use `frequency` to define the actual frequency), `10` (10 seconds), `20` (20 seconds) and `30` (30 seconds).
+                    type: number
+                  groupId:
+                    description: |-
+                      (Number) The id of the check group this check is part of.
+                      The id of the check group this check is part of.
+                    type: number
+                  groupIdRef:
+                    description: Reference to a CheckGroup in checks to populate groupId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  groupIdSelector:
+                    description: Selector for a CheckGroup in checks to populate groupId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  groupOrder:
+                    description: |-
+                      (Number) The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+                      The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+                    type: number
+                  localSetupScript:
+                    description: |-
+                      (String) A valid piece of Node.js code to run in the setup phase.
+                      A valid piece of Node.js code to run in the setup phase.
+                    type: string
+                  localTeardownScript:
+                    description: |-
+                      (String) A valid piece of Node.js code to run in the teardown phase.
+                      A valid piece of Node.js code to run in the teardown phase.
+                    type: string
+                  locations:
+                    description: |-
+                      east-1"])
+                      An array of one or more data center locations where to run the this check. (Default ["us-east-1"])
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  maxResponseTime:
+                    description: |-
+                      (Number) The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 30000. (Default 30000).
+                      The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 30000. (Default `30000`).
+                    type: number
+                  muted:
+                    description: |-
+                      (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+                      Determines if any notifications will be sent out when a check fails/degrades/recovers.
+                    type: boolean
+                  name:
+                    description: |-
+                      (String) The name of the check.
+                      The name of the check.
+                    type: string
+                  privateLocationRefs:
+                    description: References to Location in private to populate privateLocations.
+                    items:
+                      description: A Reference to a named object.
+                      properties:
+                        name:
+                          description: Name of the referenced object.
+                          type: string
+                        policy:
+                          description: Policies for referencing.
+                          properties:
+                            resolution:
+                              default: Required
+                              description: |-
+                                Resolution specifies whether resolution of this reference is required.
+                                The default is 'Required', which means the reconcile will fail if the
+                                reference cannot be resolved. 'Optional' means this reference will be
+                                a no-op if it cannot be resolved.
+                              enum:
+                              - Required
+                              - Optional
+                              type: string
+                            resolve:
+                              description: |-
+                                Resolve specifies when this reference should be resolved. The default
+                                is 'IfNotPresent', which will attempt to resolve the reference only when
+                                the corresponding field is not present. Use 'Always' to resolve the
+                                reference on every reconcile.
+                              enum:
+                              - Always
+                              - IfNotPresent
+                              type: string
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  privateLocations:
+                    description: |-
+                      (Set of String) An array of one or more private locations slugs.
+                      An array of one or more private locations slugs.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  privateLocationsSelector:
+                    description: Selector for a list of Location in private to populate
+                      privateLocations.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  request:
+                    description: |-
+                      (Block Set, Max: 1) An API check might have one request config. (see below for nested schema)
+                      An API check might have one request config.
+                    items:
+                      properties:
+                        assertion:
+                          description: |-
+                            (Block Set) A request can have multiple assertions. (see below for nested schema)
+                            A request can have multiple assertions.
+                          items:
+                            properties:
+                              comparison:
+                                description: |-
+                                  (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+                                  The type of comparison to be executed between expected and actual value of the assertion. Possible values `EQUALS`, `NOT_EQUALS`, `HAS_KEY`, `NOT_HAS_KEY`, `HAS_VALUE`, `NOT_HAS_VALUE`, `IS_EMPTY`, `NOT_EMPTY`, `GREATER_THAN`, `LESS_THAN`, `CONTAINS`, `NOT_CONTAINS`, `IS_NULL`, and `NOT_NULL`.
+                                type: string
+                              property:
+                                description: (String)
+                                type: string
+                              source:
+                                description: |-
+                                  (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+                                  The source of the asserted value. Possible values `STATUS_CODE`, `JSON_BODY`, `HEADERS`, `TEXT_BODY`, and `RESPONSE_TIME`.
+                                type: string
+                              target:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        basicAuth:
+                          description: |-
+                            (Block Set, Max: 1) Set up HTTP basic authentication (username & password). (see below for nested schema)
+                            Set up HTTP basic authentication (username & password).
+                          items:
+                            properties:
+                              passwordSecretRef:
+                                description: (String)
+                                properties:
+                                  key:
+                                    description: The key to select.
+                                    type: string
+                                  name:
+                                    description: Name of the secret.
+                                    type: string
+                                  namespace:
+                                    description: Namespace of the secret.
+                                    type: string
+                                required:
+                                - key
+                                - name
+                                - namespace
+                                type: object
+                              username:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        body:
+                          description: |-
+                            (String) The body of the request.
+                            The body of the request.
+                          type: string
+                        bodyType:
+                          description: |-
+                            Type header of the request. Possible values NONE, JSON, FORM, RAW, and GRAPHQL.
+                            The `Content-Type` header of the request. Possible values `NONE`, `JSON`, `FORM`, `RAW`, and `GRAPHQL`.
+                          type: string
+                        followRedirects:
+                          description: (Boolean)
+                          type: boolean
+                        headersSecretRef:
+                          description: (Map of String)
+                          properties:
+                            name:
+                              description: Name of the secret.
+                              type: string
+                            namespace:
+                              description: Namespace of the secret.
+                              type: string
+                          required:
+                          - name
+                          - namespace
+                          type: object
+                        ipFamily:
+                          description: |-
+                            (String) IP Family to be used when executing the api check. The value can be either IPv4 or IPv6.
+                            IP Family to be used when executing the api check. The value can be either IPv4 or IPv6.
+                          type: string
+                        method:
+                          description: |-
+                            (String) The HTTP method to use for this API check. Possible values are GET, POST, PUT, HEAD, DELETE, PATCH. (Default GET).
+                            The HTTP method to use for this API check. Possible values are `GET`, `POST`, `PUT`, `HEAD`, `DELETE`, `PATCH`. (Default `GET`).
+                          type: string
+                        queryParameters:
+                          additionalProperties:
+                            type: string
+                          description: (Map of String)
+                          type: object
+                          x-kubernetes-map-type: granular
+                        skipSsl:
+                          description: (Boolean)
+                          type: boolean
+                        url:
+                          description: (String)
+                          type: string
+                      type: object
+                    type: array
+                  retryStrategy:
+                    description: |-
+                      (Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)
+                      A strategy for retrying failed check/monitor runs.
+                    items:
+                      properties:
+                        baseBackoffSeconds:
+                          description: |-
+                            (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+                            The number of seconds to wait before the first retry attempt. (Default `60`).
+                          type: number
+                        maxDurationSeconds:
+                          description: |-
+                            (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+                            The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `600`).
+                          type: number
+                        maxRetries:
+                          description: |-
+                            (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+                            The maximum number of times to retry the check/monitor. Value must be between `1` and `10`. Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `2`).
+                          type: number
+                        onlyOn:
+                          description: |-
+                            (Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)
+                            Apply the retry strategy only if the defined conditions match.
+                          items:
+                            properties:
+                              networkError:
+                                description: |-
+                                  (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+                                  When `true`, retry only if the cause of the failure is a network error. (Default `false`).
+                                type: boolean
+                            type: object
+                          type: array
+                        sameRegion:
+                          description: |-
+                            (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+                            Whether retries should be run in the same region as the initial check/monitor run. (Default `true`).
+                          type: boolean
+                        type:
+                          description: |-
+                            (String) The type of the check. Possible values are API, BROWSER, and MULTI_STEP.
+                            Determines which type of retry strategy to use. Possible values are `FIXED`, `LINEAR`, `EXPONENTIAL`, `SINGLE_RETRY`, and `NO_RETRIES`.
+                          type: string
+                      type: object
+                    type: array
+                  runParallel:
+                    description: |-
+                      robin.
+                      Determines if the check should run in all selected locations in parallel or round-robin.
+                    type: boolean
+                  runtimeId:
+                    description: |-
+                      (String) The id of the runtime to use for this check.
+                      The id of the runtime to use for this check.
+                    type: string
+                  script:
+                    description: |-
+                      (String) A valid piece of Node.js JavaScript code describing a browser interaction with the Puppeteer/Playwright framework or a reference to an external JavaScript file.
+                      A valid piece of Node.js JavaScript code describing a browser interaction with the Puppeteer/Playwright framework or a reference to an external JavaScript file.
+                    type: string
+                  setupSnippetId:
+                    description: |-
+                      (Number) An ID reference to a snippet to use in the setup phase of an API check.
+                      An ID reference to a snippet to use in the setup phase of an API check.
+                    type: number
+                  shouldFail:
+                    description: |-
+                      (Boolean) Allows to invert the behaviour of when a check is considered to fail. Allows for validating error status like 404.
+                      Allows to invert the behaviour of when a check is considered to fail. Allows for validating error status like 404.
+                    type: boolean
+                  sslCheck:
+                    description: |-
+                      (Boolean, Deprecated) Determines if the SSL certificate should be validated for expiry.
+                      Determines if the SSL certificate should be validated for expiry.
+                    type: boolean
+                  sslCheckDomain:
+                    description: |-
+                      (String) A valid fully qualified domain name (FQDN) to check its SSL certificate.
+                      A valid fully qualified domain name (FQDN) to check its SSL certificate.
+                    type: string
+                  tags:
+                    description: |-
+                      (Set of String) A list of tags for organizing and filtering checks.
+                      A list of tags for organizing and filtering checks.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teardownSnippetId:
+                    description: |-
+                      (Number) An ID reference to a snippet to use in the teardown phase of an API check.
+                      An ID reference to a snippet to use in the teardown phase of an API check.
+                    type: number
+                  triggerIncident:
+                    description: |-
+                      (Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)
+                      Create and resolve an incident based on the alert configuration. Useful for status page automation.
+                    items:
+                      properties:
+                        description:
+                          description: |-
+                            (String) A description of the check.
+                            A detailed description of the incident.
+                          type: string
+                        name:
+                          description: |-
+                            (String) The name of the check.
+                            The name of the incident.
+                          type: string
+                        notifySubscribers:
+                          description: |-
+                            (Boolean) Whether to notify subscribers when the incident is triggered.
+                            Whether to notify subscribers when the incident is triggered.
+                          type: boolean
+                        serviceId:
+                          description: |-
+                            (String) The status page service that this incident will be associated with.
+                            The status page service that this incident will be associated with.
+                          type: string
+                        severity:
+                          description: |-
+                            (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+                            The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
+                          type: string
+                      type: object
+                    type: array
+                  type:
+                    description: |-
+                      (String) The type of the check. Possible values are API, BROWSER, and MULTI_STEP.
+                      The type of the check. Possible values are `API`, `BROWSER`, and `MULTI_STEP`.
+                    type: string
+                  useGlobalAlertSettings:
+                    description: |-
+                      (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+                      When true, the account level alert settings will be used, not the alert setting defined on this check.
+                    type: boolean
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  activated:
+                    description: |-
+                      (Boolean) Determines if the check is running or not. Possible values true, and false.
+                      Determines if the check is running or not. Possible values `true`, and `false`.
+                    type: boolean
+                  alertChannelSubscription:
+                    description: |-
+                      (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+                      An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
+                    items:
+                      properties:
+                        activated:
+                          description: |-
+                            (Boolean) Determines if the check is running or not. Possible values true, and false.
+                            Whether an alert should be sent to this channel.
+                          type: boolean
+                        channelId:
+                          description: |-
+                            (Number) The ID of the alert channel.
+                            The ID of the alert channel.
+                          type: number
+                        channelIdRef:
+                          description: Reference to a AlertChannel in alerts to populate
+                            channelId.
+                          properties:
+                            name:
+                              description: Name of the referenced object.
+                              type: string
+                            policy:
+                              description: Policies for referencing.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        channelIdSelector:
+                          description: Selector for a AlertChannel in alerts to populate
+                            channelId.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                  alertSettings:
+                    description: |-
+                      (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
+                      Determines the alert escalation policy for the check.
+                    items:
+                      properties:
+                        escalationType:
+                          description: |-
+                            (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+                            Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+                          type: string
+                        parallelRunFailureThreshold:
+                          description: |-
+                            (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+                            Configuration for parallel run failure threshold.
+                          items:
+                            properties:
+                              enabled:
+                                description: |-
+                                  (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+                                  Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+                                type: boolean
+                              percentage:
+                                description: |-
+                                  (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+                                  Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+                                type: number
+                            type: object
+                          type: array
+                        reminders:
+                          description: |-
+                            (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+                            Defines how often to send reminder notifications after initial alert.
+                          items:
+                            properties:
+                              amount:
+                                description: |-
+                                  (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+                                  Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+                                type: number
+                              interval:
+                                description: |-
+                                  (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+                                  Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                type: number
+                            type: object
+                          type: array
+                        runBasedEscalation:
+                          description: |-
+                            based escalation. (see below for nested schema)
+                            Configuration for run-based escalation.
+                          items:
+                            properties:
+                              failedRunThreshold:
+                                description: |-
+                                  (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+                                  Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+                                type: number
+                            type: object
+                          type: array
+                        sslCertificates:
+                          description: (Block Set, Deprecated) (see below for nested
+                            schema)
+                          items:
+                            properties:
+                              alertThreshold:
+                                description: |-
+                                  (Number) No longer available.
+                                  No longer available.
+                                type: number
+                              enabled:
+                                description: |-
+                                  (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+                                  No longer available.
+                                type: boolean
+                            type: object
+                          type: array
+                        timeBasedEscalation:
+                          description: |-
+                            based escalation. (see below for nested schema)
+                            Configuration for time-based escalation.
+                          items:
+                            properties:
+                              minutesFailingThreshold:
+                                description: |-
+                                  (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+                                  Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                type: number
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  degradedResponseTime:
+                    description: |-
+                      (Number) The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 30000. (Default 15000).
+                      The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 30000. (Default `15000`).
+                    type: number
+                  description:
+                    description: |-
+                      (String) A description of the check.
+                      A description of the check.
+                    type: string
+                  doubleCheck:
+                    description: |-
+                      (Boolean, Deprecated) Setting this to true will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default false).
+                      Setting this to `true` will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default `false`).
+                    type: boolean
+                  environmentVariable:
+                    description: |-
+                      (Block List) Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible. (see below for nested schema)
+                      Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible.
+                    items:
+                      properties:
+                        key:
+                          description: |-
+                            (String) The name of the environment variable or secret.
+                            The name of the environment variable or secret.
+                          type: string
+                        locked:
+                          description: |-
+                            (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+                            If true, the value is not shown by default, but it can be accessed. (Default `false`).
+                          type: boolean
+                        secret:
+                          description: |-
+                            (Boolean) If true, the value will never be visible. (Default false).
+                            If true, the value will never be visible. (Default `false`).
+                          type: boolean
+                        value:
+                          description: |-
+                            (String) The value of the environment variable or secret.
+                            The value of the environment variable or secret.
+                          type: string
+                      type: object
+                    type: array
+                  environmentVariables:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      (Map of String, Deprecated) Key/value pairs of environment variables to insert into the runtime environment.
+                      Key/value pairs of environment variables to insert into the runtime environment.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  frequency:
+                    description: |-
+                      use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+                      Controls how often the check should run. Defined in minutes. The allowed values are `0` (high frequency - use `frequency_offset` to define the actual frequency), `1` (1 minute), `2` (2 minutes), `5` (5 minutes), `10` (10 minutes), `15` (15 minutes), `30` (30 minutes), `60` (1 hour), `120` (2 hours), `180` (3 hours), `360` (6 hours), `720` (12 hours) and `1440` (24 hours).
+                    type: number
+                  frequencyOffset:
+                    description: |-
+                      use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+                      Only relevant when `type` is `API`. When `frequency` is `0` (high frequency), `frequency_offset` is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are `0` (disabled - use `frequency` to define the actual frequency), `10` (10 seconds), `20` (20 seconds) and `30` (30 seconds).
+                    type: number
+                  groupId:
+                    description: |-
+                      (Number) The id of the check group this check is part of.
+                      The id of the check group this check is part of.
+                    type: number
+                  groupIdRef:
+                    description: Reference to a CheckGroup in checks to populate groupId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  groupIdSelector:
+                    description: Selector for a CheckGroup in checks to populate groupId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  groupOrder:
+                    description: |-
+                      (Number) The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+                      The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+                    type: number
+                  localSetupScript:
+                    description: |-
+                      (String) A valid piece of Node.js code to run in the setup phase.
+                      A valid piece of Node.js code to run in the setup phase.
+                    type: string
+                  localTeardownScript:
+                    description: |-
+                      (String) A valid piece of Node.js code to run in the teardown phase.
+                      A valid piece of Node.js code to run in the teardown phase.
+                    type: string
+                  locations:
+                    description: |-
+                      east-1"])
+                      An array of one or more data center locations where to run the this check. (Default ["us-east-1"])
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  maxResponseTime:
+                    description: |-
+                      (Number) The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 30000. (Default 30000).
+                      The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 30000. (Default `30000`).
+                    type: number
+                  muted:
+                    description: |-
+                      (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+                      Determines if any notifications will be sent out when a check fails/degrades/recovers.
+                    type: boolean
+                  name:
+                    description: |-
+                      (String) The name of the check.
+                      The name of the check.
+                    type: string
+                  privateLocationRefs:
+                    description: References to Location in private to populate privateLocations.
+                    items:
+                      description: A Reference to a named object.
+                      properties:
+                        name:
+                          description: Name of the referenced object.
+                          type: string
+                        policy:
+                          description: Policies for referencing.
+                          properties:
+                            resolution:
+                              default: Required
+                              description: |-
+                                Resolution specifies whether resolution of this reference is required.
+                                The default is 'Required', which means the reconcile will fail if the
+                                reference cannot be resolved. 'Optional' means this reference will be
+                                a no-op if it cannot be resolved.
+                              enum:
+                              - Required
+                              - Optional
+                              type: string
+                            resolve:
+                              description: |-
+                                Resolve specifies when this reference should be resolved. The default
+                                is 'IfNotPresent', which will attempt to resolve the reference only when
+                                the corresponding field is not present. Use 'Always' to resolve the
+                                reference on every reconcile.
+                              enum:
+                              - Always
+                              - IfNotPresent
+                              type: string
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  privateLocations:
+                    description: |-
+                      (Set of String) An array of one or more private locations slugs.
+                      An array of one or more private locations slugs.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  privateLocationsSelector:
+                    description: Selector for a list of Location in private to populate
+                      privateLocations.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  request:
+                    description: |-
+                      (Block Set, Max: 1) An API check might have one request config. (see below for nested schema)
+                      An API check might have one request config.
+                    items:
+                      properties:
+                        assertion:
+                          description: |-
+                            (Block Set) A request can have multiple assertions. (see below for nested schema)
+                            A request can have multiple assertions.
+                          items:
+                            properties:
+                              comparison:
+                                description: |-
+                                  (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+                                  The type of comparison to be executed between expected and actual value of the assertion. Possible values `EQUALS`, `NOT_EQUALS`, `HAS_KEY`, `NOT_HAS_KEY`, `HAS_VALUE`, `NOT_HAS_VALUE`, `IS_EMPTY`, `NOT_EMPTY`, `GREATER_THAN`, `LESS_THAN`, `CONTAINS`, `NOT_CONTAINS`, `IS_NULL`, and `NOT_NULL`.
+                                type: string
+                              property:
+                                description: (String)
+                                type: string
+                              source:
+                                description: |-
+                                  (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+                                  The source of the asserted value. Possible values `STATUS_CODE`, `JSON_BODY`, `HEADERS`, `TEXT_BODY`, and `RESPONSE_TIME`.
+                                type: string
+                              target:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        basicAuth:
+                          description: |-
+                            (Block Set, Max: 1) Set up HTTP basic authentication (username & password). (see below for nested schema)
+                            Set up HTTP basic authentication (username & password).
+                          items:
+                            properties:
+                              passwordSecretRef:
+                                description: (String)
+                                properties:
+                                  key:
+                                    description: The key to select.
+                                    type: string
+                                  name:
+                                    description: Name of the secret.
+                                    type: string
+                                  namespace:
+                                    description: Namespace of the secret.
+                                    type: string
+                                required:
+                                - key
+                                - name
+                                - namespace
+                                type: object
+                              username:
+                                description: (String)
+                                type: string
+                            required:
+                            - passwordSecretRef
+                            type: object
+                          type: array
+                        body:
+                          description: |-
+                            (String) The body of the request.
+                            The body of the request.
+                          type: string
+                        bodyType:
+                          description: |-
+                            Type header of the request. Possible values NONE, JSON, FORM, RAW, and GRAPHQL.
+                            The `Content-Type` header of the request. Possible values `NONE`, `JSON`, `FORM`, `RAW`, and `GRAPHQL`.
+                          type: string
+                        followRedirects:
+                          description: (Boolean)
+                          type: boolean
+                        headersSecretRef:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        ipFamily:
+                          description: |-
+                            (String) IP Family to be used when executing the api check. The value can be either IPv4 or IPv6.
+                            IP Family to be used when executing the api check. The value can be either IPv4 or IPv6.
+                          type: string
+                        method:
+                          description: |-
+                            (String) The HTTP method to use for this API check. Possible values are GET, POST, PUT, HEAD, DELETE, PATCH. (Default GET).
+                            The HTTP method to use for this API check. Possible values are `GET`, `POST`, `PUT`, `HEAD`, `DELETE`, `PATCH`. (Default `GET`).
+                          type: string
+                        queryParameters:
+                          additionalProperties:
+                            type: string
+                          description: (Map of String)
+                          type: object
+                          x-kubernetes-map-type: granular
+                        skipSsl:
+                          description: (Boolean)
+                          type: boolean
+                        url:
+                          description: (String)
+                          type: string
+                      type: object
+                    type: array
+                  retryStrategy:
+                    description: |-
+                      (Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)
+                      A strategy for retrying failed check/monitor runs.
+                    items:
+                      properties:
+                        baseBackoffSeconds:
+                          description: |-
+                            (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+                            The number of seconds to wait before the first retry attempt. (Default `60`).
+                          type: number
+                        maxDurationSeconds:
+                          description: |-
+                            (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+                            The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `600`).
+                          type: number
+                        maxRetries:
+                          description: |-
+                            (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+                            The maximum number of times to retry the check/monitor. Value must be between `1` and `10`. Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `2`).
+                          type: number
+                        onlyOn:
+                          description: |-
+                            (Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)
+                            Apply the retry strategy only if the defined conditions match.
+                          items:
+                            properties:
+                              networkError:
+                                description: |-
+                                  (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+                                  When `true`, retry only if the cause of the failure is a network error. (Default `false`).
+                                type: boolean
+                            type: object
+                          type: array
+                        sameRegion:
+                          description: |-
+                            (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+                            Whether retries should be run in the same region as the initial check/monitor run. (Default `true`).
+                          type: boolean
+                        type:
+                          description: |-
+                            (String) The type of the check. Possible values are API, BROWSER, and MULTI_STEP.
+                            Determines which type of retry strategy to use. Possible values are `FIXED`, `LINEAR`, `EXPONENTIAL`, `SINGLE_RETRY`, and `NO_RETRIES`.
+                          type: string
+                      type: object
+                    type: array
+                  runParallel:
+                    description: |-
+                      robin.
+                      Determines if the check should run in all selected locations in parallel or round-robin.
+                    type: boolean
+                  runtimeId:
+                    description: |-
+                      (String) The id of the runtime to use for this check.
+                      The id of the runtime to use for this check.
+                    type: string
+                  script:
+                    description: |-
+                      (String) A valid piece of Node.js JavaScript code describing a browser interaction with the Puppeteer/Playwright framework or a reference to an external JavaScript file.
+                      A valid piece of Node.js JavaScript code describing a browser interaction with the Puppeteer/Playwright framework or a reference to an external JavaScript file.
+                    type: string
+                  setupSnippetId:
+                    description: |-
+                      (Number) An ID reference to a snippet to use in the setup phase of an API check.
+                      An ID reference to a snippet to use in the setup phase of an API check.
+                    type: number
+                  shouldFail:
+                    description: |-
+                      (Boolean) Allows to invert the behaviour of when a check is considered to fail. Allows for validating error status like 404.
+                      Allows to invert the behaviour of when a check is considered to fail. Allows for validating error status like 404.
+                    type: boolean
+                  sslCheck:
+                    description: |-
+                      (Boolean, Deprecated) Determines if the SSL certificate should be validated for expiry.
+                      Determines if the SSL certificate should be validated for expiry.
+                    type: boolean
+                  sslCheckDomain:
+                    description: |-
+                      (String) A valid fully qualified domain name (FQDN) to check its SSL certificate.
+                      A valid fully qualified domain name (FQDN) to check its SSL certificate.
+                    type: string
+                  tags:
+                    description: |-
+                      (Set of String) A list of tags for organizing and filtering checks.
+                      A list of tags for organizing and filtering checks.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teardownSnippetId:
+                    description: |-
+                      (Number) An ID reference to a snippet to use in the teardown phase of an API check.
+                      An ID reference to a snippet to use in the teardown phase of an API check.
+                    type: number
+                  triggerIncident:
+                    description: |-
+                      (Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)
+                      Create and resolve an incident based on the alert configuration. Useful for status page automation.
+                    items:
+                      properties:
+                        description:
+                          description: |-
+                            (String) A description of the check.
+                            A detailed description of the incident.
+                          type: string
+                        name:
+                          description: |-
+                            (String) The name of the check.
+                            The name of the incident.
+                          type: string
+                        notifySubscribers:
+                          description: |-
+                            (Boolean) Whether to notify subscribers when the incident is triggered.
+                            Whether to notify subscribers when the incident is triggered.
+                          type: boolean
+                        serviceId:
+                          description: |-
+                            (String) The status page service that this incident will be associated with.
+                            The status page service that this incident will be associated with.
+                          type: string
+                        severity:
+                          description: |-
+                            (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+                            The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
+                          type: string
+                      type: object
+                    type: array
+                  type:
+                    description: |-
+                      (String) The type of the check. Possible values are API, BROWSER, and MULTI_STEP.
+                      The type of the check. Possible values are `API`, `BROWSER`, and `MULTI_STEP`.
+                    type: string
+                  useGlobalAlertSettings:
+                    description: |-
+                      (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+                      When true, the account level alert settings will be used, not the alert setting defined on this check.
+                    type: boolean
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.activated is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.activated)
+                || (has(self.initProvider) && has(self.initProvider.activated))'
+            - message: spec.forProvider.frequency is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.frequency)
+                || (has(self.initProvider) && has(self.initProvider.frequency))'
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+            - message: spec.forProvider.type is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.type)
+                || (has(self.initProvider) && has(self.initProvider.type))'
+          status:
+            description: CheckStatus defines the observed state of Check.
+            properties:
+              atProvider:
+                properties:
+                  activated:
+                    description: |-
+                      (Boolean) Determines if the check is running or not. Possible values true, and false.
+                      Determines if the check is running or not. Possible values `true`, and `false`.
+                    type: boolean
+                  alertChannelSubscription:
+                    description: |-
+                      (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+                      An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
+                    items:
+                      properties:
+                        activated:
+                          description: |-
+                            (Boolean) Determines if the check is running or not. Possible values true, and false.
+                            Whether an alert should be sent to this channel.
+                          type: boolean
+                        channelId:
+                          description: |-
+                            (Number) The ID of the alert channel.
+                            The ID of the alert channel.
+                          type: number
+                      type: object
+                    type: array
+                  alertSettings:
+                    description: |-
+                      (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
+                      Determines the alert escalation policy for the check.
+                    items:
+                      properties:
+                        escalationType:
+                          description: |-
+                            (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+                            Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+                          type: string
+                        parallelRunFailureThreshold:
+                          description: |-
+                            (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+                            Configuration for parallel run failure threshold.
+                          items:
+                            properties:
+                              enabled:
+                                description: |-
+                                  (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+                                  Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+                                type: boolean
+                              percentage:
+                                description: |-
+                                  (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+                                  Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+                                type: number
+                            type: object
+                          type: array
+                        reminders:
+                          description: |-
+                            (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+                            Defines how often to send reminder notifications after initial alert.
+                          items:
+                            properties:
+                              amount:
+                                description: |-
+                                  (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+                                  Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+                                type: number
+                              interval:
+                                description: |-
+                                  (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+                                  Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                type: number
+                            type: object
+                          type: array
+                        runBasedEscalation:
+                          description: |-
+                            based escalation. (see below for nested schema)
+                            Configuration for run-based escalation.
+                          items:
+                            properties:
+                              failedRunThreshold:
+                                description: |-
+                                  (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+                                  Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+                                type: number
+                            type: object
+                          type: array
+                        sslCertificates:
+                          description: (Block Set, Deprecated) (see below for nested
+                            schema)
+                          items:
+                            properties:
+                              alertThreshold:
+                                description: |-
+                                  (Number) No longer available.
+                                  No longer available.
+                                type: number
+                              enabled:
+                                description: |-
+                                  (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+                                  No longer available.
+                                type: boolean
+                            type: object
+                          type: array
+                        timeBasedEscalation:
+                          description: |-
+                            based escalation. (see below for nested schema)
+                            Configuration for time-based escalation.
+                          items:
+                            properties:
+                              minutesFailingThreshold:
+                                description: |-
+                                  (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+                                  Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                type: number
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  degradedResponseTime:
+                    description: |-
+                      (Number) The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 30000. (Default 15000).
+                      The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 30000. (Default `15000`).
+                    type: number
+                  description:
+                    description: |-
+                      (String) A description of the check.
+                      A description of the check.
+                    type: string
+                  doubleCheck:
+                    description: |-
+                      (Boolean, Deprecated) Setting this to true will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default false).
+                      Setting this to `true` will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default `false`).
+                    type: boolean
+                  environmentVariable:
+                    description: |-
+                      (Block List) Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible. (see below for nested schema)
+                      Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible.
+                    items:
+                      properties:
+                        key:
+                          description: |-
+                            (String) The name of the environment variable or secret.
+                            The name of the environment variable or secret.
+                          type: string
+                        locked:
+                          description: |-
+                            (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+                            If true, the value is not shown by default, but it can be accessed. (Default `false`).
+                          type: boolean
+                        secret:
+                          description: |-
+                            (Boolean) If true, the value will never be visible. (Default false).
+                            If true, the value will never be visible. (Default `false`).
+                          type: boolean
+                        value:
+                          description: |-
+                            (String) The value of the environment variable or secret.
+                            The value of the environment variable or secret.
+                          type: string
+                      type: object
+                    type: array
+                  environmentVariables:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      (Map of String, Deprecated) Key/value pairs of environment variables to insert into the runtime environment.
+                      Key/value pairs of environment variables to insert into the runtime environment.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  frequency:
+                    description: |-
+                      use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+                      Controls how often the check should run. Defined in minutes. The allowed values are `0` (high frequency - use `frequency_offset` to define the actual frequency), `1` (1 minute), `2` (2 minutes), `5` (5 minutes), `10` (10 minutes), `15` (15 minutes), `30` (30 minutes), `60` (1 hour), `120` (2 hours), `180` (3 hours), `360` (6 hours), `720` (12 hours) and `1440` (24 hours).
+                    type: number
+                  frequencyOffset:
+                    description: |-
+                      use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+                      Only relevant when `type` is `API`. When `frequency` is `0` (high frequency), `frequency_offset` is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are `0` (disabled - use `frequency` to define the actual frequency), `10` (10 seconds), `20` (20 seconds) and `30` (30 seconds).
+                    type: number
+                  groupId:
+                    description: |-
+                      (Number) The id of the check group this check is part of.
+                      The id of the check group this check is part of.
+                    type: number
+                  groupOrder:
+                    description: |-
+                      (Number) The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+                      The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+                    type: number
+                  id:
+                    description: (String) The ID of this resource.
+                    type: string
+                  localSetupScript:
+                    description: |-
+                      (String) A valid piece of Node.js code to run in the setup phase.
+                      A valid piece of Node.js code to run in the setup phase.
+                    type: string
+                  localTeardownScript:
+                    description: |-
+                      (String) A valid piece of Node.js code to run in the teardown phase.
+                      A valid piece of Node.js code to run in the teardown phase.
+                    type: string
+                  locations:
+                    description: |-
+                      east-1"])
+                      An array of one or more data center locations where to run the this check. (Default ["us-east-1"])
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  maxResponseTime:
+                    description: |-
+                      (Number) The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 30000. (Default 30000).
+                      The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 30000. (Default `30000`).
+                    type: number
+                  muted:
+                    description: |-
+                      (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+                      Determines if any notifications will be sent out when a check fails/degrades/recovers.
+                    type: boolean
+                  name:
+                    description: |-
+                      (String) The name of the check.
+                      The name of the check.
+                    type: string
+                  privateLocations:
+                    description: |-
+                      (Set of String) An array of one or more private locations slugs.
+                      An array of one or more private locations slugs.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  request:
+                    description: |-
+                      (Block Set, Max: 1) An API check might have one request config. (see below for nested schema)
+                      An API check might have one request config.
+                    items:
+                      properties:
+                        assertion:
+                          description: |-
+                            (Block Set) A request can have multiple assertions. (see below for nested schema)
+                            A request can have multiple assertions.
+                          items:
+                            properties:
+                              comparison:
+                                description: |-
+                                  (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+                                  The type of comparison to be executed between expected and actual value of the assertion. Possible values `EQUALS`, `NOT_EQUALS`, `HAS_KEY`, `NOT_HAS_KEY`, `HAS_VALUE`, `NOT_HAS_VALUE`, `IS_EMPTY`, `NOT_EMPTY`, `GREATER_THAN`, `LESS_THAN`, `CONTAINS`, `NOT_CONTAINS`, `IS_NULL`, and `NOT_NULL`.
+                                type: string
+                              property:
+                                description: (String)
+                                type: string
+                              source:
+                                description: |-
+                                  (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+                                  The source of the asserted value. Possible values `STATUS_CODE`, `JSON_BODY`, `HEADERS`, `TEXT_BODY`, and `RESPONSE_TIME`.
+                                type: string
+                              target:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        basicAuth:
+                          description: |-
+                            (Block Set, Max: 1) Set up HTTP basic authentication (username & password). (see below for nested schema)
+                            Set up HTTP basic authentication (username & password).
+                          items:
+                            properties:
+                              username:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        body:
+                          description: |-
+                            (String) The body of the request.
+                            The body of the request.
+                          type: string
+                        bodyType:
+                          description: |-
+                            Type header of the request. Possible values NONE, JSON, FORM, RAW, and GRAPHQL.
+                            The `Content-Type` header of the request. Possible values `NONE`, `JSON`, `FORM`, `RAW`, and `GRAPHQL`.
+                          type: string
+                        followRedirects:
+                          description: (Boolean)
+                          type: boolean
+                        ipFamily:
+                          description: |-
+                            (String) IP Family to be used when executing the api check. The value can be either IPv4 or IPv6.
+                            IP Family to be used when executing the api check. The value can be either IPv4 or IPv6.
+                          type: string
+                        method:
+                          description: |-
+                            (String) The HTTP method to use for this API check. Possible values are GET, POST, PUT, HEAD, DELETE, PATCH. (Default GET).
+                            The HTTP method to use for this API check. Possible values are `GET`, `POST`, `PUT`, `HEAD`, `DELETE`, `PATCH`. (Default `GET`).
+                          type: string
+                        queryParameters:
+                          additionalProperties:
+                            type: string
+                          description: (Map of String)
+                          type: object
+                          x-kubernetes-map-type: granular
+                        skipSsl:
+                          description: (Boolean)
+                          type: boolean
+                        url:
+                          description: (String)
+                          type: string
+                      type: object
+                    type: array
+                  retryStrategy:
+                    description: |-
+                      (Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)
+                      A strategy for retrying failed check/monitor runs.
+                    items:
+                      properties:
+                        baseBackoffSeconds:
+                          description: |-
+                            (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+                            The number of seconds to wait before the first retry attempt. (Default `60`).
+                          type: number
+                        maxDurationSeconds:
+                          description: |-
+                            (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+                            The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `600`).
+                          type: number
+                        maxRetries:
+                          description: |-
+                            (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+                            The maximum number of times to retry the check/monitor. Value must be between `1` and `10`. Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `2`).
+                          type: number
+                        onlyOn:
+                          description: |-
+                            (Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)
+                            Apply the retry strategy only if the defined conditions match.
+                          items:
+                            properties:
+                              networkError:
+                                description: |-
+                                  (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+                                  When `true`, retry only if the cause of the failure is a network error. (Default `false`).
+                                type: boolean
+                            type: object
+                          type: array
+                        sameRegion:
+                          description: |-
+                            (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+                            Whether retries should be run in the same region as the initial check/monitor run. (Default `true`).
+                          type: boolean
+                        type:
+                          description: |-
+                            (String) The type of the check. Possible values are API, BROWSER, and MULTI_STEP.
+                            Determines which type of retry strategy to use. Possible values are `FIXED`, `LINEAR`, `EXPONENTIAL`, `SINGLE_RETRY`, and `NO_RETRIES`.
+                          type: string
+                      type: object
+                    type: array
+                  runParallel:
+                    description: |-
+                      robin.
+                      Determines if the check should run in all selected locations in parallel or round-robin.
+                    type: boolean
+                  runtimeId:
+                    description: |-
+                      (String) The id of the runtime to use for this check.
+                      The id of the runtime to use for this check.
+                    type: string
+                  script:
+                    description: |-
+                      (String) A valid piece of Node.js JavaScript code describing a browser interaction with the Puppeteer/Playwright framework or a reference to an external JavaScript file.
+                      A valid piece of Node.js JavaScript code describing a browser interaction with the Puppeteer/Playwright framework or a reference to an external JavaScript file.
+                    type: string
+                  setupSnippetId:
+                    description: |-
+                      (Number) An ID reference to a snippet to use in the setup phase of an API check.
+                      An ID reference to a snippet to use in the setup phase of an API check.
+                    type: number
+                  shouldFail:
+                    description: |-
+                      (Boolean) Allows to invert the behaviour of when a check is considered to fail. Allows for validating error status like 404.
+                      Allows to invert the behaviour of when a check is considered to fail. Allows for validating error status like 404.
+                    type: boolean
+                  sslCheck:
+                    description: |-
+                      (Boolean, Deprecated) Determines if the SSL certificate should be validated for expiry.
+                      Determines if the SSL certificate should be validated for expiry.
+                    type: boolean
+                  sslCheckDomain:
+                    description: |-
+                      (String) A valid fully qualified domain name (FQDN) to check its SSL certificate.
+                      A valid fully qualified domain name (FQDN) to check its SSL certificate.
+                    type: string
+                  tags:
+                    description: |-
+                      (Set of String) A list of tags for organizing and filtering checks.
+                      A list of tags for organizing and filtering checks.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teardownSnippetId:
+                    description: |-
+                      (Number) An ID reference to a snippet to use in the teardown phase of an API check.
+                      An ID reference to a snippet to use in the teardown phase of an API check.
+                    type: number
+                  triggerIncident:
+                    description: |-
+                      (Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)
+                      Create and resolve an incident based on the alert configuration. Useful for status page automation.
+                    items:
+                      properties:
+                        description:
+                          description: |-
+                            (String) A description of the check.
+                            A detailed description of the incident.
+                          type: string
+                        name:
+                          description: |-
+                            (String) The name of the check.
+                            The name of the incident.
+                          type: string
+                        notifySubscribers:
+                          description: |-
+                            (Boolean) Whether to notify subscribers when the incident is triggered.
+                            Whether to notify subscribers when the incident is triggered.
+                          type: boolean
+                        serviceId:
+                          description: |-
+                            (String) The status page service that this incident will be associated with.
+                            The status page service that this incident will be associated with.
+                          type: string
+                        severity:
+                          description: |-
+                            (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+                            The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
+                          type: string
+                      type: object
+                    type: array
+                  type:
+                    description: |-
+                      (String) The type of the check. Possible values are API, BROWSER, and MULTI_STEP.
+                      The type of the check. Possible values are `API`, `BROWSER`, and `MULTI_STEP`.
+                    type: string
+                  useGlobalAlertSettings:
+                    description: |-
+                      (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+                      When true, the account level alert settings will be used, not the alert setting defined on this check.
+                    type: boolean
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
