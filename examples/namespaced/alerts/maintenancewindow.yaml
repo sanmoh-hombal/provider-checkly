@@ -1,0 +1,18 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: MaintenanceWindow
+metadata:
+  name: example-maintenance-window
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: alerts/v1alpha1/maintenancewindow
+spec:
+  forProvider:
+    name: Weekly Sunday maintenance
+    startsAt: "2025-01-05T02:00:00Z"
+    endsAt: "2025-01-05T04:00:00Z"
+    repeatUnit: WEEK
+    repeatInterval: 1
+    tags:
+      - production
+  providerConfigRef:
+    name: default
