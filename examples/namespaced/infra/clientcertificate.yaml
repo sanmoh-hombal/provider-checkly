@@ -1,0 +1,20 @@
+apiVersion: infra.checkly.m.crossplane.io/v1alpha1
+kind: ClientCertificate
+metadata:
+  name: client-cert-example
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/clientcertificate
+spec:
+  forProvider:
+    host: api.example.com
+    certificateSecretRef:
+      name: tls-cert
+      namespace: default
+      key: tls.crt
+    privateKeySecretRef:
+      name: tls-cert
+      namespace: default
+      key: tls.key
+  providerConfigRef:
+    name: default

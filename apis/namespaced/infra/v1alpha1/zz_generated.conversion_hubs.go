@@ -7,6 +7,9 @@
 package v1alpha1
 
 // Hub marks this type as a conversion hub.
+func (tr *ClientCertificate) Hub() {}
+
+// Hub marks this type as a conversion hub.
 func (tr *EnvironmentVariable) Hub() {}
 
 // Hub marks this type as a conversion hub.

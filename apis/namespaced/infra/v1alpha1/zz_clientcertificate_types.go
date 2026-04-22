@@ -11,13 +11,14 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 )
 
-type CertificateInitParameters struct {
+type ClientCertificateInitParameters struct {
 
 	// (String) The client certificate in PEM format.
 	// The client certificate in PEM format.
-	Certificate *string `json:"certificate,omitempty" tf:"certificate,omitempty"`
+	CertificateSecretRef v1.LocalSecretKeySelector `json:"certificateSecretRef" tf:"-"`
 
 	// (String) The host domain that the certificate should be used for.
 	// The host domain that the certificate should be used for.
@@ -25,22 +26,18 @@ type CertificateInitParameters struct {
 
 	// (String, Sensitive) Passphrase for the private key.
 	// Passphrase for the private key.
-	PassphraseSecretRef *v1.SecretKeySelector `json:"passphraseSecretRef,omitempty" tf:"-"`
+	PassphraseSecretRef *v1.LocalSecretKeySelector `json:"passphraseSecretRef,omitempty" tf:"-"`
 
 	// (String) The private key for the certificate in PEM format.
 	// The private key for the certificate in PEM format.
-	PrivateKey *string `json:"privateKey,omitempty" tf:"private_key,omitempty"`
+	PrivateKeySecretRef v1.LocalSecretKeySelector `json:"privateKeySecretRef" tf:"-"`
 
 	// (String) PEM formatted bundle of CA certificates that the client should trust. The bundle may contain many CA certificates.
 	// PEM formatted bundle of CA certificates that the client should trust. The bundle may contain many CA certificates.
 	TrustedCA *string `json:"trustedCa,omitempty" tf:"trusted_ca,omitempty"`
 }
 
-type CertificateObservation struct {
-
-	// (String) The client certificate in PEM format.
-	// The client certificate in PEM format.
-	Certificate *string `json:"certificate,omitempty" tf:"certificate,omitempty"`
+type ClientCertificateObservation struct {
 
 	// (String) The host domain that the certificate should be used for.
 	// The host domain that the certificate should be used for.
@@ -49,21 +46,17 @@ type CertificateObservation struct {
 	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// (String) The private key for the certificate in PEM format.
-	// The private key for the certificate in PEM format.
-	PrivateKey *string `json:"privateKey,omitempty" tf:"private_key,omitempty"`
-
 	// (String) PEM formatted bundle of CA certificates that the client should trust. The bundle may contain many CA certificates.
 	// PEM formatted bundle of CA certificates that the client should trust. The bundle may contain many CA certificates.
 	TrustedCA *string `json:"trustedCa,omitempty" tf:"trusted_ca,omitempty"`
 }
 
-type CertificateParameters struct {
+type ClientCertificateParameters struct {
 
 	// (String) The client certificate in PEM format.
 	// The client certificate in PEM format.
 	// +kubebuilder:validation:Optional
-	Certificate *string `json:"certificate,omitempty" tf:"certificate,omitempty"`
+	CertificateSecretRef v1.LocalSecretKeySelector `json:"certificateSecretRef" tf:"-"`
 
 	// (String) The host domain that the certificate should be used for.
 	// The host domain that the certificate should be used for.
@@ -73,12 +66,12 @@ type CertificateParameters struct {
 	// (String, Sensitive) Passphrase for the private key.
 	// Passphrase for the private key.
 	// +kubebuilder:validation:Optional
-	PassphraseSecretRef *v1.SecretKeySelector `json:"passphraseSecretRef,omitempty" tf:"-"`
+	PassphraseSecretRef *v1.LocalSecretKeySelector `json:"passphraseSecretRef,omitempty" tf:"-"`
 
 	// (String) The private key for the certificate in PEM format.
 	// The private key for the certificate in PEM format.
 	// +kubebuilder:validation:Optional
-	PrivateKey *string `json:"privateKey,omitempty" tf:"private_key,omitempty"`
+	PrivateKeySecretRef v1.LocalSecretKeySelector `json:"privateKeySecretRef" tf:"-"`
 
 	// (String) PEM formatted bundle of CA certificates that the client should trust. The bundle may contain many CA certificates.
 	// PEM formatted bundle of CA certificates that the client should trust. The bundle may contain many CA certificates.
@@ -86,10 +79,10 @@ type CertificateParameters struct {
 	TrustedCA *string `json:"trustedCa,omitempty" tf:"trusted_ca,omitempty"`
 }
 
-// CertificateSpec defines the desired state of Certificate
-type CertificateSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     CertificateParameters `json:"forProvider"`
+// ClientCertificateSpec defines the desired state of ClientCertificate
+type ClientCertificateSpec struct {
+	v2.ManagedResourceSpec `json:",inline"`
+	ForProvider            ClientCertificateParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -100,52 +93,52 @@ type CertificateSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider CertificateInitParameters `json:"initProvider,omitempty"`
+	InitProvider ClientCertificateInitParameters `json:"initProvider,omitempty"`
 }
 
-// CertificateStatus defines the observed state of Certificate.
-type CertificateStatus struct {
+// ClientCertificateStatus defines the observed state of ClientCertificate.
+type ClientCertificateStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        CertificateObservation `json:"atProvider,omitempty"`
+	AtProvider        ClientCertificateObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Certificate is the Schema for the Certificates API. Use client certificates to authenticate your API checks to APIs that require mutual TLS (mTLS) authentication, or any other authentication scheme where the requester needs to provide a certificate. Each client certificate is specific to a domain name, e.g. acme.com and will be used automatically by any API checks targeting that domain. Changing the value of any attribute forces a new resource to be created.
+// ClientCertificate is the Schema for the ClientCertificates API. Use client certificates to authenticate your API checks to APIs that require mutual TLS (mTLS) authentication, or any other authentication scheme where the requester needs to provide a certificate. Each client certificate is specific to a domain name, e.g. acme.com and will be used automatically by any API checks targeting that domain. Changing the value of any attribute forces a new resource to be created.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,checkly}
-type Certificate struct {
+// +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,checkly}
+type ClientCertificate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.certificate) || (has(self.initProvider) && has(self.initProvider.certificate))",message="spec.forProvider.certificate is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.certificateSecretRef)",message="spec.forProvider.certificateSecretRef is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.host) || (has(self.initProvider) && has(self.initProvider.host))",message="spec.forProvider.host is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.privateKey) || (has(self.initProvider) && has(self.initProvider.privateKey))",message="spec.forProvider.privateKey is a required parameter"
-	Spec   CertificateSpec   `json:"spec"`
-	Status CertificateStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.privateKeySecretRef)",message="spec.forProvider.privateKeySecretRef is a required parameter"
+	Spec   ClientCertificateSpec   `json:"spec"`
+	Status ClientCertificateStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// CertificateList contains a list of Certificates
-type CertificateList struct {
+// ClientCertificateList contains a list of ClientCertificates
+type ClientCertificateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Certificate `json:"items"`
+	Items           []ClientCertificate `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	Certificate_Kind             = "Certificate"
-	Certificate_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Certificate_Kind}.String()
-	Certificate_KindAPIVersion   = Certificate_Kind + "." + CRDGroupVersion.String()
-	Certificate_GroupVersionKind = CRDGroupVersion.WithKind(Certificate_Kind)
+	ClientCertificate_Kind             = "ClientCertificate"
+	ClientCertificate_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: ClientCertificate_Kind}.String()
+	ClientCertificate_KindAPIVersion   = ClientCertificate_Kind + "." + CRDGroupVersion.String()
+	ClientCertificate_GroupVersionKind = CRDGroupVersion.WithKind(ClientCertificate_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&Certificate{}, &CertificateList{})
+	SchemeBuilder.Register(&ClientCertificate{}, &ClientCertificateList{})
 }

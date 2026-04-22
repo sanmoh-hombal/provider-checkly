@@ -11,6 +11,7 @@ func Configure(p *ujconfig.Provider) {
 	configureSnippet(p)
 	configureEnvironmentVariable(p)
 	configurePrivateLocation(p)
+	configureClientCertificate(p)
 }
 
 func configureSnippet(p *ujconfig.Provider) {
@@ -25,6 +26,15 @@ func configureEnvironmentVariable(p *ujconfig.Provider) {
 		r.ShortGroup = "infra"
 		r.Kind = "EnvironmentVariable"
 		r.TerraformResource.Schema["value"].Sensitive = true
+	})
+}
+
+func configureClientCertificate(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_client_certificate", func(r *ujconfig.Resource) {
+		r.ShortGroup = "infra"
+		r.Kind = "ClientCertificate"
+		r.TerraformResource.Schema["certificate"].Sensitive = true
+		r.TerraformResource.Schema["private_key"].Sensitive = true
 	})
 }
 
