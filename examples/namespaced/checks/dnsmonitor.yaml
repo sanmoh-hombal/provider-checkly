@@ -1,0 +1,22 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: DNSMonitor
+metadata:
+  name: example-dns-monitor
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/dnsmonitor
+spec:
+  forProvider:
+    name: example-dns-monitor
+    activated: true
+    frequency: 5
+    locations:
+      - us-east-1
+      - eu-west-1
+    request:
+      - query: example.com
+        recordType: A
+    tags:
+      - managed-by-crossplane
+  providerConfigRef:
+    name: default
