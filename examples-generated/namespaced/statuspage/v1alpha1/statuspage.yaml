@@ -20,8 +20,8 @@ spec:
 
 ---
 
-apiVersion: status.checkly.m.crossplane.io/v1alpha1
-kind: PageService
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPageService
 metadata:
   annotations:
     meta.upbound.io/example-id: statuspage/v1alpha1/statuspage
@@ -35,8 +35,8 @@ spec:
 
 ---
 
-apiVersion: status.checkly.m.crossplane.io/v1alpha1
-kind: PageService
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPageService
 metadata:
   annotations:
     meta.upbound.io/example-id: statuspage/v1alpha1/statuspage

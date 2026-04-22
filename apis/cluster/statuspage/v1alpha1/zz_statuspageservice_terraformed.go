@@ -14,18 +14,18 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this PageService
-func (mg *PageService) GetTerraformResourceType() string {
+// GetTerraformResourceType returns Terraform resource type for this StatusPageService
+func (mg *StatusPageService) GetTerraformResourceType() string {
 	return "checkly_status_page_service"
 }
 
-// GetConnectionDetailsMapping for this PageService
-func (tr *PageService) GetConnectionDetailsMapping() map[string]string {
+// GetConnectionDetailsMapping for this StatusPageService
+func (tr *StatusPageService) GetConnectionDetailsMapping() map[string]string {
 	return nil
 }
 
-// GetObservation of this PageService
-func (tr *PageService) GetObservation() (map[string]any, error) {
+// GetObservation of this StatusPageService
+func (tr *StatusPageService) GetObservation() (map[string]any, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -34,8 +34,8 @@ func (tr *PageService) GetObservation() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this PageService
-func (tr *PageService) SetObservation(obs map[string]any) error {
+// SetObservation for this StatusPageService
+func (tr *StatusPageService) SetObservation(obs map[string]any) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -43,16 +43,16 @@ func (tr *PageService) SetObservation(obs map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetID returns ID of underlying Terraform resource of this PageService
-func (tr *PageService) GetID() string {
+// GetID returns ID of underlying Terraform resource of this StatusPageService
+func (tr *StatusPageService) GetID() string {
 	if tr.Status.AtProvider.ID == nil {
 		return ""
 	}
 	return *tr.Status.AtProvider.ID
 }
 
-// GetParameters of this PageService
-func (tr *PageService) GetParameters() (map[string]any, error) {
+// GetParameters of this StatusPageService
+func (tr *StatusPageService) GetParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (tr *PageService) GetParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this PageService
-func (tr *PageService) SetParameters(params map[string]any) error {
+// SetParameters for this StatusPageService
+func (tr *StatusPageService) SetParameters(params map[string]any) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -70,8 +70,8 @@ func (tr *PageService) SetParameters(params map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// GetInitParameters of this PageService
-func (tr *PageService) GetInitParameters() (map[string]any, error) {
+// GetInitParameters of this StatusPageService
+func (tr *StatusPageService) GetInitParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.InitProvider)
 	if err != nil {
 		return nil, err
@@ -80,8 +80,8 @@ func (tr *PageService) GetInitParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// GetInitParameters of this PageService
-func (tr *PageService) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
+// GetInitParameters of this StatusPageService
+func (tr *StatusPageService) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
 	params, err := tr.GetParameters()
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get parameters for resource \"%s/%s\"", tr.GetNamespace(), tr.GetName())
@@ -110,10 +110,10 @@ func (tr *PageService) GetMergedParameters(shouldMergeInitProvider bool) (map[st
 	return params, nil
 }
 
-// LateInitialize this PageService using its observed tfState.
+// LateInitialize this StatusPageService using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *PageService) LateInitialize(attrs []byte) (bool, error) {
-	params := &PageServiceParameters{}
+func (tr *StatusPageService) LateInitialize(attrs []byte) (bool, error) {
+	params := &StatusPageServiceParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -124,6 +124,6 @@ func (tr *PageService) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *PageService) GetTerraformSchemaVersion() int {
+func (tr *StatusPageService) GetTerraformSchemaVersion() int {
 	return 0
 }

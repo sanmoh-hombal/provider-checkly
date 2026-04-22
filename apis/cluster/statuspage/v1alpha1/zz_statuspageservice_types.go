@@ -13,14 +13,14 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
 )
 
-type PageServiceInitParameters struct {
+type StatusPageServiceInitParameters struct {
 
 	// (String) The name of the service.
 	// The name of the service.
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 }
 
-type PageServiceObservation struct {
+type StatusPageServiceObservation struct {
 
 	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -28,20 +28,36 @@ type PageServiceObservation struct {
 	// (String) The name of the service.
 	// The name of the service.
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (String) The ID of this resource.
+	StatusPageID *string `json:"statusPageId,omitempty" tf:"status_page_id,omitempty"`
 }
 
-type PageServiceParameters struct {
+type StatusPageServiceParameters struct {
 
 	// (String) The name of the service.
 	// The name of the service.
 	// +kubebuilder:validation:Optional
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (String) The ID of this resource.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/statuspage/v1alpha1.StatusPage
+	// +kubebuilder:validation:Optional
+	StatusPageID *string `json:"statusPageId,omitempty" tf:"status_page_id,omitempty"`
+
+	// Reference to a StatusPage in statuspage to populate statusPageId.
+	// +kubebuilder:validation:Optional
+	StatusPageIDRef *v1.Reference `json:"statusPageIdRef,omitempty" tf:"-"`
+
+	// Selector for a StatusPage in statuspage to populate statusPageId.
+	// +kubebuilder:validation:Optional
+	StatusPageIDSelector *v1.Selector `json:"statusPageIdSelector,omitempty" tf:"-"`
 }
 
-// PageServiceSpec defines the desired state of PageService
-type PageServiceSpec struct {
+// StatusPageServiceSpec defines the desired state of StatusPageService
+type StatusPageServiceSpec struct {
 	v1.ResourceSpec `json:",inline"`
-	ForProvider     PageServiceParameters `json:"forProvider"`
+	ForProvider     StatusPageServiceParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -52,50 +68,50 @@ type PageServiceSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider PageServiceInitParameters `json:"initProvider,omitempty"`
+	InitProvider StatusPageServiceInitParameters `json:"initProvider,omitempty"`
 }
 
-// PageServiceStatus defines the observed state of PageService.
-type PageServiceStatus struct {
+// StatusPageServiceStatus defines the observed state of StatusPageService.
+type StatusPageServiceStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        PageServiceObservation `json:"atProvider,omitempty"`
+	AtProvider        StatusPageServiceObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// PageService is the Schema for the PageServices API. Status page services represent functional pieces of your application or website, such as landing page, API, support portal etc.
+// StatusPageService is the Schema for the StatusPageServices API. Status page services represent functional pieces of your application or website, such as landing page, API, support portal etc.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,checkly}
-type PageService struct {
+type StatusPageService struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
-	Spec   PageServiceSpec   `json:"spec"`
-	Status PageServiceStatus `json:"status,omitempty"`
+	Spec   StatusPageServiceSpec   `json:"spec"`
+	Status StatusPageServiceStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// PageServiceList contains a list of PageServices
-type PageServiceList struct {
+// StatusPageServiceList contains a list of StatusPageServices
+type StatusPageServiceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []PageService `json:"items"`
+	Items           []StatusPageService `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	PageService_Kind             = "PageService"
-	PageService_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: PageService_Kind}.String()
-	PageService_KindAPIVersion   = PageService_Kind + "." + CRDGroupVersion.String()
-	PageService_GroupVersionKind = CRDGroupVersion.WithKind(PageService_Kind)
+	StatusPageService_Kind             = "StatusPageService"
+	StatusPageService_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: StatusPageService_Kind}.String()
+	StatusPageService_KindAPIVersion   = StatusPageService_Kind + "." + CRDGroupVersion.String()
+	StatusPageService_GroupVersionKind = CRDGroupVersion.WithKind(StatusPageService_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&PageService{}, &PageServiceList{})
+	SchemeBuilder.Register(&StatusPageService{}, &StatusPageServiceList{})
 }

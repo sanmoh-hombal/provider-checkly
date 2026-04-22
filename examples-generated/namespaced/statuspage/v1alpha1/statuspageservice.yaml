@@ -1,8 +1,8 @@
-apiVersion: status.checkly.m.crossplane.io/v1alpha1
-kind: PageService
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPageService
 metadata:
   annotations:
-    meta.upbound.io/example-id: status/v1alpha1/pageservice
+    meta.upbound.io/example-id: statuspage/v1alpha1/statuspageservice
   labels:
     testing.upbound.io/example-name: backend
   name: backend
