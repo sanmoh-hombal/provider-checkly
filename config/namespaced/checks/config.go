@@ -11,6 +11,7 @@ func Configure(p *ujconfig.Provider) {
 	configureCheck(p)
 	configureCheckGroup(p)
 	configureCheckGroupV2(p)
+	configureHeartbeat(p)
 }
 
 func configureCheck(p *ujconfig.Provider) {
@@ -59,6 +60,18 @@ func configureCheckGroup(p *ujconfig.Provider) {
 		// Sensitive fields — environment_variable values may hold secrets.
 		envVarSchema := r.TerraformResource.Schema["environment_variable"].Elem.(*schema.Resource).Schema
 		envVarSchema["value"].Sensitive = true
+	})
+}
+
+func configureHeartbeat(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_heartbeat", func(r *ujconfig.Resource) {
+		r.ShortGroup = "checks"
+		r.Kind = "Heartbeat"
+
+		// Cross-resource references
+		r.References["alert_channel_subscription.channel_id"] = ujconfig.Reference{
+			TerraformName: "checkly_alert_channel",
+		}
 	})
 }
 
