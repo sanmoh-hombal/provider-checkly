@@ -18,6 +18,7 @@ import (
 	heartbeat "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/checks/heartbeat"
 	heartbeatmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/checks/heartbeatmonitor"
 	icmpmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/checks/icmpmonitor"
+	playwrightchecksuite "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/checks/playwrightchecksuite"
 	playwrightcodebundle "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/checks/playwrightcodebundle"
 	tcpcheck "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/checks/tcpcheck"
 	tcpmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/checks/tcpmonitor"
@@ -26,7 +27,6 @@ import (
 	environmentvariable "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/infra/environmentvariable"
 	privatelocation "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/infra/privatelocation"
 	snippet "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/infra/snippet"
-	checksuite "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/playwright/checksuite"
 	providerconfig "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/providerconfig"
 	dashboard "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/statuspage/dashboard"
 	statuspage "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/statuspage/statuspage"
@@ -48,6 +48,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		heartbeat.Setup,
 		heartbeatmonitor.Setup,
 		icmpmonitor.Setup,
+		playwrightchecksuite.Setup,
 		playwrightcodebundle.Setup,
 		tcpcheck.Setup,
 		tcpmonitor.Setup,
@@ -56,7 +57,6 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		environmentvariable.Setup,
 		privatelocation.Setup,
 		snippet.Setup,
-		checksuite.Setup,
 		providerconfig.Setup,
 		dashboard.Setup,
 		statuspage.Setup,
@@ -84,6 +84,7 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		heartbeat.SetupGated,
 		heartbeatmonitor.SetupGated,
 		icmpmonitor.SetupGated,
+		playwrightchecksuite.SetupGated,
 		playwrightcodebundle.SetupGated,
 		tcpcheck.SetupGated,
 		tcpmonitor.SetupGated,
@@ -92,7 +93,6 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		environmentvariable.SetupGated,
 		privatelocation.SetupGated,
 		snippet.SetupGated,
-		checksuite.SetupGated,
 		providerconfig.SetupGated,
 		dashboard.SetupGated,
 		statuspage.SetupGated,

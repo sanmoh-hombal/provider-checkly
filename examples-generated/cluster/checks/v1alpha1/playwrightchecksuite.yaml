@@ -1,17 +1,18 @@
-apiVersion: playwright.checkly.m.crossplane.io/v1alpha1
-kind: CheckSuite
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: PlaywrightCheckSuite
 metadata:
   annotations:
-    meta.upbound.io/example-id: playwright/v1alpha1/checksuite
+    meta.upbound.io/example-id: checks/v1alpha1/playwrightchecksuite
   labels:
     testing.upbound.io/example-name: example-playwright-check
   name: example-playwright-check
-  namespace: upbound-system
 spec:
   forProvider:
     activated: true
     bundle:
-    - id: ${checkly_playwright_code_bundle.playwright-bundle.id}
+    - idSelector:
+        matchLabels:
+          testing.upbound.io/example-name: playwright-bundle
       metadata: ${checkly_playwright_code_bundle.playwright-bundle.metadata}
     frequency: 2
     locations:
@@ -21,15 +22,14 @@ spec:
 
 ---
 
-apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+apiVersion: checks.checkly.crossplane.io/v1alpha1
 kind: PlaywrightCodeBundle
 metadata:
   annotations:
-    meta.upbound.io/example-id: playwright/v1alpha1/checksuite
+    meta.upbound.io/example-id: checks/v1alpha1/playwrightchecksuite
   labels:
     testing.upbound.io/example-name: playwright-bundle
   name: playwright-bundle
-  namespace: upbound-system
 spec:
   forProvider:
     prebuiltArchive:

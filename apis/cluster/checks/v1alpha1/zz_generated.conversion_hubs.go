@@ -28,6 +28,9 @@ func (tr *HeartbeatMonitor) Hub() {}
 func (tr *ICMPMonitor) Hub() {}
 
 // Hub marks this type as a conversion hub.
+func (tr *PlaywrightCheckSuite) Hub() {}
+
+// Hub marks this type as a conversion hub.
 func (tr *PlaywrightCodeBundle) Hub() {}
 
 // Hub marks this type as a conversion hub.

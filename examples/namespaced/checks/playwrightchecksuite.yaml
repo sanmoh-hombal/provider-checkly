@@ -1,0 +1,21 @@
+apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+kind: PlaywrightCheckSuite
+metadata:
+  name: example-playwright-check
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/playwrightchecksuite
+spec:
+  forProvider:
+    activated: true
+    bundle:
+    - idRef:
+        name: hello-world-bundle
+      metadata: "{}"
+    frequency: 10
+    locations:
+    - eu-west-1
+    name: Example Playwright Check Suite
+    useGlobalAlertSettings: true
+  providerConfigRef:
+    name: default
