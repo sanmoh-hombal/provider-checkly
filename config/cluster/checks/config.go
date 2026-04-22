@@ -12,6 +12,7 @@ func Configure(p *ujconfig.Provider) {
 	configureCheckGroup(p)
 	configureCheckGroupV2(p)
 	configureHeartbeat(p)
+	configureHeartbeatMonitor(p)
 }
 
 func configureCheck(p *ujconfig.Provider) {
@@ -67,6 +68,18 @@ func configureHeartbeat(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_heartbeat", func(r *ujconfig.Resource) {
 		r.ShortGroup = "checks"
 		r.Kind = "Heartbeat"
+
+		// Cross-resource references
+		r.References["alert_channel_subscription.channel_id"] = ujconfig.Reference{
+			TerraformName: "checkly_alert_channel",
+		}
+	})
+}
+
+func configureHeartbeatMonitor(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_heartbeat_monitor", func(r *ujconfig.Resource) {
+		r.ShortGroup = "checks"
+		r.Kind = "HeartbeatMonitor"
 
 		// Cross-resource references
 		r.References["alert_channel_subscription.channel_id"] = ujconfig.Reference{
