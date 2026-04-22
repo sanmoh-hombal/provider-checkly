@@ -11,8 +11,6 @@ import (
 
 	alertchannel "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/alerts/alertchannel"
 	maintenancewindow "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/alerts/maintenancewindow"
-	dashboard "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checkly/dashboard"
-	snippet "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checkly/snippet"
 	check "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/check"
 	checkgroup "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/checkgroup"
 	checkgroupv2 "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/checkgroupv2"
@@ -24,13 +22,15 @@ import (
 	tcpmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/tcpmonitor"
 	urlmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/urlmonitor"
 	certificate "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/client/certificate"
-	variable "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/environment/variable"
+	environmentvariable "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/environmentvariable"
+	snippet "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/snippet"
 	checksuite "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/playwright/checksuite"
 	codebundle "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/playwright/codebundle"
 	location "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/private/location"
 	providerconfig "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/providerconfig"
 	page "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/status/page"
 	pageservice "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/status/pageservice"
+	dashboard "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/statuspage/dashboard"
 	checktrigger "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/trigger/check"
 	group "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/trigger/group"
 )
@@ -41,8 +41,6 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		alertchannel.Setup,
 		maintenancewindow.Setup,
-		dashboard.Setup,
-		snippet.Setup,
 		check.Setup,
 		checkgroup.Setup,
 		checkgroupv2.Setup,
@@ -54,13 +52,15 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		tcpmonitor.Setup,
 		urlmonitor.Setup,
 		certificate.Setup,
-		variable.Setup,
+		environmentvariable.Setup,
+		snippet.Setup,
 		checksuite.Setup,
 		codebundle.Setup,
 		location.Setup,
 		providerconfig.Setup,
 		page.Setup,
 		pageservice.Setup,
+		dashboard.Setup,
 		checktrigger.Setup,
 		group.Setup,
 	} {
@@ -77,8 +77,6 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		alertchannel.SetupGated,
 		maintenancewindow.SetupGated,
-		dashboard.SetupGated,
-		snippet.SetupGated,
 		check.SetupGated,
 		checkgroup.SetupGated,
 		checkgroupv2.SetupGated,
@@ -90,13 +88,15 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		tcpmonitor.SetupGated,
 		urlmonitor.SetupGated,
 		certificate.SetupGated,
-		variable.SetupGated,
+		environmentvariable.SetupGated,
+		snippet.SetupGated,
 		checksuite.SetupGated,
 		codebundle.SetupGated,
 		location.SetupGated,
 		providerconfig.SetupGated,
 		page.SetupGated,
 		pageservice.SetupGated,
+		dashboard.SetupGated,
 		checktrigger.SetupGated,
 		group.SetupGated,
 	} {

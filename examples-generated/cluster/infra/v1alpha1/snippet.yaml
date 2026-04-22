@@ -1,0 +1,12 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: Snippet
+metadata:
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/snippet
+  labels:
+    testing.upbound.io/example-name: example_1
+  name: example-1
+spec:
+  forProvider:
+    name: Example 1
+    script: console.log('test');

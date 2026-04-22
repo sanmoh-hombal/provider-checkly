@@ -11,13 +11,13 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/alerts/v1alpha1"
-	v1alpha1checkly "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checkly/v1alpha1"
 	v1alpha1checks "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1"
 	v1alpha1client "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/client/v1alpha1"
-	v1alpha1environment "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/environment/v1alpha1"
+	v1alpha1infra "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1"
 	v1alpha1playwright "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/playwright/v1alpha1"
 	v1alpha1private "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/private/v1alpha1"
 	v1alpha1status "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/status/v1alpha1"
+	v1alpha1statuspage "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/statuspage/v1alpha1"
 	v1alpha1trigger "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/trigger/v1alpha1"
 	v1alpha1namespaced "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1alpha1"
 	v1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1beta1"
@@ -27,13 +27,13 @@ func init() {
 	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
-		v1alpha1checkly.SchemeBuilder.AddToScheme,
 		v1alpha1checks.SchemeBuilder.AddToScheme,
 		v1alpha1client.SchemeBuilder.AddToScheme,
-		v1alpha1environment.SchemeBuilder.AddToScheme,
+		v1alpha1infra.SchemeBuilder.AddToScheme,
 		v1alpha1playwright.SchemeBuilder.AddToScheme,
 		v1alpha1private.SchemeBuilder.AddToScheme,
 		v1alpha1status.SchemeBuilder.AddToScheme,
+		v1alpha1statuspage.SchemeBuilder.AddToScheme,
 		v1alpha1trigger.SchemeBuilder.AddToScheme,
 		v1alpha1namespaced.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,

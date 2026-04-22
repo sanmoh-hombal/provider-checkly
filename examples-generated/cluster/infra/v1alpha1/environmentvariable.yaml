@@ -1,0 +1,15 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: EnvironmentVariable
+metadata:
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/environmentvariable
+  labels:
+    testing.upbound.io/example-name: variable_1
+  name: variable-1
+spec:
+  forProvider:
+    locked: true
+    valueSecretRef:
+      key: example-key
+      name: example-secret
+      namespace: upbound-system

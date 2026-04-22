@@ -766,7 +766,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
@@ -920,7 +920,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
@@ -962,7 +962,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
@@ -1006,7 +1006,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
@@ -1035,7 +1035,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
@@ -1091,7 +1091,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
@@ -1124,7 +1124,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
@@ -1159,7 +1159,7 @@ resources:
                       "slack": [
                         {
                           "channel": "#alerts",
-                          "url": "https://example.com/slack-webhook-placeholder"
+                          "url": "https://hooks.slack.com/services/TXXXXX/XXXXX/XXXXXXXXXX"
                         }
                       ]
                     }
