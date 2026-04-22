@@ -1,0 +1,22 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: TCPCheck
+metadata:
+  name: smtp-tcp-check
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/tcpcheck
+spec:
+  forProvider:
+    name: smtp-tcp-check
+    activated: true
+    frequency: 5
+    locations:
+      - us-east-1
+      - eu-west-1
+    request:
+      - hostname: smtp.example.com
+        port: 25
+    tags:
+      - managed-by-crossplane
+  providerConfigRef:
+    name: default
