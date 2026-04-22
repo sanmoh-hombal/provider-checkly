@@ -1,0 +1,17 @@
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPage
+metadata:
+  name: example-status-page
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: statuspage/v1alpha1/statuspage
+spec:
+  forProvider:
+    name: Example Status Page
+    url: https://status.example.com
+    card:
+      - name: Core Services
+        serviceAttachment:
+          - serviceId: "1"
+  providerConfigRef:
+    name: default
