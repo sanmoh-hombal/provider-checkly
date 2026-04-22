@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: pages.status.checkly.crossplane.io
+  name: statuspages.statuspage.checkly.crossplane.io
 spec:
-  group: status.checkly.crossplane.io
+  group: statuspage.checkly.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - checkly
-    kind: Page
-    listKind: PageList
-    plural: pages
-    singular: page
+    kind: StatusPage
+    listKind: StatusPageList
+    plural: statuspages
+    singular: statuspage
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,9 +34,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Page is the Schema for the Pages API. Checkly status pages allow
-          you to easily communicate the uptime and health of your applications and
-          services to your customers.
+        description: StatusPage is the Schema for the StatusPages API. Checkly status
+          pages allow you to easily communicate the uptime and health of your applications
+          and services to your customers.
         properties:
           apiVersion:
             description: |-
@@ -56,7 +56,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: PageSpec defines the desired state of Page
+            description: StatusPageSpec defines the desired state of StatusPage
             properties:
               deletionPolicy:
                 default: Delete
@@ -311,7 +311,7 @@ spec:
                 || ''Update'' in self.managementPolicies) || has(self.forProvider.url)
                 || (has(self.initProvider) && has(self.initProvider.url))'
           status:
-            description: PageStatus defines the observed state of Page.
+            description: StatusPageStatus defines the observed state of StatusPage.
             properties:
               atProvider:
                 properties:

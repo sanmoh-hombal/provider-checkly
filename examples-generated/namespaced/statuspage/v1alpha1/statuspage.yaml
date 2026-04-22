@@ -1,8 +1,8 @@
-apiVersion: status.checkly.m.crossplane.io/v1alpha1
-kind: Page
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPage
 metadata:
   annotations:
-    meta.upbound.io/example-id: status/v1alpha1/page
+    meta.upbound.io/example-id: statuspage/v1alpha1/statuspage
   labels:
     testing.upbound.io/example-name: example
   name: example
@@ -24,7 +24,7 @@ apiVersion: status.checkly.m.crossplane.io/v1alpha1
 kind: PageService
 metadata:
   annotations:
-    meta.upbound.io/example-id: status/v1alpha1/page
+    meta.upbound.io/example-id: statuspage/v1alpha1/statuspage
   labels:
     testing.upbound.io/example-name: api
   name: api
@@ -39,7 +39,7 @@ apiVersion: status.checkly.m.crossplane.io/v1alpha1
 kind: PageService
 metadata:
   annotations:
-    meta.upbound.io/example-id: status/v1alpha1/page
+    meta.upbound.io/example-id: statuspage/v1alpha1/statuspage
   labels:
     testing.upbound.io/example-name: database
   name: database
