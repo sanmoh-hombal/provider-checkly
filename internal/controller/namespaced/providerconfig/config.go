@@ -7,7 +7,7 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/controller"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	"github.com/crossplane/upjet-provider-template/apis/namespaced/v1beta1"
+	"github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1beta1"
 )
 
 // Setup adds a controller that reconciles ProviderConfigs and ClusterProviderConfigs
