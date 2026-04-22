@@ -34,14 +34,14 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	apisCluster "github.com/crossplane/upjet-provider-template/apis/cluster"
-	apisNamespaced "github.com/crossplane/upjet-provider-template/apis/namespaced"
-	"github.com/crossplane/upjet-provider-template/config"
-	"github.com/crossplane/upjet-provider-template/internal/clients"
-	controllerCluster "github.com/crossplane/upjet-provider-template/internal/controller/cluster"
-	controllerNamespaced "github.com/crossplane/upjet-provider-template/internal/controller/namespaced"
-	"github.com/crossplane/upjet-provider-template/internal/features"
-	"github.com/crossplane/upjet-provider-template/internal/version"
+	apisCluster "github.com/sanmoh-hombal/provider-checkly/apis/cluster"
+	apisNamespaced "github.com/sanmoh-hombal/provider-checkly/apis/namespaced"
+	"github.com/sanmoh-hombal/provider-checkly/config"
+	"github.com/sanmoh-hombal/provider-checkly/internal/clients"
+	controllerCluster "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster"
+	controllerNamespaced "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced"
+	"github.com/sanmoh-hombal/provider-checkly/internal/features"
+	"github.com/sanmoh-hombal/provider-checkly/internal/version"
 )
 
 const (
@@ -84,7 +84,7 @@ func main() {
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 
 	zl := zap.New(zap.UseDevMode(*debug))
-	log := logging.NewLogrLogger(zl.WithName("upjet-provider-template"))
+	log := logging.NewLogrLogger(zl.WithName("provider-checkly"))
 	if *debug {
 		// The controller-runtime runs with a no-op logger by default. It is
 		// *very* verbose even at info level, so we only provide it a real
@@ -121,7 +121,7 @@ func main() {
 
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
 		LeaderElection:   *leaderElection,
-		LeaderElectionID: "crossplane-leader-election-upjet-provider-template",
+		LeaderElectionID: "crossplane-leader-election-provider-checkly",
 		Cache: cache.Options{
 			SyncPeriod: syncPeriod,
 		},

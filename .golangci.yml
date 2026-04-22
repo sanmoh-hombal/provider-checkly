@@ -123,7 +123,7 @@ formatters:
       simplify: true
     goimports:
       local-prefixes:
-        - github.com/crossplane/upjet-provider-template
+        - github.com/sanmoh-hombal/provider-checkly
   exclusions:
     generated: lax
     paths:
