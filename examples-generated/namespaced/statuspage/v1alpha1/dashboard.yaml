@@ -1,0 +1,22 @@
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: Dashboard
+metadata:
+  annotations:
+    meta.upbound.io/example-id: statuspage/v1alpha1/dashboard
+  labels:
+    testing.upbound.io/example-name: dashboard_1
+  name: dashboard-1
+  namespace: upbound-system
+spec:
+  forProvider:
+    customDomain: status.example.com
+    customUrl: checkly
+    header: Public dashboard
+    hideTags: false
+    logo: https://www.checklyhq.com/logo.png
+    paginate: false
+    paginationRate: 30
+    refreshRate: 60
+    tags:
+    - production
+    width: FULL

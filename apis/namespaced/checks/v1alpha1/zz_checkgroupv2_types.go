@@ -1040,14 +1040,14 @@ type SetupScriptInitParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checkly/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1.Snippet
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 
-	// Reference to a Snippet in checkly to populate snippetId.
+	// Reference to a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDRef *v1.NamespacedReference `json:"snippetIdRef,omitempty" tf:"-"`
 
-	// Selector for a Snippet in checkly to populate snippetId.
+	// Selector for a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDSelector *v1.NamespacedSelector `json:"snippetIdSelector,omitempty" tf:"-"`
 }
@@ -1072,15 +1072,15 @@ type SetupScriptParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checkly/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1.Snippet
 	// +kubebuilder:validation:Optional
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 
-	// Reference to a Snippet in checkly to populate snippetId.
+	// Reference to a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDRef *v1.NamespacedReference `json:"snippetIdRef,omitempty" tf:"-"`
 
-	// Selector for a Snippet in checkly to populate snippetId.
+	// Selector for a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDSelector *v1.NamespacedSelector `json:"snippetIdSelector,omitempty" tf:"-"`
 }
@@ -1093,14 +1093,14 @@ type TeardownScriptInitParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checkly/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1.Snippet
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 
-	// Reference to a Snippet in checkly to populate snippetId.
+	// Reference to a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDRef *v1.NamespacedReference `json:"snippetIdRef,omitempty" tf:"-"`
 
-	// Selector for a Snippet in checkly to populate snippetId.
+	// Selector for a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDSelector *v1.NamespacedSelector `json:"snippetIdSelector,omitempty" tf:"-"`
 }
@@ -1125,15 +1125,15 @@ type TeardownScriptParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checkly/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1.Snippet
 	// +kubebuilder:validation:Optional
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 
-	// Reference to a Snippet in checkly to populate snippetId.
+	// Reference to a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDRef *v1.NamespacedReference `json:"snippetIdRef,omitempty" tf:"-"`
 
-	// Selector for a Snippet in checkly to populate snippetId.
+	// Selector for a Snippet in infra to populate snippetId.
 	// +kubebuilder:validation:Optional
 	SnippetIDSelector *v1.NamespacedSelector `json:"snippetIdSelector,omitempty" tf:"-"`
 }

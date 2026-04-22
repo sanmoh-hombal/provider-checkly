@@ -625,7 +625,7 @@ spec:
                             The ID of a code snippet. Code snippets are not available for new plans.
                           type: number
                         snippetIdRef:
-                          description: Reference to a Snippet in checkly to populate
+                          description: Reference to a Snippet in infra to populate
                             snippetId.
                           properties:
                             name:
@@ -660,7 +660,7 @@ spec:
                           - name
                           type: object
                         snippetIdSelector:
-                          description: Selector for a Snippet in checkly to populate
+                          description: Selector for a Snippet in infra to populate
                             snippetId.
                           properties:
                             matchControllerRef:
@@ -727,7 +727,7 @@ spec:
                             The ID of a code snippet. Code snippets are not available for new plans.
                           type: number
                         snippetIdRef:
-                          description: Reference to a Snippet in checkly to populate
+                          description: Reference to a Snippet in infra to populate
                             snippetId.
                           properties:
                             name:
@@ -762,7 +762,7 @@ spec:
                           - name
                           type: object
                         snippetIdSelector:
-                          description: Selector for a Snippet in checkly to populate
+                          description: Selector for a Snippet in infra to populate
                             snippetId.
                           properties:
                             matchControllerRef:
@@ -1357,7 +1357,7 @@ spec:
                             The ID of a code snippet. Code snippets are not available for new plans.
                           type: number
                         snippetIdRef:
-                          description: Reference to a Snippet in checkly to populate
+                          description: Reference to a Snippet in infra to populate
                             snippetId.
                           properties:
                             name:
@@ -1392,7 +1392,7 @@ spec:
                           - name
                           type: object
                         snippetIdSelector:
-                          description: Selector for a Snippet in checkly to populate
+                          description: Selector for a Snippet in infra to populate
                             snippetId.
                           properties:
                             matchControllerRef:
@@ -1459,7 +1459,7 @@ spec:
                             The ID of a code snippet. Code snippets are not available for new plans.
                           type: number
                         snippetIdRef:
-                          description: Reference to a Snippet in checkly to populate
+                          description: Reference to a Snippet in infra to populate
                             snippetId.
                           properties:
                             name:
@@ -1494,7 +1494,7 @@ spec:
                           - name
                           type: object
                         snippetIdSelector:
-                          description: Selector for a Snippet in checkly to populate
+                          description: Selector for a Snippet in infra to populate
                             snippetId.
                           properties:
                             matchControllerRef:
