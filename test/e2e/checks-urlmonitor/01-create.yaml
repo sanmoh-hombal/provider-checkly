@@ -1,0 +1,20 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: URLMonitor
+metadata:
+  name: e2e-urlmonitor
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/urlmonitor
+spec:
+  forProvider:
+    name: e2e-urlmonitor
+    activated: true
+    frequency: 5
+    locations:
+      - us-east-1
+      - eu-west-1
+    request:
+      - url: https://example.com
+    tags:
+      - e2e-test
+  providerConfigRef:
+    name: default

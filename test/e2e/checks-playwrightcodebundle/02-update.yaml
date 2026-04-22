@@ -1,0 +1,12 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: PlaywrightCodeBundle
+metadata:
+  name: e2e-playwright-bundle
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/playwrightcodebundle
+spec:
+  forProvider:
+    prebuiltArchive:
+      - file: ./e2e-bundle-v2.tar.gz
+  providerConfigRef:
+    name: default

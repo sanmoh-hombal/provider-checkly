@@ -1,0 +1,13 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  name: e2e-alert-channel
+spec:
+  forProvider:
+    sendDegraded: true
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

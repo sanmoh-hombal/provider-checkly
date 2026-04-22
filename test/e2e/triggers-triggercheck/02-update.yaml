@@ -1,0 +1,11 @@
+apiVersion: triggers.checkly.crossplane.io/v1alpha1
+kind: TriggerCheck
+metadata:
+  name: e2e-triggercheck
+  annotations:
+    meta.upbound.io/example-id: triggers/v1alpha1/triggercheck
+spec:
+  forProvider:
+    checkId: "11111111-1111-1111-1111-111111111111"
+  providerConfigRef:
+    name: default

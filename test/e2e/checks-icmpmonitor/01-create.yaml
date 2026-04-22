@@ -1,0 +1,20 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: ICMPMonitor
+metadata:
+  name: e2e-icmpmonitor
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/icmpmonitor
+spec:
+  forProvider:
+    name: e2e-icmpmonitor
+    activated: true
+    frequency: 5
+    locations:
+      - us-east-1
+      - eu-west-1
+    request:
+      - hostname: 8.8.8.8
+    tags:
+      - e2e-test
+  providerConfigRef:
+    name: default

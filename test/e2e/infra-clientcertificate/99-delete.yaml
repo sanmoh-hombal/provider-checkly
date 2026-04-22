@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+delete:
+  - apiVersion: infra.checkly.crossplane.io/v1alpha1
+    kind: ClientCertificate
+    name: e2e-client-cert

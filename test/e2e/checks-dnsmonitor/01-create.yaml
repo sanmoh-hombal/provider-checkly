@@ -1,0 +1,21 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: DNSMonitor
+metadata:
+  name: e2e-dnsmonitor
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/dnsmonitor
+spec:
+  forProvider:
+    name: e2e-dnsmonitor
+    activated: true
+    frequency: 5
+    locations:
+      - us-east-1
+      - eu-west-1
+    request:
+      - query: example.com
+        recordType: A
+    tags:
+      - e2e-test
+  providerConfigRef:
+    name: default

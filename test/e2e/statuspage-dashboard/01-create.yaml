@@ -1,0 +1,17 @@
+apiVersion: statuspage.checkly.crossplane.io/v1alpha1
+kind: Dashboard
+metadata:
+  name: e2e-dashboard
+  annotations:
+    meta.upbound.io/example-id: statuspage/v1alpha1/dashboard
+spec:
+  forProvider:
+    customUrl: e2e-dashboard
+    header: E2E Dashboard
+    logo: https://www.checklyhq.com/logo.png
+    refreshRate: 60
+    width: FULL
+    tags:
+      - e2e-test
+  providerConfigRef:
+    name: default

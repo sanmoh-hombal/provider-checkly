@@ -1,0 +1,4 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: PlaywrightCodeBundle
+metadata:
+  name: e2e-playwright-bundle

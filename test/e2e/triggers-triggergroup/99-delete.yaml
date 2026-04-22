@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+delete:
+  - apiVersion: triggers.checkly.crossplane.io/v1alpha1
+    kind: TriggerGroup
+    name: e2e-triggergroup

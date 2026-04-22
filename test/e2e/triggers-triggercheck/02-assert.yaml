@@ -1,0 +1,13 @@
+apiVersion: triggers.checkly.crossplane.io/v1alpha1
+kind: TriggerCheck
+metadata:
+  name: e2e-triggercheck
+spec:
+  forProvider:
+    checkId: "11111111-1111-1111-1111-111111111111"
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

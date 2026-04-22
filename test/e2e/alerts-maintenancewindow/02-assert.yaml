@@ -1,0 +1,13 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: MaintenanceWindow
+metadata:
+  name: e2e-maintenance-window
+spec:
+  forProvider:
+    repeatInterval: 2
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

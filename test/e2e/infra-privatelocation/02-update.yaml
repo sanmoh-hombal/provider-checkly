@@ -1,0 +1,12 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: PrivateLocation
+metadata:
+  name: e2e-private-loc
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/privatelocation
+spec:
+  forProvider:
+    name: e2e-private-loc-updated
+    slugName: e2e-private-loc
+  providerConfigRef:
+    name: default

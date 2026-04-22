@@ -1,0 +1,11 @@
+apiVersion: triggers.checkly.crossplane.io/v1alpha1
+kind: TriggerGroup
+metadata:
+  name: e2e-triggergroup
+  annotations:
+    meta.upbound.io/example-id: triggers/v1alpha1/triggergroup
+spec:
+  forProvider:
+    groupId: 0
+  providerConfigRef:
+    name: default

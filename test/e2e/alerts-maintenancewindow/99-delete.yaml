@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+delete:
+  - apiVersion: alerts.checkly.crossplane.io/v1alpha1
+    kind: MaintenanceWindow
+    name: e2e-maintenance-window

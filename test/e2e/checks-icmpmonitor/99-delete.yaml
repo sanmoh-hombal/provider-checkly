@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+delete:
+  - apiVersion: checks.checkly.crossplane.io/v1alpha1
+    kind: ICMPMonitor
+    name: e2e-icmpmonitor

@@ -1,0 +1,4 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  name: e2e-alert-channel

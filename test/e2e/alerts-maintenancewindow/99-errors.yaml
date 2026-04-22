@@ -1,0 +1,4 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: MaintenanceWindow
+metadata:
+  name: e2e-maintenance-window

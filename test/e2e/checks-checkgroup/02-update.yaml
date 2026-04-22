@@ -1,0 +1,18 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: CheckGroup
+metadata:
+  name: e2e-checkgroup
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroup
+spec:
+  forProvider:
+    name: e2e-checkgroup
+    activated: true
+    concurrency: 3
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - e2e-test
+  providerConfigRef:
+    name: default

@@ -1,0 +1,15 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  name: e2e-alert-channel
+  annotations:
+    meta.upbound.io/example-id: alerts/v1alpha1/alertchannel
+spec:
+  forProvider:
+    sendFailure: true
+    sendRecovery: true
+    sendDegraded: false
+    email:
+      - address: oncall@example.com
+  providerConfigRef:
+    name: default

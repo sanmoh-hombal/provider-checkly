@@ -1,0 +1,4 @@
+apiVersion: statuspage.checkly.crossplane.io/v1alpha1
+kind: StatusPageService
+metadata:
+  name: e2e-statuspage-service

@@ -1,0 +1,15 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: EnvironmentVariable
+metadata:
+  name: e2e-env-var
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/environmentvariable
+spec:
+  forProvider:
+    valueSecretRef:
+      key: value
+      name: e2e-envvar-secret
+      namespace: default
+    locked: true
+  providerConfigRef:
+    name: default

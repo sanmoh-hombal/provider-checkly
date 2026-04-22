@@ -1,0 +1,13 @@
+apiVersion: statuspage.checkly.crossplane.io/v1alpha1
+kind: Dashboard
+metadata:
+  name: e2e-dashboard
+spec:
+  forProvider:
+    refreshRate: 120
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"
