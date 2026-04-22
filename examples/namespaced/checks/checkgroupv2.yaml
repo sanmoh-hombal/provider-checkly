@@ -1,0 +1,28 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: CheckGroupV2
+metadata:
+  name: core-api-group-v2
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroupv2
+spec:
+  forProvider:
+    name: core-api-group-v2
+    activated: true
+    concurrency: 2
+    tags:
+      - managed-by-crossplane
+    enforceLocations:
+      - enabled: true
+        locations:
+          - eu-west-1
+          - us-east-1
+    environmentVariable:
+      - key: BASE_URL
+        valueSecretRef:
+          name: checkgroupv2-env
+          namespace: default
+          key: base-url
+        locked: false
+  providerConfigRef:
+    name: default
