@@ -1,40 +1,2317 @@
-name: hashicorp/null
+name: checkly/checkly
 resources:
-    null_resource:
+    checkly_alert_channel:
         subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. On Terraform 1.4 and later, use the terraform_data resource type https://developer.hashicorp.com/terraform/language/resources/terraform-data instead. Terraform 1.9 and later support the moved configuration block from null_resource to terraform_data. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource
-        title: null_resource Resource - terraform-provider-null
+        description: Allows you to define alerting channels for the checks and groups in your account
+        name: checkly_alert_channel
+        title: checkly_alert_channel Resource - terraform-provider-checkly
         examples:
-            - name: cluster
+            - name: email_ac
               manifest: |-
                 {
-                  "connection": [
+                  "email": [
                     {
-                      "host": "${element(aws_instance.cluster[*].public_ip, 0)}"
+                      "address": "john@example.com"
                     }
                   ],
-                  "provisioner": {
-                    "remote-exec": [
-                      {
-                        "inline": [
-                          "bootstrap-cluster.sh ${join(\" \",\n      aws_instance.cluster[*].private_ip)}"
-                        ]
-                      }
-                    ]
-                  },
-                  "triggers": {
-                    "cluster_instance_ids": "${join(\",\", aws_instance.cluster[*].id)}"
-                  }
+                  "send_degraded": true,
+                  "send_failure": false,
+                  "send_recovery": true,
+                  "ssl_expiry": true,
+                  "ssl_expiry_threshold": 22
                 }
               dependencies:
-                aws_instance.cluster: |-
+                checkly_check.example_check: |-
                     {
-                      "ami": "ami-0dcc1e21636832c5d",
-                      "count": 3,
-                      "instance_type": "m5.large"
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email_ac.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.sms_ac.id}"
+                        }
+                      ],
+                      "name": "Example check"
+                    }
+            - name: sms_ac
+              manifest: |-
+                {
+                  "send_failure": true,
+                  "send_recovery": true,
+                  "sms": [
+                    {
+                      "name": "john",
+                      "number": "+5491100001111"
+                    }
+                  ]
+                }
+              dependencies:
+                checkly_check.example_check: |-
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email_ac.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.sms_ac.id}"
+                        }
+                      ],
+                      "name": "Example check"
+                    }
+            - name: slack_ac
+              manifest: |-
+                {
+                  "slack": [
+                    {
+                      "channel": "#checkly-notifications",
+                      "url": "https://example.com/slack-webhook-placeholder"
+                    }
+                  ]
+                }
+              dependencies:
+                checkly_check.example_check: |-
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email_ac.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.sms_ac.id}"
+                        }
+                      ],
+                      "name": "Example check"
+                    }
+            - name: opsgenie_ac
+              manifest: |-
+                {
+                  "opsgenie": [
+                    {
+                      "api_key": "fookey",
+                      "name": "opsalerts",
+                      "priority": "foopriority",
+                      "region": "fooregion"
+                    }
+                  ]
+                }
+              dependencies:
+                checkly_check.example_check: |-
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email_ac.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.sms_ac.id}"
+                        }
+                      ],
+                      "name": "Example check"
+                    }
+            - name: pagerduty_ac
+              manifest: |-
+                {
+                  "pagerduty": [
+                    {
+                      "account": "checkly",
+                      "service_key": "key1",
+                      "service_name": "pdalert"
+                    }
+                  ]
+                }
+              dependencies:
+                checkly_check.example_check: |-
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email_ac.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.sms_ac.id}"
+                        }
+                      ],
+                      "name": "Example check"
+                    }
+            - name: webhook_ac
+              manifest: |-
+                {
+                  "webhook": [
+                    {
+                      "method": "get",
+                      "name": "foo",
+                      "template": "footemplate",
+                      "url": "https://example.com/foo",
+                      "webhook_secret": "foosecret"
+                    }
+                  ]
+                }
+              dependencies:
+                checkly_check.example_check: |-
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email_ac.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.sms_ac.id}"
+                        }
+                      ],
+                      "name": "Example check"
+                    }
+            - name: firehydrant_ac
+              manifest: |-
+                {
+                  "webhook": [
+                    {
+                      "method": "post",
+                      "name": "firehydrant",
+                      "template": "{\n  \"event\": \"{{ALERT_TITLE}}\",\n  \"link\": \"{{RESULT_LINK}}\",\n  \"check_id\": \"{{CHECK_ID}}\",\n  \"check_type\": \"{{CHECK_TYPE}}\",\n  \"alert_type\": \"{{ALERT_TYPE}}\",\n  \"started_at\": \"{{STARTED_AT}}\",\n  \"check_result_id\": \"{{CHECK_RESULT_ID}}\"\n},\n",
+                      "url": "https://app.firehydrant.io/integrations/alerting/webhooks/2/checkly",
+                      "webhook_type": "WEBHOOK_FIREHYDRANT"
+                    }
+                  ]
+                }
+              dependencies:
+                checkly_check.example_check: |-
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email_ac.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.sms_ac.id}"
+                        }
+                      ],
+                      "name": "Example check"
                     }
         argumentDocs:
-            id: (String) This is set to a random value at create time.
-            triggers: (Map of String) A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
+            account: (String)
+            address: (String) The email address of this email alert channel.
+            api_key: (String)
+            call: '(Block Set, Max: 1) (see below for nested schema)'
+            channel: (String) The name of the alert's Slack channel
+            email: '(Block Set, Max: 1) (see below for nested schema)'
+            headers: (Map of String)
+            id: (String) The ID of this resource.
+            method: (String) (Default POST)
+            name: (String) The name of this alert channel
+            number: (String) The mobile number to receive the alerts
+            opsgenie: '(Block Set, Max: 1) (see below for nested schema)'
+            pagerduty: '(Block Set, Max: 1) (see below for nested schema)'
+            priority: (String)
+            query_parameters: (Map of String)
+            region: (String)
+            send_degraded: (Boolean) (Default false)
+            send_failure: (Boolean) (Default true)
+            send_recovery: (Boolean) (Default true)
+            service_key: (String)
+            service_name: (String)
+            slack: '(Block Set, Max: 1) (see below for nested schema)'
+            sms: '(Block Set, Max: 1) (see below for nested schema)'
+            ssl_expiry: (Boolean) (Default false)
+            ssl_expiry_threshold: (Number) Value must be between 1 and 30 (Default 30)
+            template: (String)
+            url: (String) The Slack webhook URL
+            webhook: '(Block Set, Max: 1) (see below for nested schema)'
+            webhook_secret: (String)
+            webhook_type: (String) Type of the webhook. Possible values are 'WEBHOOK_DISCORD', 'WEBHOOK_FIREHYDRANT', 'WEBHOOK_GITLAB_ALERT', 'WEBHOOK_SPIKESH', 'WEBHOOK_SPLUNK', 'WEBHOOK_MSTEAMS' and 'WEBHOOK_TELEGRAM'.
+        importStatements: []
+    checkly_check:
+        subCategory: ""
+        description: Checks allows you to monitor key webapp flows, backend API's and set up alerting, so you get a notification when things break or slow down.
+        name: checkly_check
+        title: checkly_check Resource - terraform-provider-checkly
+        examples:
+            - name: example_check
+              manifest: |-
+                {
+                  "activated": true,
+                  "frequency": 1,
+                  "locations": [
+                    "us-west-1"
+                  ],
+                  "name": "Example check",
+                  "request": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "EQUALS",
+                          "source": "STATUS_CODE",
+                          "target": "200"
+                        }
+                      ],
+                      "follow_redirects": true,
+                      "skip_ssl": false,
+                      "url": "https://api.example.com/"
+                    }
+                  ],
+                  "should_fail": false,
+                  "type": "API",
+                  "use_global_alert_settings": true
+                }
+              dependencies:
+                checkly_alert_channel.email_ac1: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info1@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.email_ac2: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info2@example.com"
+                        }
+                      ]
+                    }
+            - name: example_check_2
+              manifest: |-
+                {
+                  "activated": true,
+                  "alert_settings": [
+                    {
+                      "escalation_type": "RUN_BASED",
+                      "reminders": [
+                        {
+                          "amount": 1
+                        }
+                      ],
+                      "run_based_escalation": [
+                        {
+                          "failed_run_threshold": 1
+                        }
+                      ]
+                    }
+                  ],
+                  "degraded_response_time": 5000,
+                  "frequency": 1,
+                  "locations": [
+                    "us-west-1",
+                    "ap-northeast-1",
+                    "ap-south-1"
+                  ],
+                  "max_response_time": 10000,
+                  "name": "Example API check 2",
+                  "request": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "HAS_VALUE",
+                          "property": "code",
+                          "source": "JSON_BODY",
+                          "target": "authentication.failed"
+                        },
+                        {
+                          "comparison": "EQUALS",
+                          "property": "",
+                          "source": "STATUS_CODE",
+                          "target": "401"
+                        }
+                      ],
+                      "basic_auth": [
+                        {
+                          "password": "",
+                          "username": ""
+                        }
+                      ],
+                      "follow_redirects": true,
+                      "headers": {
+                        "X-Bogus": "bogus"
+                      },
+                      "query_parameters": {
+                        "search": "foo"
+                      },
+                      "skip_ssl": false,
+                      "url": "http://api.example.com/"
+                    }
+                  ],
+                  "retry_strategy": [
+                    {
+                      "base_backoff_seconds": 60,
+                      "max_duration_seconds": 600,
+                      "max_retries": 3,
+                      "same_region": false,
+                      "type": "FIXED"
+                    }
+                  ],
+                  "should_fail": true,
+                  "type": "API"
+                }
+              dependencies:
+                checkly_alert_channel.email_ac1: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info1@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.email_ac2: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info2@example.com"
+                        }
+                      ]
+                    }
+            - name: browser_check_1
+              manifest: |-
+                {
+                  "activated": true,
+                  "frequency": 10,
+                  "locations": [
+                    "us-west-1"
+                  ],
+                  "name": "Example check",
+                  "runtime_id": "2023.02",
+                  "script": "const { expect, test } = require('@playwright/test')\n\ntest.use({ actionTimeout: 10000 })\n\ntest('visit page and take screenshot', async ({ page }) =\u003e {\n    const response = await page.goto(process.env.ENVIRONMENT_URL || 'https://checklyhq.com')\n    await page.screenshot({ path: 'screenshot.jpg' })\n    expect(response.status(), 'should respond with correct status code').toBeLessThan(400)\n})\n",
+                  "should_fail": false,
+                  "type": "BROWSER",
+                  "use_global_alert_settings": true
+                }
+              dependencies:
+                checkly_alert_channel.email_ac1: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info1@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.email_ac2: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info2@example.com"
+                        }
+                      ]
+                    }
+            - name: example_check
+              manifest: |-
+                {
+                  "alert_channel_subscription": [
+                    {
+                      "activated": true,
+                      "channel_id": "${checkly_alert_channel.email_ac1.id}"
+                    },
+                    {
+                      "activated": true,
+                      "channel_id": "${checkly_alert_channel.email_ac2.id}"
+                    }
+                  ],
+                  "name": "Example check"
+                }
+              references:
+                alert_channel_subscription.channel_id: checkly_alert_channel.email_ac2.id
+              dependencies:
+                checkly_alert_channel.email_ac1: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info1@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.email_ac2: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info2@example.com"
+                        }
+                      ]
+                    }
+        argumentDocs:
+            activated: (Boolean) Determines if the check is running or not. Possible values true, and false.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)'
+            alert_threshold: (Number) No longer available.
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            assertion: (Block Set) A request can have multiple assertions. (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            basic_auth: '(Block Set, Max: 1) Set up HTTP basic authentication (username & password). (see below for nested schema)'
+            body: (String) The body of the request.
+            body_type: (String) The Content-Type header of the request. Possible values NONE, JSON, FORM, RAW, and GRAPHQL.
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+            degraded_response_time: (Number) The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 30000. (Default 15000).
+            description: (String) A description of the check.
+            double_check: (Boolean, Deprecated) Setting this to true will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default false).
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+            environment_variable: (Block List) Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible. (see below for nested schema)
+            environment_variables: (Map of String, Deprecated) Key/value pairs of environment variables to insert into the runtime environment.
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+            follow_redirects: (Boolean)
+            frequency: (Number) Controls how often the check should run. Defined in minutes. The allowed values are 0 (high frequency - use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+            frequency_offset: (Number) Only relevant when type is API. When frequency is 0 (high frequency), frequency_offset is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are 0 (disabled - use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+            group_id: (Number) The id of the check group this check is part of.
+            group_order: (Number) The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+            headers: (Map of String)
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            ip_family: (String) IP Family to be used when executing the api check. The value can be either IPv4 or IPv6.
+            key: (String) The name of the environment variable or secret.
+            local_setup_script: (String) A valid piece of Node.js code to run in the setup phase.
+            local_teardown_script: (String) A valid piece of Node.js code to run in the teardown phase.
+            locations: (Set of String) An array of one or more data center locations where to run the this check. (Default ["us-east-1"])
+            locked: (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_response_time: (Number) The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 30000. (Default 30000).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            method: (String) The HTTP method to use for this API check. Possible values are GET, POST, PUT, HEAD, DELETE, PATCH. (Default GET).
+            minutes_failing_threshold: (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+            name: (String) The name of the check.
+            network_error: (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            password: (String)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            private_locations: (Set of String) An array of one or more private locations slugs.
+            property: (String)
+            query_parameters: (Map of String)
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            request: '(Block Set, Max: 1) An API check might have one request config. (see below for nested schema)'
+            retry_strategy: '(Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines if the check should run in all selected locations in parallel or round-robin.
+            runtime_id: (String) The id of the runtime to use for this check.
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            script: (String) A valid piece of Node.js JavaScript code describing a browser interaction with the Puppeteer/Playwright framework or a reference to an external JavaScript file.
+            secret: (Boolean) If true, the value will never be visible. (Default false).
+            service_id: (String) The status page service that this incident will be associated with.
+            setup_snippet_id: (Number) An ID reference to a snippet to use in the setup phase of an API check.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            should_fail: (Boolean) Allows to invert the behaviour of when a check is considered to fail. Allows for validating error status like 404.
+            skip_ssl: (Boolean)
+            source: (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+            ssl_certificates: (Block Set, Deprecated) (see below for nested schema)
+            ssl_check: (Boolean, Deprecated) Determines if the SSL certificate should be validated for expiry.
+            ssl_check_domain: (String) A valid fully qualified domain name (FQDN) to check its SSL certificate.
+            tags: (Set of String) A list of tags for organizing and filtering checks.
+            target: (String)
+            teardown_snippet_id: (Number) An ID reference to a snippet to use in the teardown phase of an API check.
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            type: (String) The type of the check. Possible values are API, BROWSER, and MULTI_STEP.
+            url: (String)
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+            username: (String)
+            value: (String) The value of the environment variable or secret.
+        importStatements: []
+    checkly_check_group:
+        subCategory: ""
+        description: Check groups allow  you to group together a set of related checks, which can also share default settings for various attributes.
+        name: checkly_check_group
+        title: checkly_check_group Resource - terraform-provider-checkly
+        examples:
+            - name: test_group1
+              manifest: |-
+                {
+                  "activated": true,
+                  "alert_settings": [
+                    {
+                      "escalation_type": "RUN_BASED",
+                      "reminders": [
+                        {
+                          "amount": 2,
+                          "interval": 5
+                        }
+                      ],
+                      "run_based_escalation": [
+                        {
+                          "failed_run_threshold": 1
+                        }
+                      ]
+                    }
+                  ],
+                  "api_check_defaults": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "EQUALS",
+                          "property": "",
+                          "source": "STATUS_CODE",
+                          "target": "200"
+                        },
+                        {
+                          "comparison": "CONTAINS",
+                          "property": "",
+                          "source": "TEXT_BODY",
+                          "target": "welcome"
+                        }
+                      ],
+                      "basic_auth": [
+                        {
+                          "password": "pass",
+                          "username": "user"
+                        }
+                      ],
+                      "headers": {
+                        "X-Test": "foo"
+                      },
+                      "query_parameters": {
+                        "query": "foo"
+                      },
+                      "url": "http://example.com/"
+                    }
+                  ],
+                  "concurrency": 3,
+                  "environment_variable": [
+                    {
+                      "key": "TEST_ENV_VAR",
+                      "locked": false,
+                      "value": "Hello world"
+                    },
+                    {
+                      "key": "ADDITIONAL_ENV_VAR",
+                      "locked": true,
+                      "value": "test value"
+                    }
+                  ],
+                  "local_setup_script": "setup-test",
+                  "local_teardown_script": "teardown-test",
+                  "locations": [
+                    "eu-west-1"
+                  ],
+                  "muted": false,
+                  "name": "My test group 1",
+                  "tags": [
+                    "auto"
+                  ],
+                  "use_global_alert_settings": false
+                }
+              dependencies:
+                checkly_alert_channel.email_ac1: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.email_ac2: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info2@example.com"
+                        }
+                      ]
+                    }
+                checkly_check.test_check1: |-
+                    {
+                      "activated": true,
+                      "frequency": 1,
+                      "group_id": "${checkly_check_group.test_group1.id}",
+                      "group_order": 1,
+                      "locations": [
+                        "us-west-1"
+                      ],
+                      "name": "My test check 1",
+                      "request": [
+                        {
+                          "url": "https://api.example.com/"
+                        }
+                      ],
+                      "type": "API"
+                    }
+            - name: test_group1
+              manifest: |-
+                {
+                  "alert_channel_subscription": [
+                    {
+                      "activated": true,
+                      "channel_id": "${checkly_alert_channel.email_ac1.id}"
+                    },
+                    {
+                      "activated": true,
+                      "channel_id": "${checkly_alert_channel.email_ac2.id}"
+                    }
+                  ],
+                  "name": "My test group 1"
+                }
+              references:
+                alert_channel_subscription.channel_id: checkly_alert_channel.email_ac2.id
+              dependencies:
+                checkly_alert_channel.email_ac1: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.email_ac2: |-
+                    {
+                      "email": [
+                        {
+                          "address": "info2@example.com"
+                        }
+                      ]
+                    }
+                checkly_check.test_check1: |-
+                    {
+                      "activated": true,
+                      "frequency": 1,
+                      "group_id": "${checkly_check_group.test_group1.id}",
+                      "group_order": 1,
+                      "locations": [
+                        "us-west-1"
+                      ],
+                      "name": "My test check 1",
+                      "request": [
+                        {
+                          "url": "https://api.example.com/"
+                        }
+                      ],
+                      "type": "API"
+                    }
+        argumentDocs:
+            activated: (Boolean) Determines if the checks in the group are running or not.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)'
+            alert_threshold: (Number) No longer available.
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            api_check_defaults: '(Block Set, Max: 1) (see below for nested schema)'
+            assertion: (Block Set) (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            basic_auth: '(Block Set, Max: 1) (see below for nested schema)'
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+            concurrency: (Number) Determines how many checks are run concurrently when triggering a check group from CI/CD or through the API.
+            double_check: (Boolean, Deprecated) Setting this to true will trigger a retry when a check fails from the failing region and another, randomly selected region before marking the check as failed. (Default false).
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+            environment_variable: (Block List) Insert environment variables into the runtime environment. Only relevant for browser checks. Use global environment variables whenever possible. (see below for nested schema)
+            environment_variables: (Map of String, Deprecated) Key/value pairs of environment variables to insert into the runtime environment.
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+            headers: (Map of String)
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            key: (String) The name of the environment variable or secret.
+            local_setup_script: (String) A valid piece of Node.js code to run in the setup phase of an API check in this group.
+            local_teardown_script: (String) A valid piece of Node.js code to run in the teardown phase of an API check in this group.
+            locations: (Set of String) An array of one or more data center locations where to run the checks.
+            locked: (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            minutes_failing_threshold: (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when a check in this group fails and/or recovers.
+            name: (String) The name of the check group.
+            network_error: (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            password: (String)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            private_locations: (Set of String) An array of one or more private locations slugs.
+            property: (String)
+            query_parameters: (Map of String)
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            retry_strategy: '(Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines if the checks in the group should run in all selected locations in parallel or round-robin.
+            runtime_id: (String) The id of the runtime to use for this group.
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            secret: (Boolean) If true, the value will never be visible. (Default false).
+            setup_snippet_id: (Number) An ID reference to a snippet to use in the setup phase of an API check.
+            source: (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+            ssl_certificates: (Block Set, Deprecated) (see below for nested schema)
+            tags: (Set of String) Tags for organizing and filtering checks.
+            target: (String)
+            teardown_snippet_id: (Number) An ID reference to a snippet to use in the teardown phase of an API check.
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            type: (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+            url: (String) The base url for this group which you can reference with the GROUP_BASE_URL variable in all group checks.
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check group.
+            username: (String)
+            value: (String) The value of the environment variable or secret.
+        importStatements: []
+    checkly_check_group_v2:
+        subCategory: ""
+        description: Check groups organize related checks together and allow optional shared configuration. Unlike checkly_check_group (v1), which always imposed implicit defaults for various settings, checkly_check_group_v2 does not override any check settings by default. A group can be as minimal as just a name. Use the optional enforce_* blocks only when you explicitly want the group to override individual check settings. The new checkly_check_group_v2 resource should always be preferred over the old checkly_check_group resource.
+        name: checkly_check_group_v2
+        title: checkly_check_group_v2 Resource - terraform-provider-checkly
+        examples:
+            - name: just-a-folder
+              manifest: |-
+                {
+                  "name": "Just a Folder"
+                }
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+            - name: production-api
+              manifest: |-
+                {
+                  "activated": true,
+                  "api_check_defaults": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "LESS_THAN",
+                          "source": "STATUS_CODE",
+                          "target": "400"
+                        },
+                        {
+                          "comparison": "LESS_THAN",
+                          "source": "RESPONSE_TIME",
+                          "target": "3000"
+                        }
+                      ],
+                      "basic_auth": [
+                        {
+                          "password": "pass",
+                          "username": "admin"
+                        }
+                      ],
+                      "headers": {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "{{API_TOKEN}}"
+                      },
+                      "query_parameters": {
+                        "version": "v2"
+                      },
+                      "url": "https://api.example.com/"
+                    }
+                  ],
+                  "concurrency": 5,
+                  "default_runtime": [
+                    {
+                      "runtime_id": "2024.02"
+                    }
+                  ],
+                  "enforce_alert_settings": [
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": 1234
+                        }
+                      ],
+                      "alert_settings": [
+                        {
+                          "escalation_type": "RUN_BASED",
+                          "parallel_run_failure_threshold": [
+                            {
+                              "enabled": true,
+                              "percentage": 50
+                            }
+                          ],
+                          "reminders": [
+                            {
+                              "amount": 3,
+                              "interval": 10
+                            }
+                          ],
+                          "run_based_escalation": [
+                            {
+                              "failed_run_threshold": 2
+                            }
+                          ]
+                        }
+                      ],
+                      "enabled": true
+                    }
+                  ],
+                  "enforce_locations": [
+                    {
+                      "enabled": true,
+                      "locations": [
+                        "us-east-1",
+                        "eu-west-1",
+                        "ap-southeast-1"
+                      ],
+                      "private_locations": [
+                        "my-datacenter"
+                      ]
+                    }
+                  ],
+                  "enforce_retry_strategy": [
+                    {
+                      "enabled": true,
+                      "retry_strategy": [
+                        {
+                          "base_backoff_seconds": 30,
+                          "max_duration_seconds": 300,
+                          "max_retries": 3,
+                          "same_region": true,
+                          "type": "LINEAR"
+                        }
+                      ]
+                    }
+                  ],
+                  "enforce_scheduling_strategy": [
+                    {
+                      "enabled": true,
+                      "run_parallel": true
+                    }
+                  ],
+                  "environment_variable": [
+                    {
+                      "key": "BASE_URL",
+                      "locked": false,
+                      "value": "https://api.example.com"
+                    },
+                    {
+                      "key": "API_TOKEN",
+                      "locked": true,
+                      "secret": true,
+                      "value": "super-secret-token"
+                    }
+                  ],
+                  "muted": false,
+                  "name": "Production API",
+                  "setup_script": [
+                    {
+                      "inline_script": "// Runs before every API check in this group\nconsole.log(\"Setting up...\")\n"
+                    }
+                  ],
+                  "tags": [
+                    "production",
+                    "api"
+                  ],
+                  "teardown_script": [
+                    {
+                      "inline_script": "// Runs after every API check in this group\nconsole.log(\"Tearing down...\")\n"
+                    }
+                  ]
+                }
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+            - name: retry-on-network-errors
+              manifest: |-
+                {
+                  "enforce_retry_strategy": [
+                    {
+                      "enabled": true,
+                      "retry_strategy": [
+                        {
+                          "base_backoff_seconds": 10,
+                          "max_duration_seconds": 600,
+                          "max_retries": 5,
+                          "only_on": [
+                            {
+                              "network_error": true
+                            }
+                          ],
+                          "same_region": false,
+                          "type": "EXPONENTIAL"
+                        }
+                      ]
+                    }
+                  ],
+                  "name": "Retry on Network Errors Only"
+                }
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+            - name: time-based-alerts
+              manifest: |-
+                {
+                  "enforce_alert_settings": [
+                    {
+                      "alert_settings": [
+                        {
+                          "escalation_type": "TIME_BASED",
+                          "reminders": [
+                            {
+                              "amount": 5,
+                              "interval": 15
+                            }
+                          ],
+                          "time_based_escalation": [
+                            {
+                              "minutes_failing_threshold": 10
+                            }
+                          ]
+                        }
+                      ],
+                      "enabled": true
+                    }
+                  ],
+                  "name": "Time-Based Alert Escalation"
+                }
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+            - name: use-global-alerts
+              manifest: |-
+                {
+                  "enforce_alert_settings": [
+                    {
+                      "enabled": true,
+                      "use_global_alert_settings": true
+                    }
+                  ],
+                  "name": "Use Global Alert Settings"
+                }
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+            - name: with-alert-channels
+              manifest: |-
+                {
+                  "enforce_alert_settings": [
+                    {
+                      "alert_channel_subscription": [
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.email.id}"
+                        },
+                        {
+                          "activated": true,
+                          "channel_id": "${checkly_alert_channel.slack.id}"
+                        }
+                      ],
+                      "alert_settings": [
+                        {
+                          "escalation_type": "RUN_BASED",
+                          "reminders": [
+                            {
+                              "amount": 0,
+                              "interval": 5
+                            }
+                          ],
+                          "run_based_escalation": [
+                            {
+                              "failed_run_threshold": 1
+                            }
+                          ]
+                        }
+                      ],
+                      "enabled": true
+                    }
+                  ],
+                  "name": "Group with Alert Channels"
+                }
+              references:
+                enforce_alert_settings.alert_channel_subscription.channel_id: checkly_alert_channel.slack.id
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+            - name: no-retries
+              manifest: |-
+                {
+                  "enforce_retry_strategy": [
+                    {
+                      "enabled": true,
+                      "retry_strategy": [
+                        {
+                          "type": "NO_RETRIES"
+                        }
+                      ]
+                    }
+                  ],
+                  "name": "No Retries Group"
+                }
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+            - name: single-retry
+              manifest: |-
+                {
+                  "enforce_retry_strategy": [
+                    {
+                      "enabled": true,
+                      "retry_strategy": [
+                        {
+                          "base_backoff_seconds": 10,
+                          "same_region": true,
+                          "type": "SINGLE_RETRY"
+                        }
+                      ]
+                    }
+                  ],
+                  "name": "Single Retry Group"
+                }
+              dependencies:
+                checkly_alert_channel.email: |-
+                    {
+                      "email": [
+                        {
+                          "address": "alerts@example.com"
+                        }
+                      ]
+                    }
+                checkly_alert_channel.slack: |-
+                    {
+                      "slack": [
+                        {
+                          "channel": "#alerts",
+                          "url": "https://example.com/slack-webhook-placeholder"
+                        }
+                      ]
+                    }
+        argumentDocs:
+            activated: (Boolean) Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default true).
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)'
+            alert_threshold: (Number) No longer available.
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            api_check_defaults: '(Block Set, Max: 1) (see below for nested schema)'
+            assertion: (Block Set) (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            basic_auth: '(Block Set, Max: 1) (see below for nested schema)'
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+            concurrency: (Number) Determines the number of checks to run concurrently when triggering the check group via CI/CD or the API. (Default 1).
+            default_runtime: '(Block List, Max: 1) Sets a default runtime for the group. Used as a fallback when a check belonging to the group has no runtime set. Takes precedence over the account default runtime. (see below for nested schema)'
+            enabled: (Boolean) Determines whether the enforced alert settings should be active.
+            enforce_alert_settings: '(Block List, Max: 1) Enforces alert settings for the whole group. Overrides check configuration. (see below for nested schema)'
+            enforce_locations: '(Block List, Max: 1) Enforces public and private locations for the whole group. Overrides check configuration. (see below for nested schema)'
+            enforce_retry_strategy: '(Block List, Max: 1) Enforces a retry strategy for the whole group. Overrides check configuration. (see below for nested schema)'
+            enforce_scheduling_strategy: '(Block List, Max: 1) Enforces a scheduling strategy for the whole group. Overrides check configuration. (see below for nested schema)'
+            environment_variable: (Block List) Insert environment variables into the runtime environment of checks in the group. Only relevant for check types that support environment variables. Use global environment variables whenever possible. (see below for nested schema)
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+            headers: (Map of String)
+            id: (String) The ID of this resource.
+            inline_script: (String) A valid piece of Node.js code.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            key: (String) The name of the environment variable or secret.
+            locations: (Set of String) An array of one or more data center locations where to run the checks.
+            locked: (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            minutes_failing_threshold: (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when a check in this group fails and/or recovers. Muting the group will deactivate all notifications for all checks in the group, regardless of their muted state. (Default false).
+            name: (String) The name of the check group.
+            network_error: (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            password: (String)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            private_locations: (Set of String) An array of one or more private locations slugs.
+            property: (String)
+            query_parameters: (Map of String)
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            retry_strategy: '(Block List, Min: 1, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines if the checks in the group should run in all selected locations in parallel or round-robin.
+            runtime_id: (String) The runtime ID.
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            secret: (Boolean) If true, the value will never be visible. (Default false).
+            setup_script: '(Block List, Max: 1) A script to run in the setup phase of an API check. Runs in addition to the check''s own setup script. (see below for nested schema)'
+            snippet_id: (Number) The ID of a code snippet. Code snippets are not available for new plans.
+            source: (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+            ssl_certificates: (Block Set, Deprecated) (see below for nested schema)
+            tags: (Set of String) Additional tags to append to all checks in the group.
+            target: (String)
+            teardown_script: '(Block List, Max: 1) A script to run in the teardown phase of an API check. Runs in addition to the check''s own teardown script. (see below for nested schema)'
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            type: (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+            url: (String) The base url for this group which you can reference with the GROUP_BASE_URL variable in all group checks.
+            use_global_alert_settings: (Boolean) Whether to use account level alert settings instead of the group's alert settings.Default (false).
+            username: (String)
+            value: (String) The value of the environment variable or secret.
+        importStatements: []
+    checkly_client_certificate:
+        subCategory: ""
+        description: Use client certificates to authenticate your API checks to APIs that require mutual TLS (mTLS) authentication, or any other authentication scheme where the requester needs to provide a certificate. Each client certificate is specific to a domain name, e.g. acme.com and will be used automatically by any API checks targeting that domain. Changing the value of any attribute forces a new resource to be created.
+        name: checkly_client_certificate
+        title: checkly_client_certificate Resource - terraform-provider-checkly
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "certificate": "${file(\"${path.module}/cert.pem\")}",
+                  "host": "*.acme.com",
+                  "passphrase": "${var.acme_client_certificate_passphrase}",
+                  "private_key": "${file(\"${path.module}/key.pem\")}",
+                  "trusted_ca": "${file(\"${path.module}/ca.pem\")}"
+                }
+              references:
+                passphrase: var.acme_client_certificate_passphrase
+        argumentDocs:
+            certificate: (String) The client certificate in PEM format.
+            host: (String) The host domain that the certificate should be used for.
+            id: (String) The ID of this resource.
+            passphrase: (String, Sensitive) Passphrase for the private key.
+            private_key: (String) The private key for the certificate in PEM format.
+            trusted_ca: (String) PEM formatted bundle of CA certificates that the client should trust. The bundle may contain many CA certificates.
+        importStatements: []
+    checkly_dashboard:
+        subCategory: ""
+        name: checkly_dashboard
+        title: checkly_dashboard Resource - terraform-provider-checkly
+        examples:
+            - name: dashboard_1
+              manifest: |-
+                {
+                  "custom_domain": "status.example.com",
+                  "custom_url": "checkly",
+                  "header": "Public dashboard",
+                  "hide_tags": false,
+                  "logo": "https://www.checklyhq.com/logo.png",
+                  "paginate": false,
+                  "pagination_rate": 30,
+                  "refresh_rate": 60,
+                  "tags": [
+                    "production"
+                  ],
+                  "width": "FULL"
+                }
+        argumentDocs:
+            checks_per_page: (Number) Determines how many checks to show per page. Possible values are between 1 and 20. (Default 15).
+            custom_css: (String) Custom CSS to be applied to the dashboard.
+            custom_domain: (String) A custom user domain, e.g. 'status.example.com'. See the docs on updating your DNS and SSL usage.
+            custom_url: (String) A subdomain name under 'checklyhq.com'. Needs to be unique across all users.
+            description: (String) HTML  description for the dashboard.
+            enable_incidents: (Boolean) Enable incident support for the dashboard. (Default false).
+            expand_checks: (Boolean) Expand or collapse checks on the dashboard. (Default false).
+            favicon: (String) A URL pointing to an image file to use as browser favicon.
+            header: (String) A piece of text displayed at the top of your dashboard.
+            hide_tags: (Boolean) Show or hide the tags on the dashboard. (Default false).
+            id: (String) The ID of this resource.
+            is_private: (Boolean) Set your dashboard as private and generate key.
+            key: (String, Sensitive) The access key when the dashboard is private.
+            link: (String) A link to for the dashboard logo.
+            logo: (String) A URL pointing to an image file to use for the dashboard logo.
+            paginate: (Boolean) Determines if pagination is on or off. (Default true).
+            pagination_rate: (Number) How often to trigger pagination in seconds. Possible values 30, 60 and 300. (Default 60).
+            refresh_rate: (Number) How often to refresh the dashboard in seconds. Possible values 60, '300' and 600. (Default 60).
+            show_check_run_links: (Boolean) Show or hide check run links on the dashboard. (Default false).
+            show_header: (Boolean) Show or hide header and description on the dashboard. (Default true).
+            show_p95: (Boolean) Show or hide the P95 stats on the dashboard. (Default true).
+            show_p99: (Boolean) Show or hide the P99 stats on the dashboard. (Default true).
+            tags: (Set of String) A list of one or more tags that filter which checks to display on the dashboard.
+            use_tags_and_operator: (Boolean) Set when to use AND operator for fetching dashboard tags. (Default false).
+            width: (String) Determines whether to use the full screen or focus in the center. Possible values are FULL and 960PX. (Default FULL).
+        importStatements: []
+    checkly_dns_monitor:
+        subCategory: ""
+        description: Creates a DNS Monitor to check DNS record availability and response times.
+        name: checkly_dns_monitor
+        title: checkly_dns_monitor Resource - terraform-provider-checkly
+        examples:
+            - name: example-dns-monitor
+              manifest: |-
+                {
+                  "activated": true,
+                  "frequency": 2,
+                  "locations": [
+                    "eu-west-1"
+                  ],
+                  "name": "Example DNS monitor",
+                  "request": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "EQUALS",
+                          "source": "RESPONSE_CODE",
+                          "target": "NOERROR"
+                        }
+                      ],
+                      "name_server": [
+                        {
+                          "host": "1.1.1.1",
+                          "port": 53
+                        }
+                      ],
+                      "query": "welcome.checklyhq.com",
+                      "record_type": "A"
+                    }
+                  ],
+                  "use_global_alert_settings": true
+                }
+        argumentDocs:
+            activated: (Boolean) Determines whether the monitor will run periodically or not after being deployed.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your monitor, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the monitor. (see below for nested schema)'
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            assertion: (Block Set) Assertions to validate the HTTP response. DNS monitors only support status code assertions. (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values are EQUALS, NOT_EQUALS, GREATER_THAN and LESS_THAN.
+            degraded_response_time: (Number) The response time in milliseconds where the monitor should be considered degraded. Possible values are between 0 and 5000. (Default 500).
+            description: (String) A description of the monitor.
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the monitor is scheduled for multiple locations in parallel. (Default false).
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive monitor runs have failed. Possible values are between 1 and 5. (Default 1).
+            frequency: (Number) Controls how often the monitor should run. Defined in minutes. The allowed values are 0 (high frequency - use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+            frequency_offset: (Number) When frequency is 0 (high frequency), frequency_offset is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are 0 (disabled - use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+            group_id: (Number) The ID of the check group that this monitor is part of.
+            group_order: (Number) The position of the monitor in the check group. It determines in what order checks and monitors are run when a group is triggered from the API or from CI/CD.
+            host: (String) The name server host.
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            locations: (Set of String) An array of one or more data center locations where to run the this monitor.
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_response_time: (Number) The response time in milliseconds where the monitor should be considered failing. Possible values are between 0 and 5000. (Default 1000).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            minutes_failing_threshold: (Number) Send an alert notification after the monitor has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when the monitor fails and/or recovers. (Default false).
+            name: (String) The name of the monitor.
+            name_server: '(Block List, Max: 1) The name server to use. (see below for nested schema)'
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            port: (Number) The name server port.
+            property: (String)
+            protocol: (String) The protocol used to communicate with the name server. Possible values are UDP and TCP. (Default UDP).
+            query: (String) The DNS record to query.
+            record_type: (String) The DNS record type. Possible values are A, AAAA, CNAME, MX, NS, TXT and SOA.
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            request: '(Block List, Min: 1, Max: 1) The parameters of the HTTP request. (see below for nested schema)'
+            retry_strategy: '(Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines whether the monitor should run on all selected locations in parallel or round-robin. (Default false).
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            source: (String) The source of the asserted value. Possible values are RESPONSE_CODE, RESPONSE_TIME, TEXT_ANSWER and JSON_ANSWER.
+            tags: (Set of String) A list of tags for organizing and filtering checks and monitors.
+            target: (String) The target value. Typically NOERROR when the source is RESPONSE_CODE.
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            type: (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this monitor. (Default true).
+        importStatements: []
+    checkly_environment_variable:
+        subCategory: ""
+        name: checkly_environment_variable
+        title: checkly_environment_variable Resource - terraform-provider-checkly
+        examples:
+            - name: variable_1
+              manifest: |-
+                {
+                  "key": "API_KEY",
+                  "locked": true,
+                  "value": "loZd9hOGHDUrGvmW"
+                }
+            - name: variable_2
+              manifest: |-
+                {
+                  "key": "API_URL",
+                  "value": "http://localhost:3000"
+                }
+        argumentDocs:
+            id: (String) The ID of this resource.
+            key: (String)
+            locked: (Boolean)
+            secret: (Boolean)
+            value: (String)
+        importStatements: []
+    checkly_heartbeat:
+        subCategory: ""
+        description: The checkly_heartbeat resource has been renamed to checkly_heartbeat_monitor to better reflect its position in the Checkly product lineup. The old resource type will not be deprecated until the Checkly provider is updated to the Terraform Plugin Framework, which makes it possible to easily move resources between resource types. We recommend using the checkly_heartbeat_monitor resource type for any new resources.
+        name: checkly_heartbeat
+        title: checkly_heartbeat Resource - terraform-provider-checkly
+        examples:
+            - name: example-heartbeat
+              manifest: |-
+                {
+                  "activated": true,
+                  "heartbeat": [
+                    {
+                      "grace": 1,
+                      "grace_unit": "days",
+                      "period": 7,
+                      "period_unit": "days"
+                    }
+                  ],
+                  "name": "Example heartbeat",
+                  "use_global_alert_settings": true
+                }
+        argumentDocs:
+            activated: (Boolean) Determines if the check is running or not. Possible values true, and false.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your monitor, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the monitor. (see below for nested schema)'
+            alert_threshold: (Number) No longer available.
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            channel_id: (Number) The ID of the alert channel.
+            description: (String) A description of the monitor.
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the monitor is scheduled for multiple locations in parallel. (Default false).
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive monitor runs have failed. Possible values are between 1 and 5. (Default 1).
+            grace: (Number) How long Checkly should wait before triggering any alerts when a ping does not arrive within the set period.
+            grace_unit: (String) Possible values seconds, minutes, hours and days.
+            heartbeat: '(Block Set, Min: 1, Max: 1) (see below for nested schema)'
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            minutes_failing_threshold: (Number) Send an alert notification after the monitor has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+            name: (String) The name of the check.
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            period: (Number) How often you expect a ping to the ping URL.
+            period_unit: (String) Possible values seconds, minutes, hours and days.
+            ping_token: (String) Custom token to generate your ping URL. Checkly will expect a ping to https://ping.checklyhq.com/[PING_TOKEN].
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            ssl_certificates: (Block Set, Deprecated) (see below for nested schema)
+            tags: (Set of String) A list of tags for organizing and filtering checks.
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+        importStatements: []
+    checkly_heartbeat_monitor:
+        subCategory: ""
+        description: Heartbeats allows you to monitor your cron jobs and set up alerting, so you get a notification when things break or slow down.
+        name: checkly_heartbeat_monitor
+        title: checkly_heartbeat_monitor Resource - terraform-provider-checkly
+        examples:
+            - name: example-heartbeat-monitor
+              manifest: |-
+                {
+                  "activated": true,
+                  "heartbeat": [
+                    {
+                      "grace": 1,
+                      "grace_unit": "days",
+                      "period": 7,
+                      "period_unit": "days"
+                    }
+                  ],
+                  "name": "Example heartbeat monitor",
+                  "use_global_alert_settings": true
+                }
+        argumentDocs:
+            activated: (Boolean) Determines if the check is running or not. Possible values true, and false.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your monitor, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the monitor. (see below for nested schema)'
+            alert_threshold: (Number) No longer available.
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            channel_id: (Number) The ID of the alert channel.
+            description: (String) A description of the monitor.
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the monitor is scheduled for multiple locations in parallel. (Default false).
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive monitor runs have failed. Possible values are between 1 and 5. (Default 1).
+            grace: (Number) How long Checkly should wait before triggering any alerts when a ping does not arrive within the set period.
+            grace_unit: (String) Possible values seconds, minutes, hours and days.
+            heartbeat: '(Block Set, Min: 1, Max: 1) (see below for nested schema)'
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            minutes_failing_threshold: (Number) Send an alert notification after the monitor has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+            name: (String) The name of the check.
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            period: (Number) How often you expect a ping to the ping URL.
+            period_unit: (String) Possible values seconds, minutes, hours and days.
+            ping_token: (String) Custom token to generate your ping URL. Checkly will expect a ping to https://ping.checklyhq.com/[PING_TOKEN].
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            ssl_certificates: (Block Set, Deprecated) (see below for nested schema)
+            tags: (Set of String) A list of tags for organizing and filtering checks.
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+        importStatements: []
+    checkly_icmp_monitor:
+        subCategory: ""
+        description: Creates an ICMP Monitor to check host availability using ping.
+        name: checkly_icmp_monitor
+        title: checkly_icmp_monitor Resource - terraform-provider-checkly
+        examples:
+            - name: example-icmp-monitor
+              manifest: |-
+                {
+                  "activated": true,
+                  "frequency": 10,
+                  "locations": [
+                    "eu-west-1"
+                  ],
+                  "name": "Example ICMP monitor",
+                  "request": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "LESS_THAN",
+                          "property": "avg",
+                          "source": "LATENCY",
+                          "target": "200"
+                        }
+                      ],
+                      "hostname": "example.com",
+                      "ip_family": "IPv4",
+                      "ping_count": 10
+                    }
+                  ],
+                  "use_global_alert_settings": true
+                }
+        argumentDocs:
+            activated: (Boolean) Determines whether the monitor will run periodically or not after being deployed.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your monitor, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the monitor. (see below for nested schema)'
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            assertion: (Block Set) Assertions to validate the ICMP response. (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values are EQUALS, NOT_EQUALS, GREATER_THAN and LESS_THAN.
+            degraded_packet_loss_threshold: (Number) The packet loss percentage where the monitor should be considered degraded. Possible values are between 0 and 100. (Default 10).
+            description: (String) A description of the monitor.
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the monitor is scheduled for multiple locations in parallel. (Default false).
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive monitor runs have failed. Possible values are between 1 and 5. (Default 1).
+            frequency: (Number) Controls how often the monitor should run. Defined in minutes. The allowed values are 0 (high frequency - use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+            frequency_offset: (Number) When frequency is 0 (high frequency), frequency_offset is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are 0 (disabled - use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+            group_id: (Number) The ID of the check group that this monitor is part of.
+            group_order: (Number) The position of the monitor in the check group. It determines in what order checks and monitors are run when a group is triggered from the API or from CI/CD.
+            hostname: (String) The hostname to ping.
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            ip_family: (String) The IP family to use. Possible values are IPv4 and IPv6. (Default IPv4).
+            locations: (Set of String) An array of one or more data center locations where to run this monitor.
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_packet_loss_threshold: (Number) The packet loss percentage where the monitor should be considered failing. Possible values are between 0 and 100. (Default 20).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            minutes_failing_threshold: (Number) Send an alert notification after the monitor has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when the monitor fails and/or recovers. (Default false).
+            name: (String) The name of the monitor.
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            ping_count: (Number) The number of ping packets to send. (Default 10).
+            property: (String) The property of the source to assert. For LATENCY source, possible values are avg, min, max and stdDev.
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            request: '(Block List, Min: 1, Max: 1) The parameters of the ICMP request. (see below for nested schema)'
+            retry_strategy: '(Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines whether the monitor should run on all selected locations in parallel or round-robin. (Default false).
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            source: (String) The source of the asserted value. Possible values are LATENCY and JSON_RESPONSE.
+            tags: (Set of String) A list of tags for organizing and filtering checks and monitors.
+            target: (String) The target value for the assertion.
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            type: (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this monitor. (Default true).
+        importStatements: []
+    checkly_maintenance_windows:
+        subCategory: ""
+        name: checkly_maintenance_windows
+        title: checkly_maintenance_windows Resource - terraform-provider-checkly
+        examples:
+            - name: maintenance-1
+              manifest: |-
+                {
+                  "ends_at": "2014-08-25T00:00:00.000Z",
+                  "name": "Maintenance Windows",
+                  "repeat_ends_at": "2014-08-24T00:00:00.000Z",
+                  "repeat_interval": 1,
+                  "repeat_unit": "MONTH",
+                  "starts_at": "2014-08-24T00:00:00.000Z",
+                  "tags": [
+                    "production"
+                  ]
+                }
+        argumentDocs:
+            ends_at: (String) The end date of the maintenance window.
+            id: (String) The ID of this resource.
+            name: (String) The maintenance window name.
+            repeat_ends_at: (String) The date on which the maintenance window should stop repeating.
+            repeat_interval: (Number) The repeat interval of the maintenance window from the first occurrence.
+            repeat_unit: (String) The repeat cadence for the maintenance window. Possible values DAY, WEEK and MONTH.
+            starts_at: (String) The start date of the maintenance window.
+            tags: (Set of String) The names of the checks and groups maintenance window should apply to.
+        importStatements: []
+    checkly_playwright_check_suite:
+        subCategory: ""
+        description: Creates a Playwright check from a code bundle.
+        name: checkly_playwright_check_suite
+        title: checkly_playwright_check_suite Resource - terraform-provider-checkly
+        examples:
+            - name: example-playwright-check
+              manifest: |-
+                {
+                  "activated": true,
+                  "bundle": [
+                    {
+                      "id": "${checkly_playwright_code_bundle.playwright-bundle.id}",
+                      "metadata": "${checkly_playwright_code_bundle.playwright-bundle.metadata}"
+                    }
+                  ],
+                  "frequency": 2,
+                  "locations": [
+                    "eu-west-1"
+                  ],
+                  "name": "Example Playwright check",
+                  "use_global_alert_settings": true
+                }
+              references:
+                bundle.id: checkly_playwright_code_bundle.playwright-bundle.id
+                bundle.metadata: checkly_playwright_code_bundle.playwright-bundle.metadata
+              dependencies:
+                checkly_playwright_code_bundle.playwright-bundle: |-
+                    {
+                      "prebuilt_archive": [
+                        {
+                          "file": "${data.archive_file.playwright-bundle.output_path}"
+                        }
+                      ]
+                    }
+            - name: example-playwright-check-custom
+              manifest: |-
+                {
+                  "activated": true,
+                  "bundle": [
+                    {
+                      "id": "${checkly_playwright_code_bundle.playwright-bundle.id}",
+                      "metadata": "${checkly_playwright_code_bundle.playwright-bundle.metadata}"
+                    }
+                  ],
+                  "frequency": 2,
+                  "locations": [
+                    "eu-west-1"
+                  ],
+                  "name": "Example Playwright check with overrides",
+                  "runtime": [
+                    {
+                      "playwright": [
+                        {
+                          "device": [
+                            {
+                              "type": "chromium"
+                            },
+                            {
+                              "type": "firefox"
+                            }
+                          ],
+                          "version": "1.56.1"
+                        }
+                      ],
+                      "steps": [
+                        {
+                          "test": [
+                            {
+                              "command": "npx playwright test --config \"playwright.config.ts\""
+                            }
+                          ]
+                        }
+                      ],
+                      "working_dir": "./packages/e2e"
+                    }
+                  ],
+                  "use_global_alert_settings": true
+                }
+              references:
+                bundle.id: checkly_playwright_code_bundle.playwright-bundle.id
+                bundle.metadata: checkly_playwright_code_bundle.playwright-bundle.metadata
+              dependencies:
+                checkly_playwright_code_bundle.playwright-bundle: |-
+                    {
+                      "prebuilt_archive": [
+                        {
+                          "file": "${data.archive_file.playwright-bundle.output_path}"
+                        }
+                      ]
+                    }
+        argumentDocs:
+            activated: (Boolean) Determines whether the check will run periodically or not after being deployed.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)'
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            auto_detect: (Boolean) Whether to automatically detect appropriate runtime environment configuration from the bundle. (Default true).
+            bundle: '(Block List, Min: 1, Max: 1) Attaches a code bundle to the check. (see below for nested schema)'
+            channel_id: (Number) The ID of the alert channel.
+            command: (String) The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. npm install for npm).
+            description: (String) A description of the check.
+            device: (Block Set) The list of devices that should be made available for Playwright. Defaults to chromium, firefox, and webkit. (see below for nested schema)
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+            environment_variable: (Block List) Insert environment variables into the execution environment. (see below for nested schema)
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+            frequency: (Number) Controls how often the check should run. Defined in minutes. The allowed values are 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+            group_id: (Number) The ID of the check group that this check is part of.
+            group_order: (Number) The position of the check in the check group. It determines in what order checks and monitors are run when a group is triggered from the API or from CI/CD.
+            id: (String) The ID of this resource.
+            install: '(Block List, Max: 1) Customize the install step, which is used to initialize the environment prior to starting the test run. (see below for nested schema)'
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            key: (String) The name of the environment variable or secret.
+            locations: (Set of String) An array of one or more data center locations where to run the this check.
+            locked: (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+            metadata: (String) The generated metadata of the code bundle.
+            minutes_failing_threshold: (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when the check fails and/or recovers. (Default false).
+            name: (String) The name of the check.
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            playwright: '(Block List, Max: 1) Configure the Playwright capabilities that should be made available to the runtime environment. (see below for nested schema)'
+            private_locations: (Set of String) An array of one or more private locations slugs.
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines whether the check should run on all selected locations in parallel or round-robin. (Default false).
+            runtime: '(Block List, Max: 1) Configure the runtime environment of the Playwright check. (see below for nested schema)'
+            secret: (Boolean) If true, the value will never be visible. (Default false).
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            steps: '(Block List, Max: 1) Customize the actions taken during test execution. (see below for nested schema)'
+            tags: (Set of String) A list of tags for organizing and filtering checks and monitors.
+            test: '(Block List, Max: 1) Customize the test step. (see below for nested schema)'
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            type: (String) The type of the device.
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check. (Default true).
+            value: (String) The value of the environment variable or secret.
+            version: (String) The Playwright version to use. Defaults to the version detected from the code bundle's lockfile.
+            working_dir: (String) The working directory in which runtime commands are executed. This is useful for monorepos or workspaces where the Playwright project is in a subdirectory. Use "." to explicitly specify the root.
+        importStatements: []
+    checkly_playwright_code_bundle:
+        subCategory: ""
+        description: A managed code bundle which can be used in Playwright Check Suite resources.
+        name: checkly_playwright_code_bundle
+        title: checkly_playwright_code_bundle Resource - terraform-provider-checkly
+        examples:
+            - name: example-1
+              manifest: |-
+                {
+                  "prebuilt_archive": [
+                    {
+                      "file": "${data.archive_file.playwright-bundle.output_path}"
+                    }
+                  ]
+                }
+              references:
+                prebuilt_archive.file: data.archive_file.playwright-bundle.output_path
+            - name: example-2
+              manifest: |-
+                {
+                  "prebuilt_archive": [
+                    {
+                      "file": "${path.module}/existing-playwright-bundle.tar.gz"
+                    }
+                  ]
+                }
+        argumentDocs:
+            file: (String) Path to the archive file.
+            id: (String) The ID of this resource.
+            metadata: (String) An opaque blob of generated metadata. The value is not intended to be user-consumable and should be passed as-is to a Playwright check resource.
+            prebuilt_archive: '(Block List, Min: 1, Max: 1) A prebuilt archive containing the code bundle. (see below for nested schema)'
+        importStatements: []
+    checkly_private_location:
+        subCategory: ""
+        name: checkly_private_location
+        title: checkly_private_location Resource - terraform-provider-checkly
+        examples:
+            - name: location
+              manifest: |-
+                {
+                  "name": "New Private Location",
+                  "slug_name": "new-private-location"
+                }
+        argumentDocs:
+            icon: (String) Icon assigned to the private location.
+            id: (String) The ID of this resource.
+            keys: (Set of String, Sensitive) Private location API keys.
+            name: (String) The private location name.
+            slug_name: (String) Valid slug name.
+        importStatements: []
+    checkly_snippet:
+        subCategory: ""
+        name: checkly_snippet
+        title: checkly_snippet Resource - terraform-provider-checkly
+        examples:
+            - name: example_1
+              manifest: |-
+                {
+                  "name": "Example 1",
+                  "script": "console.log('test');"
+                }
+            - name: example_2
+              manifest: |-
+                {
+                  "name": "Example 2",
+                  "script": "    console.log('test1');\n    console.log('test2');\n"
+                }
+        argumentDocs:
+            id: (String) The ID of this resource.
+            name: (String) The name of the snippet
+            script: (String) Your Node.js code that interacts with the API check lifecycle, or functions as a partial for browser checks.
+        importStatements: []
+    checkly_status_page:
+        subCategory: ""
+        description: Checkly status pages allow you to easily communicate the uptime and health of your applications and services to your customers.
+        name: checkly_status_page
+        title: checkly_status_page Resource - terraform-provider-checkly
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "card": [
+                    {
+                      "name": "Services",
+                      "service_attachment": [
+                        {
+                          "service_id": "${checkly_status_page_service.api.id}"
+                        },
+                        {
+                          "service_id": "${checkly_status_page_service.database.id}"
+                        }
+                      ]
+                    }
+                  ],
+                  "default_theme": "DARK",
+                  "name": "Example Application",
+                  "url": "my-example-status-page"
+                }
+              references:
+                card.service_attachment.service_id: checkly_status_page_service.database.id
+              dependencies:
+                checkly_status_page_service.api: |-
+                    {
+                      "name": "API"
+                    }
+                checkly_status_page_service.database: |-
+                    {
+                      "name": "Database"
+                    }
+        argumentDocs:
+            card: '(Block List, Min: 1) A list of cards to include on the status page. (see below for nested schema)'
+            custom_domain: (String) A custom user domain, e.g. "status.example.com". See the docs on updating your DNS and SSL usage.
+            default_theme: (String) Possible values are AUTO, DARK, and LIGHT. (Default AUTO).
+            favicon: (String) A URL to an image file to use as the favicon of the status page.
+            id: (String) The ID of this resource.
+            logo: (String) A URL to an image file to use as the logo for the status page.
+            name: (String) The name of the status page.
+            redirect_to: (String) The URL the user should be redirected to when clicking the logo.
+            service_attachment: '(Block List, Min: 1) A list of services to attach to the card. (see below for nested schema)'
+            service_id: (String) The ID of the service.
+            url: (String) The URL of the status page.
+        importStatements: []
+    checkly_status_page_service:
+        subCategory: ""
+        description: Status page services represent functional pieces of your application or website, such as landing page, API, support portal etc.
+        name: checkly_status_page_service
+        title: checkly_status_page_service Resource - terraform-provider-checkly
+        examples:
+            - name: backend
+              manifest: |-
+                {
+                  "name": "Backend"
+                }
+            - name: frontend
+              manifest: |-
+                {
+                  "name": "Frontend"
+                }
+        argumentDocs:
+            id: (String) The ID of this resource.
+            name: (String) The name of the service.
+        importStatements: []
+    checkly_tcp_check:
+        subCategory: ""
+        description: The checkly_tcp_check resource has been renamed to checkly_tcp_monitor to better reflect its position in the Checkly product lineup. The old resource type will not be deprecated until the Checkly provider is updated to the Terraform Plugin Framework, which makes it possible to easily move resources between resource types. We recommend using the checkly_tcp_monitor resource type for any new resources.
+        name: checkly_tcp_check
+        title: checkly_tcp_check Resource - terraform-provider-checkly
+        examples:
+            - name: example-tcp-check
+              manifest: |-
+                {
+                  "activated": true,
+                  "frequency": 1,
+                  "locations": [
+                    "us-west-1"
+                  ],
+                  "name": "Example TCP check",
+                  "request": [
+                    {
+                      "hostname": "api.checklyhq.com",
+                      "port": 80
+                    }
+                  ],
+                  "should_fail": false,
+                  "use_global_alert_settings": true
+                }
+            - name: example-tcp-check-2
+              manifest: |-
+                {
+                  "activated": true,
+                  "alert_settings": [
+                    {
+                      "escalation_type": "RUN_BASED",
+                      "reminders": [
+                        {
+                          "amount": 1
+                        }
+                      ],
+                      "run_based_escalation": [
+                        {
+                          "failed_run_threshold": 1
+                        }
+                      ]
+                    }
+                  ],
+                  "degraded_response_time": 5000,
+                  "frequency": 1,
+                  "locations": [
+                    "us-west-1",
+                    "ap-northeast-1",
+                    "ap-south-1"
+                  ],
+                  "max_response_time": 10000,
+                  "name": "Example TCP check 2",
+                  "request": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "CONTAINS",
+                          "property": "",
+                          "source": "RESPONSE_DATA",
+                          "target": "welcome"
+                        },
+                        {
+                          "comparison": "LESS_THAN",
+                          "property": "",
+                          "source": "RESPONSE_TIME",
+                          "target": "2000"
+                        }
+                      ],
+                      "data": "hello",
+                      "hostname": "api.checklyhq.com",
+                      "port": 80
+                    }
+                  ],
+                  "retry_strategy": [
+                    {
+                      "base_backoff_seconds": 60,
+                      "max_duration_seconds": 600,
+                      "max_retries": 3,
+                      "same_region": false,
+                      "type": "FIXED"
+                    }
+                  ],
+                  "should_fail": true
+                }
+        argumentDocs:
+            activated: (Boolean) Determines if the check is running or not. Possible values true, and false.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your monitor, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the monitor. (see below for nested schema)'
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            assertion: (Block Set) A request can have multiple assertions. (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values are EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+            data: (String) The data to send to the target host.
+            degraded_response_time: (Number) The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 5000. (Default 4000).
+            description: (String) A description of the monitor.
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the monitor is scheduled for multiple locations in parallel. (Default false).
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive monitor runs have failed. Possible values are between 1 and 5. (Default 1).
+            frequency: (Number) Controls how often the monitor should run. Defined in minutes. The allowed values are 0 (high frequency - use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+            frequency_offset: (Number) When frequency is 0 (high frequency), frequency_offset is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are 0 (disabled - use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+            group_id: (Number) The id of the check group this check is part of.
+            group_order: (Number) The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+            hostname: (String) The hostname or IP to connect to. Do not include a scheme or a port in this value.
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            ip_family: (String) The IP family to use when executing the TCP check. The value can be either IPv4 or IPv6.
+            locations: (Set of String) An array of one or more data center locations where to run the this check. (Default ["us-east-1"])
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_response_time: (Number) The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 5000. (Default 5000).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            minutes_failing_threshold: (Number) Send an alert notification after the monitor has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+            name: (String) The name of the check.
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            port: (Number) The port number to connect to.
+            private_locations: (Set of String) An array of one or more private locations slugs.
+            property: (String)
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            request: '(Block Set, Min: 1, Max: 1) The parameters for the TCP connection. (see below for nested schema)'
+            retry_strategy: '(Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines if the check should run in all selected locations in parallel or round-robin.
+            runtime_id: (String) The ID of the runtime to use for this check.
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            should_fail: (Boolean) Allows to invert the behaviour of when a check is considered to fail.
+            source: (String) The source of the asserted value. Possible values are RESPONSE_DATA and RESPONSE_TIME.
+            tags: (Set of String) A list of tags for organizing and filtering checks.
+            target: (String)
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            type: (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+        importStatements: []
+    checkly_tcp_monitor:
+        subCategory: ""
+        description: TCP checks allow you to monitor remote endpoints at a lower level.
+        name: checkly_tcp_monitor
+        title: checkly_tcp_monitor Resource - terraform-provider-checkly
+        examples:
+            - name: example-tcp-monitor
+              manifest: |-
+                {
+                  "activated": true,
+                  "frequency": 1,
+                  "locations": [
+                    "us-west-1"
+                  ],
+                  "name": "Example TCP monitor",
+                  "request": [
+                    {
+                      "hostname": "api.checklyhq.com",
+                      "port": 80
+                    }
+                  ],
+                  "should_fail": false,
+                  "use_global_alert_settings": true
+                }
+            - name: example-tcp-monitor-2
+              manifest: |-
+                {
+                  "activated": true,
+                  "alert_settings": [
+                    {
+                      "escalation_type": "RUN_BASED",
+                      "reminders": [
+                        {
+                          "amount": 1
+                        }
+                      ],
+                      "run_based_escalation": [
+                        {
+                          "failed_run_threshold": 1
+                        }
+                      ]
+                    }
+                  ],
+                  "degraded_response_time": 5000,
+                  "frequency": 1,
+                  "locations": [
+                    "us-west-1",
+                    "ap-northeast-1",
+                    "ap-south-1"
+                  ],
+                  "max_response_time": 10000,
+                  "name": "Example TCP monitor 2",
+                  "request": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "CONTAINS",
+                          "property": "",
+                          "source": "RESPONSE_DATA",
+                          "target": "welcome"
+                        },
+                        {
+                          "comparison": "LESS_THAN",
+                          "property": "",
+                          "source": "RESPONSE_TIME",
+                          "target": "2000"
+                        }
+                      ],
+                      "data": "hello",
+                      "hostname": "api.checklyhq.com",
+                      "port": 80
+                    }
+                  ],
+                  "retry_strategy": [
+                    {
+                      "base_backoff_seconds": 60,
+                      "max_duration_seconds": 600,
+                      "max_retries": 3,
+                      "same_region": false,
+                      "type": "FIXED"
+                    }
+                  ],
+                  "should_fail": true
+                }
+        argumentDocs:
+            activated: (Boolean) Determines if the check is running or not. Possible values true, and false.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your monitor, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the monitor. (see below for nested schema)'
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            assertion: (Block Set) A request can have multiple assertions. (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values are EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+            data: (String) The data to send to the target host.
+            degraded_response_time: (Number) The response time in milliseconds starting from which a check should be considered degraded. Possible values are between 0 and 5000. (Default 4000).
+            description: (String) A description of the monitor.
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the monitor is scheduled for multiple locations in parallel. (Default false).
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive monitor runs have failed. Possible values are between 1 and 5. (Default 1).
+            frequency: (Number) Controls how often the monitor should run. Defined in minutes. The allowed values are 0 (high frequency - use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+            frequency_offset: (Number) When frequency is 0 (high frequency), frequency_offset is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are 0 (disabled - use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+            group_id: (Number) The id of the check group this check is part of.
+            group_order: (Number) The position of this check in a check group. It determines in what order checks are run when a group is triggered from the API or from CI/CD.
+            hostname: (String) The hostname or IP to connect to. Do not include a scheme or a port in this value.
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            ip_family: (String) The IP family to use when executing the TCP check. The value can be either IPv4 or IPv6.
+            locations: (Set of String) An array of one or more data center locations where to run the this check. (Default ["us-east-1"])
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_response_time: (Number) The response time in milliseconds starting from which a check should be considered failing. Possible values are between 0 and 5000. (Default 5000).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            minutes_failing_threshold: (Number) Send an alert notification after the monitor has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when a check fails/degrades/recovers.
+            name: (String) The name of the check.
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            port: (Number) The port number to connect to.
+            private_locations: (Set of String) An array of one or more private locations slugs.
+            property: (String)
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            request: '(Block Set, Min: 1, Max: 1) The parameters for the TCP connection. (see below for nested schema)'
+            retry_strategy: '(Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines if the check should run in all selected locations in parallel or round-robin.
+            runtime_id: (String) The ID of the runtime to use for this check.
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            should_fail: (Boolean) Allows to invert the behaviour of when a check is considered to fail.
+            source: (String) The source of the asserted value. Possible values are RESPONSE_DATA and RESPONSE_TIME.
+            tags: (Set of String) A list of tags for organizing and filtering checks.
+            target: (String)
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            type: (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check.
+        importStatements: []
+    checkly_trigger_check:
+        subCategory: ""
+        name: checkly_trigger_check
+        title: checkly_trigger_check Resource - terraform-provider-checkly
+        examples:
+            - name: test_trigger_check
+              manifest: |-
+                {
+                  "check_id": "c1ff95c5-d7f6-4a90-9ce2-1e605f117592"
+                }
+        argumentDocs:
+            check_id: (String) The id of the check that you want to attach the trigger to.
+            id: (String) The ID of this resource.
+            token: (String) The token value created to trigger the check
+            url: (String) The request URL to trigger the check run.
+        importStatements: []
+    checkly_trigger_group:
+        subCategory: ""
+        name: checkly_trigger_group
+        title: checkly_trigger_group Resource - terraform-provider-checkly
+        examples:
+            - name: test_trigger_group
+              manifest: |-
+                {
+                  "group_id": "215"
+                }
+        argumentDocs:
+            group_id: (Number) The id of the group that you want to attach the trigger to.
+            id: (String) The ID of this resource.
+            token: (String) The token value created to trigger the group
+            url: (String) The request URL to trigger the group run.
+        importStatements: []
+    checkly_url_monitor:
+        subCategory: ""
+        description: Creates a URL Monitor to check HTTP endpoint availability and response times.
+        name: checkly_url_monitor
+        title: checkly_url_monitor Resource - terraform-provider-checkly
+        examples:
+            - name: example-url-monitor
+              manifest: |-
+                {
+                  "activated": true,
+                  "frequency": 2,
+                  "locations": [
+                    "eu-west-1"
+                  ],
+                  "name": "Example URL monitor",
+                  "request": [
+                    {
+                      "assertion": [
+                        {
+                          "comparison": "EQUALS",
+                          "source": "STATUS_CODE",
+                          "target": "200"
+                        }
+                      ],
+                      "url": "https://welcome.checklyhq.com"
+                    }
+                  ],
+                  "use_global_alert_settings": true
+                }
+        argumentDocs:
+            activated: (Boolean) Determines whether the monitor will run periodically or not after being deployed.
+            alert_channel_subscription: (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your monitor, we won't be able to alert you even if it starts failing. (see below for nested schema)
+            alert_settings: '(Block List, Max: 1) Determines the alert escalation policy for the monitor. (see below for nested schema)'
+            amount: (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+            assertion: (Block Set) Assertions to validate the HTTP response. URL monitors only support status code assertions. (see below for nested schema)
+            base_backoff_seconds: (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+            channel_id: (Number) The ID of the alert channel.
+            comparison: (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values are EQUALS, NOT_EQUALS, GREATER_THAN and LESS_THAN.
+            degraded_response_time: (Number) The response time in milliseconds where the monitor should be considered degraded. Possible values are between 0 and 30000. (Default 3000).
+            description: (String) A description of the monitor.
+            enabled: (Boolean) Whether parallel run failure threshold is enabled. Only applies if the monitor is scheduled for multiple locations in parallel. (Default false).
+            escalation_type: (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+            failed_run_threshold: (Number) Send an alert notification after the given number of consecutive monitor runs have failed. Possible values are between 1 and 5. (Default 1).
+            follow_redirects: (Boolean) Whether to follow HTTP redirects automatically. (Default true).
+            frequency: (Number) Controls how often the monitor should run. Defined in minutes. The allowed values are 0 (high frequency - use frequency_offset to define the actual frequency), 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
+            frequency_offset: (Number) When frequency is 0 (high frequency), frequency_offset is required and it alone controls how often the monitor should run. Defined in seconds. The allowed values are 0 (disabled - use frequency to define the actual frequency), 10 (10 seconds), 20 (20 seconds) and 30 (30 seconds).
+            group_id: (Number) The ID of the check group that this monitor is part of.
+            group_order: (Number) The position of the monitor in the check group. It determines in what order checks and monitors are run when a group is triggered from the API or from CI/CD.
+            id: (String) The ID of this resource.
+            interval: (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+            ip_family: (String) IP family version to use for the connection. The value can be either IPv4 or IPv6. (Default IPv4).
+            locations: (Set of String) An array of one or more data center locations where to run the this monitor.
+            max_duration_seconds: (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+            max_response_time: (Number) The response time in milliseconds where the monitor should be considered failing. Possible values are between 0 and 30000. (Default 5000).
+            max_retries: (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+            minutes_failing_threshold: (Number) Send an alert notification after the monitor has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+            muted: (Boolean) Determines if any notifications will be sent out when the monitor fails and/or recovers. (Default false).
+            name: (String) The name of the monitor.
+            network_error: (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+            notify_subscribers: (Boolean) Whether to notify subscribers when the incident is triggered.
+            only_on: '(Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)'
+            parallel_run_failure_threshold: (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+            percentage: (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+            private_locations: (Set of String) An array of one or more private locations slugs.
+            property: (String)
+            reminders: (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+            request: '(Block Set, Min: 1, Max: 1) The parameters of the HTTP request. (see below for nested schema)'
+            retry_strategy: '(Block List, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)'
+            run_based_escalation: (Block List) Configuration for run-based escalation. (see below for nested schema)
+            run_parallel: (Boolean) Determines whether the monitor should run on all selected locations in parallel or round-robin. (Default false).
+            same_region: (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+            service_id: (String) The status page service that this incident will be associated with.
+            severity: (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+            should_fail: (Boolean) Allows to invert the behaviour of when the monitor is considered to fail. (Default false).
+            skip_ssl: (Boolean) Whether to skip SSL certificate verification. (Default false).
+            source: (String) The source of the asserted value. The only allowed value is STATUS_CODE.
+            tags: (Set of String) A list of tags for organizing and filtering checks and monitors.
+            target: (String) The target value. Typically 200 when the source is STATUS_CODE.
+            time_based_escalation: (Block List) Configuration for time-based escalation. (see below for nested schema)
+            trigger_incident: '(Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)'
+            type: (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+            url: (String) The URL to monitor. Must be a valid HTTP or HTTPS URL.
+            use_global_alert_settings: (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this monitor. (Default true).
         importStatements: []

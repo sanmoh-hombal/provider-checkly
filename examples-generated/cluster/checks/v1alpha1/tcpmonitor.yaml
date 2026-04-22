@@ -1,0 +1,20 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: TCPMonitor
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/tcpmonitor
+  labels:
+    testing.upbound.io/example-name: example-tcp-monitor
+  name: example-tcp-monitor
+spec:
+  forProvider:
+    activated: true
+    frequency: 1
+    locations:
+    - us-west-1
+    name: Example TCP monitor
+    request:
+    - hostname: api.checklyhq.com
+      port: 80
+    shouldFail: false
+    useGlobalAlertSettings: true

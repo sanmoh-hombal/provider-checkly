@@ -1,0 +1,18 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: HeartbeatMonitor
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/heartbeatmonitor
+  labels:
+    testing.upbound.io/example-name: example-heartbeat-monitor
+  name: example-heartbeat-monitor
+spec:
+  forProvider:
+    activated: true
+    heartbeat:
+    - grace: 1
+      graceUnit: days
+      period: 7
+      periodUnit: days
+    name: Example heartbeat monitor
+    useGlobalAlertSettings: true

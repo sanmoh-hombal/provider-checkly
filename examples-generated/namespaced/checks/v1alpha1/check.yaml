@@ -1,0 +1,59 @@
+apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/check
+  labels:
+    testing.upbound.io/example-name: example_check
+  name: example-check
+  namespace: upbound-system
+spec:
+  forProvider:
+    activated: true
+    frequency: 1
+    locations:
+    - us-west-1
+    name: Example check
+    request:
+    - assertion:
+      - comparison: EQUALS
+        source: STATUS_CODE
+        target: "200"
+      followRedirects: true
+      skipSsl: false
+      url: https://api.example.com/
+    shouldFail: false
+    type: API
+    useGlobalAlertSettings: true
+
+---
+
+apiVersion: alerts.checkly.m.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/check
+  labels:
+    testing.upbound.io/example-name: email_ac1
+  name: email-ac1
+  namespace: upbound-system
+spec:
+  forProvider:
+    email:
+    - address: info1@example.com
+
+---
+
+apiVersion: alerts.checkly.m.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/check
+  labels:
+    testing.upbound.io/example-name: email_ac2
+  name: email-ac2
+  namespace: upbound-system
+spec:
+  forProvider:
+    email:
+    - address: info2@example.com

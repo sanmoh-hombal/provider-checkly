@@ -1,0 +1,2086 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: checkgroupv2s.checks.checkly.crossplane.io
+spec:
+  group: checks.checkly.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - checkly
+    kind: CheckGroupV2
+    listKind: CheckGroupV2List
+    plural: checkgroupv2s
+    singular: checkgroupv2
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: CheckGroupV2 is the Schema for the CheckGroupV2s API. Check groups
+          organize related checks together and allow optional shared configuration.
+          Unlike checkly_check_group (v1), which always imposed implicit defaults
+          for various settings, checkly_check_group_v2 does not override any check
+          settings by default. A group can be as minimal as just a name. Use the optional
+          enforce_* blocks only when you explicitly want the group to override individual
+          check settings. The new checkly_check_group_v2 resource should always be
+          preferred over the old checkly_check_group resource.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CheckGroupV2Spec defines the desired state of CheckGroupV2
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  activated:
+                    description: |-
+                      (Boolean) Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default true).
+                      Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default `true`).
+                    type: boolean
+                  apiCheckDefaults:
+                    description: '(Block Set, Max: 1) (see below for nested schema)'
+                    items:
+                      properties:
+                        assertion:
+                          description: (Block Set) (see below for nested schema)
+                          items:
+                            properties:
+                              comparison:
+                                description: |-
+                                  (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+                                  The type of comparison to be executed between expected and actual value of the assertion. Possible values `EQUALS`, `NOT_EQUALS`, `HAS_KEY`, `NOT_HAS_KEY`, `HAS_VALUE`, `NOT_HAS_VALUE`, `IS_EMPTY`, `NOT_EMPTY`, `GREATER_THAN`, `LESS_THAN`, `CONTAINS`, `NOT_CONTAINS`, `IS_NULL`, and `NOT_NULL`.
+                                type: string
+                              property:
+                                description: (String)
+                                type: string
+                              source:
+                                description: |-
+                                  (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+                                  The source of the asserted value. Possible values `STATUS_CODE`, `JSON_BODY`, `HEADERS`, `TEXT_BODY`, and `RESPONSE_TIME`.
+                                type: string
+                              target:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        basicAuth:
+                          description: '(Block Set, Max: 1) (see below for nested
+                            schema)'
+                          items:
+                            properties:
+                              password:
+                                description: (String)
+                                type: string
+                              username:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        headersSecretRef:
+                          description: (Map of String)
+                          properties:
+                            name:
+                              description: Name of the secret.
+                              type: string
+                            namespace:
+                              description: Namespace of the secret.
+                              type: string
+                          required:
+                          - name
+                          - namespace
+                          type: object
+                        queryParameters:
+                          additionalProperties:
+                            type: string
+                          description: (Map of String)
+                          type: object
+                          x-kubernetes-map-type: granular
+                        url:
+                          description: |-
+                            (String) The base url for this group which you can reference with the GROUP_BASE_URL variable in all group checks.
+                            The base url for this group which you can reference with the `GROUP_BASE_URL` variable in all group checks.
+                          type: string
+                      type: object
+                    type: array
+                  concurrency:
+                    description: |-
+                      (Number) Determines the number of checks to run concurrently when triggering the check group via CI/CD or the API. (Default 1).
+                      Determines the number of checks to run concurrently when triggering the check group via CI/CD or the API. (Default `1`).
+                    type: number
+                  defaultRuntime:
+                    description: |-
+                      (Block List, Max: 1) Sets a default runtime for the group. Used as a fallback when a check belonging to the group has no runtime set. Takes precedence over the account default runtime. (see below for nested schema)
+                      Sets a default runtime for the group. Used as a fallback when a check belonging to the group has no runtime set. Takes precedence over the account default runtime.
+                    items:
+                      properties:
+                        runtimeId:
+                          description: |-
+                            (String) The runtime ID.
+                            The runtime ID.
+                          type: string
+                      type: object
+                    type: array
+                  enforceAlertSettings:
+                    description: |-
+                      (Block List, Max: 1) Enforces alert settings for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces alert settings for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        alertChannelSubscription:
+                          description: |-
+                            (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+                            An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
+                          items:
+                            properties:
+                              activated:
+                                description: |-
+                                  (Boolean) Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default true).
+                                  Whether an alert should be sent to this channel.
+                                type: boolean
+                              channelId:
+                                description: |-
+                                  (Number) The ID of the alert channel.
+                                  The ID of the alert channel.
+                                type: number
+                              channelIdRef:
+                                description: Reference to a AlertChannel in alerts
+                                  to populate channelId.
+                                properties:
+                                  name:
+                                    description: Name of the referenced object.
+                                    type: string
+                                  policy:
+                                    description: Policies for referencing.
+                                    properties:
+                                      resolution:
+                                        default: Required
+                                        description: |-
+                                          Resolution specifies whether resolution of this reference is required.
+                                          The default is 'Required', which means the reconcile will fail if the
+                                          reference cannot be resolved. 'Optional' means this reference will be
+                                          a no-op if it cannot be resolved.
+                                        enum:
+                                        - Required
+                                        - Optional
+                                        type: string
+                                      resolve:
+                                        description: |-
+                                          Resolve specifies when this reference should be resolved. The default
+                                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                                          the corresponding field is not present. Use 'Always' to resolve the
+                                          reference on every reconcile.
+                                        enum:
+                                        - Always
+                                        - IfNotPresent
+                                        type: string
+                                    type: object
+                                required:
+                                - name
+                                type: object
+                              channelIdSelector:
+                                description: Selector for a AlertChannel in alerts
+                                  to populate channelId.
+                                properties:
+                                  matchControllerRef:
+                                    description: |-
+                                      MatchControllerRef ensures an object with the same controller reference
+                                      as the selecting object is selected.
+                                    type: boolean
+                                  matchLabels:
+                                    additionalProperties:
+                                      type: string
+                                    description: MatchLabels ensures an object with
+                                      matching labels is selected.
+                                    type: object
+                                  policy:
+                                    description: Policies for selection.
+                                    properties:
+                                      resolution:
+                                        default: Required
+                                        description: |-
+                                          Resolution specifies whether resolution of this reference is required.
+                                          The default is 'Required', which means the reconcile will fail if the
+                                          reference cannot be resolved. 'Optional' means this reference will be
+                                          a no-op if it cannot be resolved.
+                                        enum:
+                                        - Required
+                                        - Optional
+                                        type: string
+                                      resolve:
+                                        description: |-
+                                          Resolve specifies when this reference should be resolved. The default
+                                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                                          the corresponding field is not present. Use 'Always' to resolve the
+                                          reference on every reconcile.
+                                        enum:
+                                        - Always
+                                        - IfNotPresent
+                                        type: string
+                                    type: object
+                                type: object
+                            type: object
+                          type: array
+                        alertSettings:
+                          description: |-
+                            (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
+                            Determines the alert escalation policy for the check.
+                          items:
+                            properties:
+                              escalationType:
+                                description: |-
+                                  (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+                                  Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+                                type: string
+                              parallelRunFailureThreshold:
+                                description: |-
+                                  (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+                                  Configuration for parallel run failure threshold.
+                                items:
+                                  properties:
+                                    enabled:
+                                      description: |-
+                                        (Boolean) Determines whether the enforced alert settings should be active.
+                                        Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+                                      type: boolean
+                                    percentage:
+                                      description: |-
+                                        (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+                                        Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+                                      type: number
+                                  type: object
+                                type: array
+                              reminders:
+                                description: |-
+                                  (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+                                  Defines how often to send reminder notifications after initial alert.
+                                items:
+                                  properties:
+                                    amount:
+                                      description: |-
+                                        (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+                                        Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+                                      type: number
+                                    interval:
+                                      description: |-
+                                        (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+                                        Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                      type: number
+                                  type: object
+                                type: array
+                              runBasedEscalation:
+                                description: |-
+                                  based escalation. (see below for nested schema)
+                                  Configuration for run-based escalation.
+                                items:
+                                  properties:
+                                    failedRunThreshold:
+                                      description: |-
+                                        (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+                                        Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+                                      type: number
+                                  type: object
+                                type: array
+                              sslCertificates:
+                                description: (Block Set, Deprecated) (see below for
+                                  nested schema)
+                                items:
+                                  properties:
+                                    alertThreshold:
+                                      description: |-
+                                        (Number) No longer available.
+                                        No longer available.
+                                      type: number
+                                    enabled:
+                                      description: |-
+                                        (Boolean) Determines whether the enforced alert settings should be active.
+                                        No longer available.
+                                      type: boolean
+                                  type: object
+                                type: array
+                              timeBasedEscalation:
+                                description: |-
+                                  based escalation. (see below for nested schema)
+                                  Configuration for time-based escalation.
+                                items:
+                                  properties:
+                                    minutesFailingThreshold:
+                                      description: |-
+                                        (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+                                        Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                      type: number
+                                  type: object
+                                type: array
+                            type: object
+                          type: array
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced alert settings should be active.
+                          type: boolean
+                        useGlobalAlertSettings:
+                          description: |-
+                            (Boolean) Whether to use account level alert settings instead of the group's alert settings.Default (false).
+                            Whether to use account level alert settings instead of the group's alert settings.Default (`false`).
+                          type: boolean
+                      type: object
+                    type: array
+                  enforceLocations:
+                    description: |-
+                      (Block List, Max: 1) Enforces public and private locations for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces public and private locations for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced locations should be active.
+                          type: boolean
+                        locations:
+                          description: |-
+                            (Set of String) An array of one or more data center locations where to run the checks.
+                            An array of one or more data center locations where to run the checks.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: set
+                        privateLocationRefs:
+                          description: References to Location in private to populate
+                            privateLocations.
+                          items:
+                            description: A Reference to a named object.
+                            properties:
+                              name:
+                                description: Name of the referenced object.
+                                type: string
+                              policy:
+                                description: Policies for referencing.
+                                properties:
+                                  resolution:
+                                    default: Required
+                                    description: |-
+                                      Resolution specifies whether resolution of this reference is required.
+                                      The default is 'Required', which means the reconcile will fail if the
+                                      reference cannot be resolved. 'Optional' means this reference will be
+                                      a no-op if it cannot be resolved.
+                                    enum:
+                                    - Required
+                                    - Optional
+                                    type: string
+                                  resolve:
+                                    description: |-
+                                      Resolve specifies when this reference should be resolved. The default
+                                      is 'IfNotPresent', which will attempt to resolve the reference only when
+                                      the corresponding field is not present. Use 'Always' to resolve the
+                                      reference on every reconcile.
+                                    enum:
+                                    - Always
+                                    - IfNotPresent
+                                    type: string
+                                type: object
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        privateLocations:
+                          description: |-
+                            (Set of String) An array of one or more private locations slugs.
+                            An array of one or more private locations slugs.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: set
+                        privateLocationsSelector:
+                          description: Selector for a list of Location in private
+                            to populate privateLocations.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                  enforceRetryStrategy:
+                    description: |-
+                      (Block List, Max: 1) Enforces a retry strategy for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces a retry strategy for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced retry strategy should be active.
+                          type: boolean
+                        retryStrategy:
+                          description: |-
+                            (Block List, Min: 1, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)
+                            A strategy for retrying failed check/monitor runs.
+                          items:
+                            properties:
+                              baseBackoffSeconds:
+                                description: |-
+                                  (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+                                  The number of seconds to wait before the first retry attempt. (Default `60`).
+                                type: number
+                              maxDurationSeconds:
+                                description: |-
+                                  (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+                                  The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `600`).
+                                type: number
+                              maxRetries:
+                                description: |-
+                                  (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+                                  The maximum number of times to retry the check/monitor. Value must be between `1` and `10`. Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `2`).
+                                type: number
+                              onlyOn:
+                                description: |-
+                                  (Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)
+                                  Apply the retry strategy only if the defined conditions match.
+                                items:
+                                  properties:
+                                    networkError:
+                                      description: |-
+                                        (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+                                        When `true`, retry only if the cause of the failure is a network error. (Default `false`).
+                                      type: boolean
+                                  type: object
+                                type: array
+                              sameRegion:
+                                description: |-
+                                  (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+                                  Whether retries should be run in the same region as the initial check/monitor run. (Default `true`).
+                                type: boolean
+                              type:
+                                description: |-
+                                  (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+                                  Determines which type of retry strategy to use. Possible values are `FIXED`, `LINEAR`, `EXPONENTIAL`, `SINGLE_RETRY`, and `NO_RETRIES`.
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  enforceSchedulingStrategy:
+                    description: |-
+                      (Block List, Max: 1) Enforces a scheduling strategy for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces a scheduling strategy for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced scheduling strategy should be active.
+                          type: boolean
+                        runParallel:
+                          description: |-
+                            robin.
+                            Determines if the checks in the group should run in all selected locations in parallel or round-robin.
+                          type: boolean
+                      type: object
+                    type: array
+                  environmentVariable:
+                    description: |-
+                      (Block List) Insert environment variables into the runtime environment of checks in the group. Only relevant for check types that support environment variables. Use global environment variables whenever possible. (see below for nested schema)
+                      Insert environment variables into the runtime environment of checks in the group. Only relevant for check types that support environment variables. Use global environment variables whenever possible.
+                    items:
+                      properties:
+                        key:
+                          description: |-
+                            (String) The name of the environment variable or secret.
+                            The name of the environment variable or secret.
+                          type: string
+                        locked:
+                          description: |-
+                            (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+                            If true, the value is not shown by default, but it can be accessed. (Default `false`).
+                          type: boolean
+                        secret:
+                          description: |-
+                            (Boolean) If true, the value will never be visible. (Default false).
+                            If true, the value will never be visible. (Default `false`).
+                          type: boolean
+                        valueSecretRef:
+                          description: |-
+                            (String) The value of the environment variable or secret.
+                            The value of the environment variable or secret.
+                          properties:
+                            key:
+                              description: The key to select.
+                              type: string
+                            name:
+                              description: Name of the secret.
+                              type: string
+                            namespace:
+                              description: Namespace of the secret.
+                              type: string
+                          required:
+                          - key
+                          - name
+                          - namespace
+                          type: object
+                      type: object
+                    type: array
+                  muted:
+                    description: |-
+                      (Boolean) Determines if any notifications will be sent out when a check in this group fails and/or recovers. Muting the group will deactivate all notifications for all checks in the group, regardless of their muted state. (Default false).
+                      Determines if any notifications will be sent out when a check in this group fails and/or recovers. Muting the group will deactivate all notifications for all checks in the group, regardless of their muted state. (Default `false`).
+                    type: boolean
+                  name:
+                    description: |-
+                      (String) The name of the check group.
+                      The name of the check group.
+                    type: string
+                  setupScript:
+                    description: |-
+                      (Block List, Max: 1) A script to run in the setup phase of an API check. Runs in addition to the check's own setup script. (see below for nested schema)
+                      A script to run in the setup phase of an API check. Runs in addition to the check's own setup script.
+                    items:
+                      properties:
+                        inlineScript:
+                          description: |-
+                            (String) A valid piece of Node.js code.
+                            A valid piece of Node.js code.
+                          type: string
+                        snippetId:
+                          description: |-
+                            (Number) The ID of a code snippet. Code snippets are not available for new plans.
+                            The ID of a code snippet. Code snippets are not available for new plans.
+                          type: number
+                        snippetIdRef:
+                          description: Reference to a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            name:
+                              description: Name of the referenced object.
+                              type: string
+                            policy:
+                              description: Policies for referencing.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        snippetIdSelector:
+                          description: Selector for a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                  tags:
+                    description: |-
+                      (Set of String) Additional tags to append to all checks in the group.
+                      Additional tags to append to all checks in the group.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teardownScript:
+                    description: |-
+                      (Block List, Max: 1) A script to run in the teardown phase of an API check. Runs in addition to the check's own teardown script. (see below for nested schema)
+                      A script to run in the teardown phase of an API check. Runs in addition to the check's own teardown script.
+                    items:
+                      properties:
+                        inlineScript:
+                          description: |-
+                            (String) A valid piece of Node.js code.
+                            A valid piece of Node.js code.
+                          type: string
+                        snippetId:
+                          description: |-
+                            (Number) The ID of a code snippet. Code snippets are not available for new plans.
+                            The ID of a code snippet. Code snippets are not available for new plans.
+                          type: number
+                        snippetIdRef:
+                          description: Reference to a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            name:
+                              description: Name of the referenced object.
+                              type: string
+                            policy:
+                              description: Policies for referencing.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        snippetIdSelector:
+                          description: Selector for a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  activated:
+                    description: |-
+                      (Boolean) Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default true).
+                      Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default `true`).
+                    type: boolean
+                  apiCheckDefaults:
+                    description: '(Block Set, Max: 1) (see below for nested schema)'
+                    items:
+                      properties:
+                        assertion:
+                          description: (Block Set) (see below for nested schema)
+                          items:
+                            properties:
+                              comparison:
+                                description: |-
+                                  (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+                                  The type of comparison to be executed between expected and actual value of the assertion. Possible values `EQUALS`, `NOT_EQUALS`, `HAS_KEY`, `NOT_HAS_KEY`, `HAS_VALUE`, `NOT_HAS_VALUE`, `IS_EMPTY`, `NOT_EMPTY`, `GREATER_THAN`, `LESS_THAN`, `CONTAINS`, `NOT_CONTAINS`, `IS_NULL`, and `NOT_NULL`.
+                                type: string
+                              property:
+                                description: (String)
+                                type: string
+                              source:
+                                description: |-
+                                  (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+                                  The source of the asserted value. Possible values `STATUS_CODE`, `JSON_BODY`, `HEADERS`, `TEXT_BODY`, and `RESPONSE_TIME`.
+                                type: string
+                              target:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        basicAuth:
+                          description: '(Block Set, Max: 1) (see below for nested
+                            schema)'
+                          items:
+                            properties:
+                              password:
+                                description: (String)
+                                type: string
+                              username:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        headersSecretRef:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        queryParameters:
+                          additionalProperties:
+                            type: string
+                          description: (Map of String)
+                          type: object
+                          x-kubernetes-map-type: granular
+                        url:
+                          description: |-
+                            (String) The base url for this group which you can reference with the GROUP_BASE_URL variable in all group checks.
+                            The base url for this group which you can reference with the `GROUP_BASE_URL` variable in all group checks.
+                          type: string
+                      type: object
+                    type: array
+                  concurrency:
+                    description: |-
+                      (Number) Determines the number of checks to run concurrently when triggering the check group via CI/CD or the API. (Default 1).
+                      Determines the number of checks to run concurrently when triggering the check group via CI/CD or the API. (Default `1`).
+                    type: number
+                  defaultRuntime:
+                    description: |-
+                      (Block List, Max: 1) Sets a default runtime for the group. Used as a fallback when a check belonging to the group has no runtime set. Takes precedence over the account default runtime. (see below for nested schema)
+                      Sets a default runtime for the group. Used as a fallback when a check belonging to the group has no runtime set. Takes precedence over the account default runtime.
+                    items:
+                      properties:
+                        runtimeId:
+                          description: |-
+                            (String) The runtime ID.
+                            The runtime ID.
+                          type: string
+                      type: object
+                    type: array
+                  enforceAlertSettings:
+                    description: |-
+                      (Block List, Max: 1) Enforces alert settings for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces alert settings for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        alertChannelSubscription:
+                          description: |-
+                            (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+                            An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
+                          items:
+                            properties:
+                              activated:
+                                description: |-
+                                  (Boolean) Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default true).
+                                  Whether an alert should be sent to this channel.
+                                type: boolean
+                              channelId:
+                                description: |-
+                                  (Number) The ID of the alert channel.
+                                  The ID of the alert channel.
+                                type: number
+                              channelIdRef:
+                                description: Reference to a AlertChannel in alerts
+                                  to populate channelId.
+                                properties:
+                                  name:
+                                    description: Name of the referenced object.
+                                    type: string
+                                  policy:
+                                    description: Policies for referencing.
+                                    properties:
+                                      resolution:
+                                        default: Required
+                                        description: |-
+                                          Resolution specifies whether resolution of this reference is required.
+                                          The default is 'Required', which means the reconcile will fail if the
+                                          reference cannot be resolved. 'Optional' means this reference will be
+                                          a no-op if it cannot be resolved.
+                                        enum:
+                                        - Required
+                                        - Optional
+                                        type: string
+                                      resolve:
+                                        description: |-
+                                          Resolve specifies when this reference should be resolved. The default
+                                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                                          the corresponding field is not present. Use 'Always' to resolve the
+                                          reference on every reconcile.
+                                        enum:
+                                        - Always
+                                        - IfNotPresent
+                                        type: string
+                                    type: object
+                                required:
+                                - name
+                                type: object
+                              channelIdSelector:
+                                description: Selector for a AlertChannel in alerts
+                                  to populate channelId.
+                                properties:
+                                  matchControllerRef:
+                                    description: |-
+                                      MatchControllerRef ensures an object with the same controller reference
+                                      as the selecting object is selected.
+                                    type: boolean
+                                  matchLabels:
+                                    additionalProperties:
+                                      type: string
+                                    description: MatchLabels ensures an object with
+                                      matching labels is selected.
+                                    type: object
+                                  policy:
+                                    description: Policies for selection.
+                                    properties:
+                                      resolution:
+                                        default: Required
+                                        description: |-
+                                          Resolution specifies whether resolution of this reference is required.
+                                          The default is 'Required', which means the reconcile will fail if the
+                                          reference cannot be resolved. 'Optional' means this reference will be
+                                          a no-op if it cannot be resolved.
+                                        enum:
+                                        - Required
+                                        - Optional
+                                        type: string
+                                      resolve:
+                                        description: |-
+                                          Resolve specifies when this reference should be resolved. The default
+                                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                                          the corresponding field is not present. Use 'Always' to resolve the
+                                          reference on every reconcile.
+                                        enum:
+                                        - Always
+                                        - IfNotPresent
+                                        type: string
+                                    type: object
+                                type: object
+                            type: object
+                          type: array
+                        alertSettings:
+                          description: |-
+                            (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
+                            Determines the alert escalation policy for the check.
+                          items:
+                            properties:
+                              escalationType:
+                                description: |-
+                                  (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+                                  Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+                                type: string
+                              parallelRunFailureThreshold:
+                                description: |-
+                                  (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+                                  Configuration for parallel run failure threshold.
+                                items:
+                                  properties:
+                                    enabled:
+                                      description: |-
+                                        (Boolean) Determines whether the enforced alert settings should be active.
+                                        Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+                                      type: boolean
+                                    percentage:
+                                      description: |-
+                                        (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+                                        Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+                                      type: number
+                                  type: object
+                                type: array
+                              reminders:
+                                description: |-
+                                  (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+                                  Defines how often to send reminder notifications after initial alert.
+                                items:
+                                  properties:
+                                    amount:
+                                      description: |-
+                                        (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+                                        Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+                                      type: number
+                                    interval:
+                                      description: |-
+                                        (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+                                        Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                      type: number
+                                  type: object
+                                type: array
+                              runBasedEscalation:
+                                description: |-
+                                  based escalation. (see below for nested schema)
+                                  Configuration for run-based escalation.
+                                items:
+                                  properties:
+                                    failedRunThreshold:
+                                      description: |-
+                                        (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+                                        Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+                                      type: number
+                                  type: object
+                                type: array
+                              sslCertificates:
+                                description: (Block Set, Deprecated) (see below for
+                                  nested schema)
+                                items:
+                                  properties:
+                                    alertThreshold:
+                                      description: |-
+                                        (Number) No longer available.
+                                        No longer available.
+                                      type: number
+                                    enabled:
+                                      description: |-
+                                        (Boolean) Determines whether the enforced alert settings should be active.
+                                        No longer available.
+                                      type: boolean
+                                  type: object
+                                type: array
+                              timeBasedEscalation:
+                                description: |-
+                                  based escalation. (see below for nested schema)
+                                  Configuration for time-based escalation.
+                                items:
+                                  properties:
+                                    minutesFailingThreshold:
+                                      description: |-
+                                        (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+                                        Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                      type: number
+                                  type: object
+                                type: array
+                            type: object
+                          type: array
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced alert settings should be active.
+                          type: boolean
+                        useGlobalAlertSettings:
+                          description: |-
+                            (Boolean) Whether to use account level alert settings instead of the group's alert settings.Default (false).
+                            Whether to use account level alert settings instead of the group's alert settings.Default (`false`).
+                          type: boolean
+                      type: object
+                    type: array
+                  enforceLocations:
+                    description: |-
+                      (Block List, Max: 1) Enforces public and private locations for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces public and private locations for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced locations should be active.
+                          type: boolean
+                        locations:
+                          description: |-
+                            (Set of String) An array of one or more data center locations where to run the checks.
+                            An array of one or more data center locations where to run the checks.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: set
+                        privateLocationRefs:
+                          description: References to Location in private to populate
+                            privateLocations.
+                          items:
+                            description: A Reference to a named object.
+                            properties:
+                              name:
+                                description: Name of the referenced object.
+                                type: string
+                              policy:
+                                description: Policies for referencing.
+                                properties:
+                                  resolution:
+                                    default: Required
+                                    description: |-
+                                      Resolution specifies whether resolution of this reference is required.
+                                      The default is 'Required', which means the reconcile will fail if the
+                                      reference cannot be resolved. 'Optional' means this reference will be
+                                      a no-op if it cannot be resolved.
+                                    enum:
+                                    - Required
+                                    - Optional
+                                    type: string
+                                  resolve:
+                                    description: |-
+                                      Resolve specifies when this reference should be resolved. The default
+                                      is 'IfNotPresent', which will attempt to resolve the reference only when
+                                      the corresponding field is not present. Use 'Always' to resolve the
+                                      reference on every reconcile.
+                                    enum:
+                                    - Always
+                                    - IfNotPresent
+                                    type: string
+                                type: object
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        privateLocations:
+                          description: |-
+                            (Set of String) An array of one or more private locations slugs.
+                            An array of one or more private locations slugs.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: set
+                        privateLocationsSelector:
+                          description: Selector for a list of Location in private
+                            to populate privateLocations.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                  enforceRetryStrategy:
+                    description: |-
+                      (Block List, Max: 1) Enforces a retry strategy for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces a retry strategy for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced retry strategy should be active.
+                          type: boolean
+                        retryStrategy:
+                          description: |-
+                            (Block List, Min: 1, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)
+                            A strategy for retrying failed check/monitor runs.
+                          items:
+                            properties:
+                              baseBackoffSeconds:
+                                description: |-
+                                  (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+                                  The number of seconds to wait before the first retry attempt. (Default `60`).
+                                type: number
+                              maxDurationSeconds:
+                                description: |-
+                                  (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+                                  The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `600`).
+                                type: number
+                              maxRetries:
+                                description: |-
+                                  (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+                                  The maximum number of times to retry the check/monitor. Value must be between `1` and `10`. Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `2`).
+                                type: number
+                              onlyOn:
+                                description: |-
+                                  (Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)
+                                  Apply the retry strategy only if the defined conditions match.
+                                items:
+                                  properties:
+                                    networkError:
+                                      description: |-
+                                        (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+                                        When `true`, retry only if the cause of the failure is a network error. (Default `false`).
+                                      type: boolean
+                                  type: object
+                                type: array
+                              sameRegion:
+                                description: |-
+                                  (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+                                  Whether retries should be run in the same region as the initial check/monitor run. (Default `true`).
+                                type: boolean
+                              type:
+                                description: |-
+                                  (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+                                  Determines which type of retry strategy to use. Possible values are `FIXED`, `LINEAR`, `EXPONENTIAL`, `SINGLE_RETRY`, and `NO_RETRIES`.
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  enforceSchedulingStrategy:
+                    description: |-
+                      (Block List, Max: 1) Enforces a scheduling strategy for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces a scheduling strategy for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced scheduling strategy should be active.
+                          type: boolean
+                        runParallel:
+                          description: |-
+                            robin.
+                            Determines if the checks in the group should run in all selected locations in parallel or round-robin.
+                          type: boolean
+                      type: object
+                    type: array
+                  environmentVariable:
+                    description: |-
+                      (Block List) Insert environment variables into the runtime environment of checks in the group. Only relevant for check types that support environment variables. Use global environment variables whenever possible. (see below for nested schema)
+                      Insert environment variables into the runtime environment of checks in the group. Only relevant for check types that support environment variables. Use global environment variables whenever possible.
+                    items:
+                      properties:
+                        key:
+                          description: |-
+                            (String) The name of the environment variable or secret.
+                            The name of the environment variable or secret.
+                          type: string
+                        locked:
+                          description: |-
+                            (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+                            If true, the value is not shown by default, but it can be accessed. (Default `false`).
+                          type: boolean
+                        secret:
+                          description: |-
+                            (Boolean) If true, the value will never be visible. (Default false).
+                            If true, the value will never be visible. (Default `false`).
+                          type: boolean
+                        valueSecretRef:
+                          description: |-
+                            (String) The value of the environment variable or secret.
+                            The value of the environment variable or secret.
+                          properties:
+                            key:
+                              description: The key to select.
+                              type: string
+                            name:
+                              description: Name of the secret.
+                              type: string
+                            namespace:
+                              description: Namespace of the secret.
+                              type: string
+                          required:
+                          - key
+                          - name
+                          - namespace
+                          type: object
+                      required:
+                      - valueSecretRef
+                      type: object
+                    type: array
+                  muted:
+                    description: |-
+                      (Boolean) Determines if any notifications will be sent out when a check in this group fails and/or recovers. Muting the group will deactivate all notifications for all checks in the group, regardless of their muted state. (Default false).
+                      Determines if any notifications will be sent out when a check in this group fails and/or recovers. Muting the group will deactivate all notifications for all checks in the group, regardless of their muted state. (Default `false`).
+                    type: boolean
+                  name:
+                    description: |-
+                      (String) The name of the check group.
+                      The name of the check group.
+                    type: string
+                  setupScript:
+                    description: |-
+                      (Block List, Max: 1) A script to run in the setup phase of an API check. Runs in addition to the check's own setup script. (see below for nested schema)
+                      A script to run in the setup phase of an API check. Runs in addition to the check's own setup script.
+                    items:
+                      properties:
+                        inlineScript:
+                          description: |-
+                            (String) A valid piece of Node.js code.
+                            A valid piece of Node.js code.
+                          type: string
+                        snippetId:
+                          description: |-
+                            (Number) The ID of a code snippet. Code snippets are not available for new plans.
+                            The ID of a code snippet. Code snippets are not available for new plans.
+                          type: number
+                        snippetIdRef:
+                          description: Reference to a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            name:
+                              description: Name of the referenced object.
+                              type: string
+                            policy:
+                              description: Policies for referencing.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        snippetIdSelector:
+                          description: Selector for a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                  tags:
+                    description: |-
+                      (Set of String) Additional tags to append to all checks in the group.
+                      Additional tags to append to all checks in the group.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teardownScript:
+                    description: |-
+                      (Block List, Max: 1) A script to run in the teardown phase of an API check. Runs in addition to the check's own teardown script. (see below for nested schema)
+                      A script to run in the teardown phase of an API check. Runs in addition to the check's own teardown script.
+                    items:
+                      properties:
+                        inlineScript:
+                          description: |-
+                            (String) A valid piece of Node.js code.
+                            A valid piece of Node.js code.
+                          type: string
+                        snippetId:
+                          description: |-
+                            (Number) The ID of a code snippet. Code snippets are not available for new plans.
+                            The ID of a code snippet. Code snippets are not available for new plans.
+                          type: number
+                        snippetIdRef:
+                          description: Reference to a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            name:
+                              description: Name of the referenced object.
+                              type: string
+                            policy:
+                              description: Policies for referencing.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        snippetIdSelector:
+                          description: Selector for a Snippet in checkly to populate
+                            snippetId.
+                          properties:
+                            matchControllerRef:
+                              description: |-
+                                MatchControllerRef ensures an object with the same controller reference
+                                as the selecting object is selected.
+                              type: boolean
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: MatchLabels ensures an object with matching
+                                labels is selected.
+                              type: object
+                            policy:
+                              description: Policies for selection.
+                              properties:
+                                resolution:
+                                  default: Required
+                                  description: |-
+                                    Resolution specifies whether resolution of this reference is required.
+                                    The default is 'Required', which means the reconcile will fail if the
+                                    reference cannot be resolved. 'Optional' means this reference will be
+                                    a no-op if it cannot be resolved.
+                                  enum:
+                                  - Required
+                                  - Optional
+                                  type: string
+                                resolve:
+                                  description: |-
+                                    Resolve specifies when this reference should be resolved. The default
+                                    is 'IfNotPresent', which will attempt to resolve the reference only when
+                                    the corresponding field is not present. Use 'Always' to resolve the
+                                    reference on every reconcile.
+                                  enum:
+                                  - Always
+                                  - IfNotPresent
+                                  type: string
+                              type: object
+                          type: object
+                      type: object
+                    type: array
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+          status:
+            description: CheckGroupV2Status defines the observed state of CheckGroupV2.
+            properties:
+              atProvider:
+                properties:
+                  activated:
+                    description: |-
+                      (Boolean) Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default true).
+                      Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default `true`).
+                    type: boolean
+                  apiCheckDefaults:
+                    description: '(Block Set, Max: 1) (see below for nested schema)'
+                    items:
+                      properties:
+                        assertion:
+                          description: (Block Set) (see below for nested schema)
+                          items:
+                            properties:
+                              comparison:
+                                description: |-
+                                  (String) The type of comparison to be executed between expected and actual value of the assertion. Possible values EQUALS, NOT_EQUALS, HAS_KEY, NOT_HAS_KEY, HAS_VALUE, NOT_HAS_VALUE, IS_EMPTY, NOT_EMPTY, GREATER_THAN, LESS_THAN, CONTAINS, NOT_CONTAINS, IS_NULL, and NOT_NULL.
+                                  The type of comparison to be executed between expected and actual value of the assertion. Possible values `EQUALS`, `NOT_EQUALS`, `HAS_KEY`, `NOT_HAS_KEY`, `HAS_VALUE`, `NOT_HAS_VALUE`, `IS_EMPTY`, `NOT_EMPTY`, `GREATER_THAN`, `LESS_THAN`, `CONTAINS`, `NOT_CONTAINS`, `IS_NULL`, and `NOT_NULL`.
+                                type: string
+                              property:
+                                description: (String)
+                                type: string
+                              source:
+                                description: |-
+                                  (String) The source of the asserted value. Possible values STATUS_CODE, JSON_BODY, HEADERS, TEXT_BODY, and RESPONSE_TIME.
+                                  The source of the asserted value. Possible values `STATUS_CODE`, `JSON_BODY`, `HEADERS`, `TEXT_BODY`, and `RESPONSE_TIME`.
+                                type: string
+                              target:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        basicAuth:
+                          description: '(Block Set, Max: 1) (see below for nested
+                            schema)'
+                          items:
+                            properties:
+                              password:
+                                description: (String)
+                                type: string
+                              username:
+                                description: (String)
+                                type: string
+                            type: object
+                          type: array
+                        queryParameters:
+                          additionalProperties:
+                            type: string
+                          description: (Map of String)
+                          type: object
+                          x-kubernetes-map-type: granular
+                        url:
+                          description: |-
+                            (String) The base url for this group which you can reference with the GROUP_BASE_URL variable in all group checks.
+                            The base url for this group which you can reference with the `GROUP_BASE_URL` variable in all group checks.
+                          type: string
+                      type: object
+                    type: array
+                  concurrency:
+                    description: |-
+                      (Number) Determines the number of checks to run concurrently when triggering the check group via CI/CD or the API. (Default 1).
+                      Determines the number of checks to run concurrently when triggering the check group via CI/CD or the API. (Default `1`).
+                    type: number
+                  defaultRuntime:
+                    description: |-
+                      (Block List, Max: 1) Sets a default runtime for the group. Used as a fallback when a check belonging to the group has no runtime set. Takes precedence over the account default runtime. (see below for nested schema)
+                      Sets a default runtime for the group. Used as a fallback when a check belonging to the group has no runtime set. Takes precedence over the account default runtime.
+                    items:
+                      properties:
+                        runtimeId:
+                          description: |-
+                            (String) The runtime ID.
+                            The runtime ID.
+                          type: string
+                      type: object
+                    type: array
+                  enforceAlertSettings:
+                    description: |-
+                      (Block List, Max: 1) Enforces alert settings for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces alert settings for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        alertChannelSubscription:
+                          description: |-
+                            (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
+                            An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
+                          items:
+                            properties:
+                              activated:
+                                description: |-
+                                  (Boolean) Determines whether activated checks in the group should run or not. Deactivating the group will prevent all checks in the group from running, regardless of their activated state. (Default true).
+                                  Whether an alert should be sent to this channel.
+                                type: boolean
+                              channelId:
+                                description: |-
+                                  (Number) The ID of the alert channel.
+                                  The ID of the alert channel.
+                                type: number
+                            type: object
+                          type: array
+                        alertSettings:
+                          description: |-
+                            (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
+                            Determines the alert escalation policy for the check.
+                          items:
+                            properties:
+                              escalationType:
+                                description: |-
+                                  (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+                                  Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+                                type: string
+                              parallelRunFailureThreshold:
+                                description: |-
+                                  (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+                                  Configuration for parallel run failure threshold.
+                                items:
+                                  properties:
+                                    enabled:
+                                      description: |-
+                                        (Boolean) Determines whether the enforced alert settings should be active.
+                                        Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+                                      type: boolean
+                                    percentage:
+                                      description: |-
+                                        (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+                                        Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+                                      type: number
+                                  type: object
+                                type: array
+                              reminders:
+                                description: |-
+                                  (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+                                  Defines how often to send reminder notifications after initial alert.
+                                items:
+                                  properties:
+                                    amount:
+                                      description: |-
+                                        (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+                                        Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+                                      type: number
+                                    interval:
+                                      description: |-
+                                        (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+                                        Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                      type: number
+                                  type: object
+                                type: array
+                              runBasedEscalation:
+                                description: |-
+                                  based escalation. (see below for nested schema)
+                                  Configuration for run-based escalation.
+                                items:
+                                  properties:
+                                    failedRunThreshold:
+                                      description: |-
+                                        (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+                                        Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+                                      type: number
+                                  type: object
+                                type: array
+                              sslCertificates:
+                                description: (Block Set, Deprecated) (see below for
+                                  nested schema)
+                                items:
+                                  properties:
+                                    alertThreshold:
+                                      description: |-
+                                        (Number) No longer available.
+                                        No longer available.
+                                      type: number
+                                    enabled:
+                                      description: |-
+                                        (Boolean) Determines whether the enforced alert settings should be active.
+                                        No longer available.
+                                      type: boolean
+                                  type: object
+                                type: array
+                              timeBasedEscalation:
+                                description: |-
+                                  based escalation. (see below for nested schema)
+                                  Configuration for time-based escalation.
+                                items:
+                                  properties:
+                                    minutesFailingThreshold:
+                                      description: |-
+                                        (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+                                        Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+                                      type: number
+                                  type: object
+                                type: array
+                            type: object
+                          type: array
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced alert settings should be active.
+                          type: boolean
+                        useGlobalAlertSettings:
+                          description: |-
+                            (Boolean) Whether to use account level alert settings instead of the group's alert settings.Default (false).
+                            Whether to use account level alert settings instead of the group's alert settings.Default (`false`).
+                          type: boolean
+                      type: object
+                    type: array
+                  enforceLocations:
+                    description: |-
+                      (Block List, Max: 1) Enforces public and private locations for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces public and private locations for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced locations should be active.
+                          type: boolean
+                        locations:
+                          description: |-
+                            (Set of String) An array of one or more data center locations where to run the checks.
+                            An array of one or more data center locations where to run the checks.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: set
+                        privateLocations:
+                          description: |-
+                            (Set of String) An array of one or more private locations slugs.
+                            An array of one or more private locations slugs.
+                          items:
+                            type: string
+                          type: array
+                          x-kubernetes-list-type: set
+                      type: object
+                    type: array
+                  enforceRetryStrategy:
+                    description: |-
+                      (Block List, Max: 1) Enforces a retry strategy for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces a retry strategy for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced retry strategy should be active.
+                          type: boolean
+                        retryStrategy:
+                          description: |-
+                            (Block List, Min: 1, Max: 1) A strategy for retrying failed check/monitor runs. (see below for nested schema)
+                            A strategy for retrying failed check/monitor runs.
+                          items:
+                            properties:
+                              baseBackoffSeconds:
+                                description: |-
+                                  (Number) The number of seconds to wait before the first retry attempt. (Default 60).
+                                  The number of seconds to wait before the first retry attempt. (Default `60`).
+                                type: number
+                              maxDurationSeconds:
+                                description: |-
+                                  (Number) The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 600).
+                                  The total amount of time to continue retrying the check/monitor (maximum 600 seconds). Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `600`).
+                                type: number
+                              maxRetries:
+                                description: |-
+                                  (Number) The maximum number of times to retry the check/monitor. Value must be between 1 and 10. Available when type is FIXED, LINEAR, or EXPONENTIAL. (Default 2).
+                                  The maximum number of times to retry the check/monitor. Value must be between `1` and `10`. Available when `type` is `FIXED`, `LINEAR`, or `EXPONENTIAL`. (Default `2`).
+                                type: number
+                              onlyOn:
+                                description: |-
+                                  (Block List, Max: 1) Apply the retry strategy only if the defined conditions match. (see below for nested schema)
+                                  Apply the retry strategy only if the defined conditions match.
+                                items:
+                                  properties:
+                                    networkError:
+                                      description: |-
+                                        (Boolean) When true, retry only if the cause of the failure is a network error. (Default false).
+                                        When `true`, retry only if the cause of the failure is a network error. (Default `false`).
+                                      type: boolean
+                                  type: object
+                                type: array
+                              sameRegion:
+                                description: |-
+                                  (Boolean) Whether retries should be run in the same region as the initial check/monitor run. (Default true).
+                                  Whether retries should be run in the same region as the initial check/monitor run. (Default `true`).
+                                type: boolean
+                              type:
+                                description: |-
+                                  (String) Determines which type of retry strategy to use. Possible values are FIXED, LINEAR, EXPONENTIAL, SINGLE_RETRY, and NO_RETRIES.
+                                  Determines which type of retry strategy to use. Possible values are `FIXED`, `LINEAR`, `EXPONENTIAL`, `SINGLE_RETRY`, and `NO_RETRIES`.
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  enforceSchedulingStrategy:
+                    description: |-
+                      (Block List, Max: 1) Enforces a scheduling strategy for the whole group. Overrides check configuration. (see below for nested schema)
+                      Enforces a scheduling strategy for the whole group. Overrides check configuration.
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            (Boolean) Determines whether the enforced alert settings should be active.
+                            Determines whether the enforced scheduling strategy should be active.
+                          type: boolean
+                        runParallel:
+                          description: |-
+                            robin.
+                            Determines if the checks in the group should run in all selected locations in parallel or round-robin.
+                          type: boolean
+                      type: object
+                    type: array
+                  environmentVariable:
+                    description: |-
+                      (Block List) Insert environment variables into the runtime environment of checks in the group. Only relevant for check types that support environment variables. Use global environment variables whenever possible. (see below for nested schema)
+                      Insert environment variables into the runtime environment of checks in the group. Only relevant for check types that support environment variables. Use global environment variables whenever possible.
+                    items:
+                      properties:
+                        key:
+                          description: |-
+                            (String) The name of the environment variable or secret.
+                            The name of the environment variable or secret.
+                          type: string
+                        locked:
+                          description: |-
+                            (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+                            If true, the value is not shown by default, but it can be accessed. (Default `false`).
+                          type: boolean
+                        secret:
+                          description: |-
+                            (Boolean) If true, the value will never be visible. (Default false).
+                            If true, the value will never be visible. (Default `false`).
+                          type: boolean
+                      type: object
+                    type: array
+                  id:
+                    description: (String) The ID of this resource.
+                    type: string
+                  muted:
+                    description: |-
+                      (Boolean) Determines if any notifications will be sent out when a check in this group fails and/or recovers. Muting the group will deactivate all notifications for all checks in the group, regardless of their muted state. (Default false).
+                      Determines if any notifications will be sent out when a check in this group fails and/or recovers. Muting the group will deactivate all notifications for all checks in the group, regardless of their muted state. (Default `false`).
+                    type: boolean
+                  name:
+                    description: |-
+                      (String) The name of the check group.
+                      The name of the check group.
+                    type: string
+                  setupScript:
+                    description: |-
+                      (Block List, Max: 1) A script to run in the setup phase of an API check. Runs in addition to the check's own setup script. (see below for nested schema)
+                      A script to run in the setup phase of an API check. Runs in addition to the check's own setup script.
+                    items:
+                      properties:
+                        inlineScript:
+                          description: |-
+                            (String) A valid piece of Node.js code.
+                            A valid piece of Node.js code.
+                          type: string
+                        snippetId:
+                          description: |-
+                            (Number) The ID of a code snippet. Code snippets are not available for new plans.
+                            The ID of a code snippet. Code snippets are not available for new plans.
+                          type: number
+                      type: object
+                    type: array
+                  tags:
+                    description: |-
+                      (Set of String) Additional tags to append to all checks in the group.
+                      Additional tags to append to all checks in the group.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teardownScript:
+                    description: |-
+                      (Block List, Max: 1) A script to run in the teardown phase of an API check. Runs in addition to the check's own teardown script. (see below for nested schema)
+                      A script to run in the teardown phase of an API check. Runs in addition to the check's own teardown script.
+                    items:
+                      properties:
+                        inlineScript:
+                          description: |-
+                            (String) A valid piece of Node.js code.
+                            A valid piece of Node.js code.
+                          type: string
+                        snippetId:
+                          description: |-
+                            (Number) The ID of a code snippet. Code snippets are not available for new plans.
+                            The ID of a code snippet. Code snippets are not available for new plans.
+                          type: number
+                      type: object
+                    type: array
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

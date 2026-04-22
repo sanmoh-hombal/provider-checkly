@@ -1,0 +1,12 @@
+apiVersion: private.checkly.crossplane.io/v1alpha1
+kind: Location
+metadata:
+  annotations:
+    meta.upbound.io/example-id: private/v1alpha1/location
+  labels:
+    testing.upbound.io/example-name: location
+  name: location
+spec:
+  forProvider:
+    name: New Private Location
+    slugName: new-private-location

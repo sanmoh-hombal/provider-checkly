@@ -1,0 +1,46 @@
+apiVersion: status.checkly.crossplane.io/v1alpha1
+kind: Page
+metadata:
+  annotations:
+    meta.upbound.io/example-id: status/v1alpha1/page
+  labels:
+    testing.upbound.io/example-name: example
+  name: example
+spec:
+  forProvider:
+    card:
+    - name: Services
+      serviceAttachment:
+      - serviceId: ${checkly_status_page_service.api.id}
+      - serviceId: ${checkly_status_page_service.database.id}
+    defaultTheme: DARK
+    name: Example Application
+    url: my-example-status-page
+
+---
+
+apiVersion: status.checkly.crossplane.io/v1alpha1
+kind: PageService
+metadata:
+  annotations:
+    meta.upbound.io/example-id: status/v1alpha1/page
+  labels:
+    testing.upbound.io/example-name: api
+  name: api
+spec:
+  forProvider:
+    name: API
+
+---
+
+apiVersion: status.checkly.crossplane.io/v1alpha1
+kind: PageService
+metadata:
+  annotations:
+    meta.upbound.io/example-id: status/v1alpha1/page
+  labels:
+    testing.upbound.io/example-name: database
+  name: database
+spec:
+  forProvider:
+    name: Database

@@ -1,0 +1,21 @@
+apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+kind: TCPCheck
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/tcpcheck
+  labels:
+    testing.upbound.io/example-name: example-tcp-check
+  name: example-tcp-check
+  namespace: upbound-system
+spec:
+  forProvider:
+    activated: true
+    frequency: 1
+    locations:
+    - us-west-1
+    name: Example TCP check
+    request:
+    - hostname: api.checklyhq.com
+      port: 80
+    shouldFail: false
+    useGlobalAlertSettings: true

@@ -1,0 +1,34 @@
+apiVersion: playwright.checkly.crossplane.io/v1alpha1
+kind: CheckSuite
+metadata:
+  annotations:
+    meta.upbound.io/example-id: playwright/v1alpha1/checksuite
+  labels:
+    testing.upbound.io/example-name: example-playwright-check
+  name: example-playwright-check
+spec:
+  forProvider:
+    activated: true
+    bundle:
+    - id: ${checkly_playwright_code_bundle.playwright-bundle.id}
+      metadata: ${checkly_playwright_code_bundle.playwright-bundle.metadata}
+    frequency: 2
+    locations:
+    - eu-west-1
+    name: Example Playwright check
+    useGlobalAlertSettings: true
+
+---
+
+apiVersion: playwright.checkly.crossplane.io/v1alpha1
+kind: CodeBundle
+metadata:
+  annotations:
+    meta.upbound.io/example-id: playwright/v1alpha1/checksuite
+  labels:
+    testing.upbound.io/example-name: playwright-bundle
+  name: playwright-bundle
+spec:
+  forProvider:
+    prebuiltArchive:
+    - file: ${data.archive_file.playwright-bundle.output_path}

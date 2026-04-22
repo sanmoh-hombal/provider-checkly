@@ -1,0 +1,23 @@
+apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+kind: URLMonitor
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/urlmonitor
+  labels:
+    testing.upbound.io/example-name: example-url-monitor
+  name: example-url-monitor
+  namespace: upbound-system
+spec:
+  forProvider:
+    activated: true
+    frequency: 2
+    locations:
+    - eu-west-1
+    name: Example URL monitor
+    request:
+    - assertion:
+      - comparison: EQUALS
+        source: STATUS_CODE
+        target: "200"
+      url: https://welcome.checklyhq.com
+    useGlobalAlertSettings: true

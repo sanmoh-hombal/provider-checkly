@@ -1,0 +1,12 @@
+apiVersion: status.checkly.m.crossplane.io/v1alpha1
+kind: PageService
+metadata:
+  annotations:
+    meta.upbound.io/example-id: status/v1alpha1/pageservice
+  labels:
+    testing.upbound.io/example-name: backend
+  name: backend
+  namespace: upbound-system
+spec:
+  forProvider:
+    name: Backend

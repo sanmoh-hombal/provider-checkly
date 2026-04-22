@@ -1,0 +1,40 @@
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: alerts/v1alpha1/alertchannel
+  labels:
+    testing.upbound.io/example-name: email_ac
+  name: email-ac
+spec:
+  forProvider:
+    email:
+    - address: john@example.com
+    sendDegraded: true
+    sendFailure: false
+    sendRecovery: true
+    sslExpiry: true
+    sslExpiryThreshold: 22
+
+---
+
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  annotations:
+    meta.upbound.io/example-id: alerts/v1alpha1/alertchannel
+  labels:
+    testing.upbound.io/example-name: example_check
+  name: example-check
+spec:
+  forProvider:
+    alertChannelSubscription:
+    - activated: true
+      channelIdSelector:
+        matchLabels:
+          testing.upbound.io/example-name: email_ac
+    - activated: true
+      channelIdSelector:
+        matchLabels:
+          testing.upbound.io/example-name: sms_ac
+    name: Example check

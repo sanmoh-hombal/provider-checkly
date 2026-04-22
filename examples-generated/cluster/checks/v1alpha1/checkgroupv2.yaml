@@ -1,0 +1,45 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: CheckGroupV2
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroupv2
+  labels:
+    testing.upbound.io/example-name: just-a-folder
+  name: just-a-folder
+spec:
+  forProvider:
+    name: Just a Folder
+
+---
+
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroupv2
+  labels:
+    testing.upbound.io/example-name: email
+  name: email
+spec:
+  forProvider:
+    email:
+    - address: alerts@example.com
+
+---
+
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/checkgroupv2
+  labels:
+    testing.upbound.io/example-name: slack
+  name: slack
+spec:
+  forProvider:
+    slack:
+    - channel: '#alerts'
+      urlSecretRef:
+        key: example-key
+        name: example-secret
+        namespace: upbound-system

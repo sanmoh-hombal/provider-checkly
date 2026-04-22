@@ -1,0 +1,11 @@
+apiVersion: trigger.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  annotations:
+    meta.upbound.io/example-id: trigger/v1alpha1/check
+  labels:
+    testing.upbound.io/example-name: test_trigger_check
+  name: test-trigger-check
+spec:
+  forProvider:
+    checkId: c1ff95c5-d7f6-4a90-9ce2-1e605f117592
