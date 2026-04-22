@@ -1,0 +1,15 @@
+apiVersion: trigger.checkly.m.crossplane.io/v1alpha1
+kind: Group
+metadata:
+  name: trigger-group-example
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: triggers/v1alpha1/triggergroup
+spec:
+  forProvider:
+    groupId: 0
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: trigger-group-example-conn
+    namespace: default
