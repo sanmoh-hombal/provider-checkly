@@ -9,6 +9,14 @@ import (
 // Configure adds per-resource overrides for the alerts short-group (namespaced scope).
 func Configure(p *ujconfig.Provider) {
 	configureAlertChannel(p)
+	configureMaintenanceWindow(p)
+}
+
+func configureMaintenanceWindow(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_maintenance_windows", func(r *ujconfig.Resource) {
+		r.ShortGroup = "alerts"
+		r.Kind = "MaintenanceWindow"
+	})
 }
 
 func configureAlertChannel(p *ujconfig.Provider) {
