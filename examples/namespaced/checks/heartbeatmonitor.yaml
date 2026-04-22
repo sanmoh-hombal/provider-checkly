@@ -1,0 +1,15 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: HeartbeatMonitor
+metadata:
+  name: worker-heartbeat-monitor
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/heartbeatmonitor
+spec:
+  forProvider:
+    name: worker-heartbeat-monitor
+    activated: true
+    tags:
+      - managed-by-crossplane
+  providerConfigRef:
+    name: default
