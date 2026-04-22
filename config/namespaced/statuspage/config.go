@@ -5,6 +5,14 @@ import ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 // Configure adds per-resource overrides for the statuspage short-group (namespaced scope).
 func Configure(p *ujconfig.Provider) {
 	configureDashboard(p)
+	configureStatusPage(p)
+}
+
+func configureStatusPage(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_status_page", func(r *ujconfig.Resource) {
+		r.ShortGroup = "statuspage"
+		r.Kind = "StatusPage"
+	})
 }
 
 func configureDashboard(p *ujconfig.Provider) {
