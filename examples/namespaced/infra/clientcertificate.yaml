@@ -10,11 +10,10 @@ spec:
     host: api.example.com
     certificateSecretRef:
       name: tls-cert
-      namespace: default
       key: tls.crt
     privateKeySecretRef:
       name: tls-cert
-      namespace: default
       key: tls.key
   providerConfigRef:
+    kind: ProviderConfig
     name: default

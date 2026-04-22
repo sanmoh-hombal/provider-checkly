@@ -12,9 +12,9 @@ spec:
     tags:
       - managed-by-crossplane
     heartbeat:
-      period: 60
-      periodUnit: seconds
-      grace: 120
-      graceUnit: seconds
+      - period: 60
+        periodUnit: seconds
+        grace: 120
+        graceUnit: seconds
   providerConfigRef:
     name: default

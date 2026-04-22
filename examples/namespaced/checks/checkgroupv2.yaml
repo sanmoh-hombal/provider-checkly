@@ -17,6 +17,14 @@ spec:
         locations:
           - eu-west-1
           - us-east-1
+    enforceRetryStrategy:
+      - enabled: true
+        retryStrategy:
+          - type: FIXED
+            maxRetries: 2
+            baseBackoffSeconds: 60
+            maxDurationSeconds: 600
+            sameRegion: true
     environmentVariable:
       - key: BASE_URL
         valueSecretRef:

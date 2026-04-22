@@ -1,4 +1,4 @@
-apiVersion: checkly.checkly.m.crossplane.io/v1alpha1
+apiVersion: infra.checkly.m.crossplane.io/v1alpha1
 kind: Snippet
 metadata:
   name: setup-helper
@@ -19,4 +19,5 @@ spec:
 
       module.exports = { setupAuth };
   providerConfigRef:
+    kind: ProviderConfig
     name: default

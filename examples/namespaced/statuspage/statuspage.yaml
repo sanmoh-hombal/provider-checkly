@@ -8,10 +8,11 @@ metadata:
 spec:
   forProvider:
     name: Example Status Page
-    url: https://status.example.com
+    url: status-example-crossplane
     card:
       - name: Core Services
         serviceAttachment:
           - serviceId: "1"
   providerConfigRef:
+    kind: ProviderConfig
     name: default

@@ -11,4 +11,5 @@ spec:
     statusPageIdRef:
       name: example-status-page
   providerConfigRef:
+    kind: ProviderConfig
     name: default
