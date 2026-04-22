@@ -14,18 +14,18 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this Check
-func (mg *Check) GetTerraformResourceType() string {
+// GetTerraformResourceType returns Terraform resource type for this TriggerCheck
+func (mg *TriggerCheck) GetTerraformResourceType() string {
 	return "checkly_trigger_check"
 }
 
-// GetConnectionDetailsMapping for this Check
-func (tr *Check) GetConnectionDetailsMapping() map[string]string {
+// GetConnectionDetailsMapping for this TriggerCheck
+func (tr *TriggerCheck) GetConnectionDetailsMapping() map[string]string {
 	return nil
 }
 
-// GetObservation of this Check
-func (tr *Check) GetObservation() (map[string]any, error) {
+// GetObservation of this TriggerCheck
+func (tr *TriggerCheck) GetObservation() (map[string]any, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -34,8 +34,8 @@ func (tr *Check) GetObservation() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this Check
-func (tr *Check) SetObservation(obs map[string]any) error {
+// SetObservation for this TriggerCheck
+func (tr *TriggerCheck) SetObservation(obs map[string]any) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -43,16 +43,16 @@ func (tr *Check) SetObservation(obs map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetID returns ID of underlying Terraform resource of this Check
-func (tr *Check) GetID() string {
+// GetID returns ID of underlying Terraform resource of this TriggerCheck
+func (tr *TriggerCheck) GetID() string {
 	if tr.Status.AtProvider.ID == nil {
 		return ""
 	}
 	return *tr.Status.AtProvider.ID
 }
 
-// GetParameters of this Check
-func (tr *Check) GetParameters() (map[string]any, error) {
+// GetParameters of this TriggerCheck
+func (tr *TriggerCheck) GetParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (tr *Check) GetParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this Check
-func (tr *Check) SetParameters(params map[string]any) error {
+// SetParameters for this TriggerCheck
+func (tr *TriggerCheck) SetParameters(params map[string]any) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -70,8 +70,8 @@ func (tr *Check) SetParameters(params map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// GetInitParameters of this Check
-func (tr *Check) GetInitParameters() (map[string]any, error) {
+// GetInitParameters of this TriggerCheck
+func (tr *TriggerCheck) GetInitParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.InitProvider)
 	if err != nil {
 		return nil, err
@@ -80,8 +80,8 @@ func (tr *Check) GetInitParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// GetInitParameters of this Check
-func (tr *Check) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
+// GetInitParameters of this TriggerCheck
+func (tr *TriggerCheck) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
 	params, err := tr.GetParameters()
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get parameters for resource \"%s/%s\"", tr.GetNamespace(), tr.GetName())
@@ -110,10 +110,10 @@ func (tr *Check) GetMergedParameters(shouldMergeInitProvider bool) (map[string]a
 	return params, nil
 }
 
-// LateInitialize this Check using its observed tfState.
+// LateInitialize this TriggerCheck using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *Check) LateInitialize(attrs []byte) (bool, error) {
-	params := &CheckParameters{}
+func (tr *TriggerCheck) LateInitialize(attrs []byte) (bool, error) {
+	params := &TriggerCheckParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -124,6 +124,6 @@ func (tr *Check) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *Check) GetTerraformSchemaVersion() int {
+func (tr *TriggerCheck) GetTerraformSchemaVersion() int {
 	return 0
 }

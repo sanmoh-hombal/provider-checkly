@@ -11,14 +11,22 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 )
 
-type CheckInitParameters struct {
+type TriggerCheckInitParameters struct {
 
 	// (String) The id of the check that you want to attach the trigger to.
 	// The id of the check that you want to attach the trigger to.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.Check
 	CheckID *string `json:"checkId,omitempty" tf:"check_id,omitempty"`
+
+	// Reference to a Check in checks to populate checkId.
+	// +kubebuilder:validation:Optional
+	CheckIDRef *v1.Reference `json:"checkIdRef,omitempty" tf:"-"`
+
+	// Selector for a Check in checks to populate checkId.
+	// +kubebuilder:validation:Optional
+	CheckIDSelector *v1.Selector `json:"checkIdSelector,omitempty" tf:"-"`
 
 	// (String) The token value created to trigger the check
 	// The token value created to trigger the check
@@ -29,7 +37,7 @@ type CheckInitParameters struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-type CheckObservation struct {
+type TriggerCheckObservation struct {
 
 	// (String) The id of the check that you want to attach the trigger to.
 	// The id of the check that you want to attach the trigger to.
@@ -47,12 +55,21 @@ type CheckObservation struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-type CheckParameters struct {
+type TriggerCheckParameters struct {
 
 	// (String) The id of the check that you want to attach the trigger to.
 	// The id of the check that you want to attach the trigger to.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.Check
 	// +kubebuilder:validation:Optional
 	CheckID *string `json:"checkId,omitempty" tf:"check_id,omitempty"`
+
+	// Reference to a Check in checks to populate checkId.
+	// +kubebuilder:validation:Optional
+	CheckIDRef *v1.Reference `json:"checkIdRef,omitempty" tf:"-"`
+
+	// Selector for a Check in checks to populate checkId.
+	// +kubebuilder:validation:Optional
+	CheckIDSelector *v1.Selector `json:"checkIdSelector,omitempty" tf:"-"`
 
 	// (String) The token value created to trigger the check
 	// The token value created to trigger the check
@@ -65,10 +82,10 @@ type CheckParameters struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-// CheckSpec defines the desired state of Check
-type CheckSpec struct {
-	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            CheckParameters `json:"forProvider"`
+// TriggerCheckSpec defines the desired state of TriggerCheck
+type TriggerCheckSpec struct {
+	v1.ResourceSpec `json:",inline"`
+	ForProvider     TriggerCheckParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -79,50 +96,49 @@ type CheckSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider CheckInitParameters `json:"initProvider,omitempty"`
+	InitProvider TriggerCheckInitParameters `json:"initProvider,omitempty"`
 }
 
-// CheckStatus defines the observed state of Check.
-type CheckStatus struct {
+// TriggerCheckStatus defines the observed state of TriggerCheck.
+type TriggerCheckStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        CheckObservation `json:"atProvider,omitempty"`
+	AtProvider        TriggerCheckObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Check is the Schema for the Checks API.
+// TriggerCheck is the Schema for the TriggerChecks API.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,checkly}
-type Check struct {
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,checkly}
+type TriggerCheck struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.checkId) || (has(self.initProvider) && has(self.initProvider.checkId))",message="spec.forProvider.checkId is a required parameter"
-	Spec   CheckSpec   `json:"spec"`
-	Status CheckStatus `json:"status,omitempty"`
+	Spec              TriggerCheckSpec   `json:"spec"`
+	Status            TriggerCheckStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// CheckList contains a list of Checks
-type CheckList struct {
+// TriggerCheckList contains a list of TriggerChecks
+type TriggerCheckList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Check `json:"items"`
+	Items           []TriggerCheck `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	Check_Kind             = "Check"
-	Check_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Check_Kind}.String()
-	Check_KindAPIVersion   = Check_Kind + "." + CRDGroupVersion.String()
-	Check_GroupVersionKind = CRDGroupVersion.WithKind(Check_Kind)
+	TriggerCheck_Kind             = "TriggerCheck"
+	TriggerCheck_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: TriggerCheck_Kind}.String()
+	TriggerCheck_KindAPIVersion   = TriggerCheck_Kind + "." + CRDGroupVersion.String()
+	TriggerCheck_GroupVersionKind = CRDGroupVersion.WithKind(TriggerCheck_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&Check{}, &CheckList{})
+	SchemeBuilder.Register(&TriggerCheck{}, &TriggerCheckList{})
 }
