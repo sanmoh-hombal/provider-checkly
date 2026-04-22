@@ -1,0 +1,16 @@
+apiVersion: infra.checkly.m.crossplane.io/v1alpha1
+kind: PrivateLocation
+metadata:
+  name: private-loc-example
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/privatelocation
+spec:
+  forProvider:
+    name: private-loc-example
+    slugName: private-loc-example
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: private-loc-example-conn
+    namespace: default

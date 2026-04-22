@@ -391,7 +391,7 @@ spec:
                           type: array
                           x-kubernetes-list-type: set
                         privateLocationRefs:
-                          description: References to Location in private to populate
+                          description: References to PrivateLocation in infra to populate
                             privateLocations.
                           items:
                             description: A Reference to a named object.
@@ -437,7 +437,7 @@ spec:
                           type: array
                           x-kubernetes-list-type: set
                         privateLocationsSelector:
-                          description: Selector for a list of Location in private
+                          description: Selector for a list of PrivateLocation in infra
                             to populate privateLocations.
                           properties:
                             matchControllerRef:
@@ -1121,7 +1121,7 @@ spec:
                           type: array
                           x-kubernetes-list-type: set
                         privateLocationRefs:
-                          description: References to Location in private to populate
+                          description: References to PrivateLocation in infra to populate
                             privateLocations.
                           items:
                             description: A Reference to a named object.
@@ -1167,7 +1167,7 @@ spec:
                           type: array
                           x-kubernetes-list-type: set
                         privateLocationsSelector:
-                          description: Selector for a list of Location in private
+                          description: Selector for a list of PrivateLocation in infra
                             to populate privateLocations.
                           properties:
                             matchControllerRef:

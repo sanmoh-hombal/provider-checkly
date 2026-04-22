@@ -11,8 +11,7 @@ import (
 	reference "github.com/crossplane/crossplane-runtime/v2/pkg/reference"
 	errors "github.com/pkg/errors"
 	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1"
-	v1alpha12 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1"
-	v1alpha11 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/private/v1alpha1"
+	v1alpha11 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1"
 	client "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -67,8 +66,8 @@ func (mg *Check) ResolveReferences(ctx context.Context, c client.Reader) error {
 		References:    mg.Spec.ForProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.ForProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -120,8 +119,8 @@ func (mg *Check) ResolveReferences(ctx context.Context, c client.Reader) error {
 		References:    mg.Spec.InitProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.InitProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -167,8 +166,8 @@ func (mg *CheckGroup) ResolveReferences(ctx context.Context, c client.Reader) er
 		References:    mg.Spec.ForProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.ForProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -203,8 +202,8 @@ func (mg *CheckGroup) ResolveReferences(ctx context.Context, c client.Reader) er
 		References:    mg.Spec.InitProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.InitProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -253,8 +252,8 @@ func (mg *CheckGroupV2) ResolveReferences(ctx context.Context, c client.Reader) 
 			References:    mg.Spec.ForProvider.EnforceLocations[i3].PrivateLocationRefs,
 			Selector:      mg.Spec.ForProvider.EnforceLocations[i3].PrivateLocationsSelector,
 			To: reference.To{
-				List:    &v1alpha11.LocationList{},
-				Managed: &v1alpha11.Location{},
+				List:    &v1alpha11.PrivateLocationList{},
+				Managed: &v1alpha11.PrivateLocation{},
 			},
 		})
 		if err != nil {
@@ -272,8 +271,8 @@ func (mg *CheckGroupV2) ResolveReferences(ctx context.Context, c client.Reader) 
 			Reference:    mg.Spec.ForProvider.SetupScript[i3].SnippetIDRef,
 			Selector:     mg.Spec.ForProvider.SetupScript[i3].SnippetIDSelector,
 			To: reference.To{
-				List:    &v1alpha12.SnippetList{},
-				Managed: &v1alpha12.Snippet{},
+				List:    &v1alpha11.SnippetList{},
+				Managed: &v1alpha11.Snippet{},
 			},
 		})
 		if err != nil {
@@ -291,8 +290,8 @@ func (mg *CheckGroupV2) ResolveReferences(ctx context.Context, c client.Reader) 
 			Reference:    mg.Spec.ForProvider.TeardownScript[i3].SnippetIDRef,
 			Selector:     mg.Spec.ForProvider.TeardownScript[i3].SnippetIDSelector,
 			To: reference.To{
-				List:    &v1alpha12.SnippetList{},
-				Managed: &v1alpha12.Snippet{},
+				List:    &v1alpha11.SnippetList{},
+				Managed: &v1alpha11.Snippet{},
 			},
 		})
 		if err != nil {
@@ -331,8 +330,8 @@ func (mg *CheckGroupV2) ResolveReferences(ctx context.Context, c client.Reader) 
 			References:    mg.Spec.InitProvider.EnforceLocations[i3].PrivateLocationRefs,
 			Selector:      mg.Spec.InitProvider.EnforceLocations[i3].PrivateLocationsSelector,
 			To: reference.To{
-				List:    &v1alpha11.LocationList{},
-				Managed: &v1alpha11.Location{},
+				List:    &v1alpha11.PrivateLocationList{},
+				Managed: &v1alpha11.PrivateLocation{},
 			},
 		})
 		if err != nil {
@@ -350,8 +349,8 @@ func (mg *CheckGroupV2) ResolveReferences(ctx context.Context, c client.Reader) 
 			Reference:    mg.Spec.InitProvider.SetupScript[i3].SnippetIDRef,
 			Selector:     mg.Spec.InitProvider.SetupScript[i3].SnippetIDSelector,
 			To: reference.To{
-				List:    &v1alpha12.SnippetList{},
-				Managed: &v1alpha12.Snippet{},
+				List:    &v1alpha11.SnippetList{},
+				Managed: &v1alpha11.Snippet{},
 			},
 		})
 		if err != nil {
@@ -369,8 +368,8 @@ func (mg *CheckGroupV2) ResolveReferences(ctx context.Context, c client.Reader) 
 			Reference:    mg.Spec.InitProvider.TeardownScript[i3].SnippetIDRef,
 			Selector:     mg.Spec.InitProvider.TeardownScript[i3].SnippetIDSelector,
 			To: reference.To{
-				List:    &v1alpha12.SnippetList{},
-				Managed: &v1alpha12.Snippet{},
+				List:    &v1alpha11.SnippetList{},
+				Managed: &v1alpha11.Snippet{},
 			},
 		})
 		if err != nil {
@@ -697,8 +696,8 @@ func (mg *TCPCheck) ResolveReferences(ctx context.Context, c client.Reader) erro
 		References:    mg.Spec.ForProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.ForProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -750,8 +749,8 @@ func (mg *TCPCheck) ResolveReferences(ctx context.Context, c client.Reader) erro
 		References:    mg.Spec.InitProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.InitProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -814,8 +813,8 @@ func (mg *TCPMonitor) ResolveReferences(ctx context.Context, c client.Reader) er
 		References:    mg.Spec.ForProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.ForProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -867,8 +866,8 @@ func (mg *TCPMonitor) ResolveReferences(ctx context.Context, c client.Reader) er
 		References:    mg.Spec.InitProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.InitProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -931,8 +930,8 @@ func (mg *URLMonitor) ResolveReferences(ctx context.Context, c client.Reader) er
 		References:    mg.Spec.ForProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.ForProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
@@ -984,8 +983,8 @@ func (mg *URLMonitor) ResolveReferences(ctx context.Context, c client.Reader) er
 		References:    mg.Spec.InitProvider.PrivateLocationRefs,
 		Selector:      mg.Spec.InitProvider.PrivateLocationsSelector,
 		To: reference.To{
-			List:    &v1alpha11.LocationList{},
-			Managed: &v1alpha11.Location{},
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
 		},
 	})
 	if err != nil {
