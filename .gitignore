@@ -6,6 +6,7 @@ cover.out
 /.vendor-new
 .DS_Store
 kubeconfig
+.env
 
 # ignore IDE folders
 .vscode/

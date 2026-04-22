@@ -10,7 +10,7 @@ spec:
     name: private-loc-example
     slugName: private-loc-example
   providerConfigRef:
+    kind: ProviderConfig
     name: default
   writeConnectionSecretToRef:
     name: private-loc-example-conn
-    namespace: default

@@ -5,13 +5,13 @@ metadata:
   namespace: default
   annotations:
     meta.upbound.io/example-id: infra/v1alpha1/environmentvariable
+    crossplane.io/external-name: API_BASE_URL
 spec:
   forProvider:
-    key: API_BASE_URL
     valueSecretRef:
       key: value
       name: envvar-api-base-url
-      namespace: default
     locked: false
   providerConfigRef:
+    kind: ProviderConfig
     name: default

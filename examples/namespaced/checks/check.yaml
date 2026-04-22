@@ -17,12 +17,12 @@ spec:
     tags:
       - managed-by-crossplane
     request:
-      method: GET
-      url: https://example.com
-      assertions:
-        - source: STATUS_CODE
-          property: ""
-          comparison: EQUALS
-          target: "200"
+      - method: GET
+        url: https://example.com
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
   providerConfigRef:
     name: default

@@ -15,4 +15,5 @@ spec:
     tags:
       - production
   providerConfigRef:
+    kind: ProviderConfig
     name: default
