@@ -1,0 +1,18 @@
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: Dashboard
+metadata:
+  name: public-dashboard
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: statuspage/v1alpha1/dashboard
+spec:
+  forProvider:
+    customUrl: checkly-crossplane
+    header: Public dashboard
+    logo: https://www.checklyhq.com/logo.png
+    refreshRate: 60
+    width: FULL
+    tags:
+      - production
+  providerConfigRef:
+    name: default
