@@ -135,7 +135,12 @@ pull-docs:
 	fi
 	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
-generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
+sanitize-docs: pull-docs
+	@find $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)/$(TERRAFORM_DOCS_PATH) -name '*.md' -exec \
+		sed -i '' 's|https://hooks.slack.com/services/[A-Za-z0-9/_-]*|REPLACE_WITH_SLACK_WEBHOOK_URL|g' {} +
+	@$(OK) sanitized secrets from upstream docs
+
+generate.init: $(TERRAFORM_PROVIDER_SCHEMA) sanitize-docs
 
 .PHONY: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs check-terraform-version
 # ====================================================================================
