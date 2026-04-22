@@ -14,7 +14,6 @@ import (
 	v1alpha1checks "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1"
 	v1alpha1infra "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1"
 	v1alpha1playwright "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/playwright/v1alpha1"
-	v1alpha1status "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/status/v1alpha1"
 	v1alpha1statuspage "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/statuspage/v1alpha1"
 	v1alpha1trigger "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/trigger/v1alpha1"
 	v1alpha1namespaced "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1alpha1"
@@ -28,7 +27,6 @@ func init() {
 		v1alpha1checks.SchemeBuilder.AddToScheme,
 		v1alpha1infra.SchemeBuilder.AddToScheme,
 		v1alpha1playwright.SchemeBuilder.AddToScheme,
-		v1alpha1status.SchemeBuilder.AddToScheme,
 		v1alpha1statuspage.SchemeBuilder.AddToScheme,
 		v1alpha1trigger.SchemeBuilder.AddToScheme,
 		v1alpha1namespaced.SchemeBuilder.AddToScheme,

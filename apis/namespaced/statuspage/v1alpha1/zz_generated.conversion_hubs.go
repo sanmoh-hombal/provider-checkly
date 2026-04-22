@@ -11,3 +11,6 @@ func (tr *Dashboard) Hub() {}
 
 // Hub marks this type as a conversion hub.
 func (tr *StatusPage) Hub() {}
+
+// Hub marks this type as a conversion hub.
+func (tr *StatusPageService) Hub() {}
