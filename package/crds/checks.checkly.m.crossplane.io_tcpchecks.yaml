@@ -375,7 +375,8 @@ spec:
                       The name of the check.
                     type: string
                   privateLocationRefs:
-                    description: References to Location in private to populate privateLocations.
+                    description: References to PrivateLocation in infra to populate
+                      privateLocations.
                     items:
                       description: A NamespacedReference to a named object.
                       properties:
@@ -423,8 +424,8 @@ spec:
                     type: array
                     x-kubernetes-list-type: set
                   privateLocationsSelector:
-                    description: Selector for a list of Location in private to populate
-                      privateLocations.
+                    description: Selector for a list of PrivateLocation in infra to
+                      populate privateLocations.
                     properties:
                       matchControllerRef:
                         description: |-
@@ -947,7 +948,8 @@ spec:
                       The name of the check.
                     type: string
                   privateLocationRefs:
-                    description: References to Location in private to populate privateLocations.
+                    description: References to PrivateLocation in infra to populate
+                      privateLocations.
                     items:
                       description: A NamespacedReference to a named object.
                       properties:
@@ -995,8 +997,8 @@ spec:
                     type: array
                     x-kubernetes-list-type: set
                   privateLocationsSelector:
-                    description: Selector for a list of Location in private to populate
-                      privateLocations.
+                    description: Selector for a list of PrivateLocation in infra to
+                      populate privateLocations.
                     properties:
                       matchControllerRef:
                         description: |-

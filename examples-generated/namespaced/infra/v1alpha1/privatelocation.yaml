@@ -1,11 +1,12 @@
-apiVersion: private.checkly.crossplane.io/v1alpha1
-kind: Location
+apiVersion: infra.checkly.m.crossplane.io/v1alpha1
+kind: PrivateLocation
 metadata:
   annotations:
-    meta.upbound.io/example-id: private/v1alpha1/location
+    meta.upbound.io/example-id: infra/v1alpha1/privatelocation
   labels:
     testing.upbound.io/example-name: location
   name: location
+  namespace: upbound-system
 spec:
   forProvider:
     name: New Private Location

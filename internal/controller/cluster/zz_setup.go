@@ -23,10 +23,10 @@ import (
 	urlmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/urlmonitor"
 	certificate "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/client/certificate"
 	environmentvariable "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/environmentvariable"
+	privatelocation "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/privatelocation"
 	snippet "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/snippet"
 	checksuite "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/playwright/checksuite"
 	codebundle "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/playwright/codebundle"
-	location "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/private/location"
 	providerconfig "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/providerconfig"
 	page "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/status/page"
 	pageservice "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/status/pageservice"
@@ -53,10 +53,10 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		urlmonitor.Setup,
 		certificate.Setup,
 		environmentvariable.Setup,
+		privatelocation.Setup,
 		snippet.Setup,
 		checksuite.Setup,
 		codebundle.Setup,
-		location.Setup,
 		providerconfig.Setup,
 		page.Setup,
 		pageservice.Setup,
@@ -89,10 +89,10 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		urlmonitor.SetupGated,
 		certificate.SetupGated,
 		environmentvariable.SetupGated,
+		privatelocation.SetupGated,
 		snippet.SetupGated,
 		checksuite.SetupGated,
 		codebundle.SetupGated,
-		location.SetupGated,
 		providerconfig.SetupGated,
 		page.SetupGated,
 		pageservice.SetupGated,

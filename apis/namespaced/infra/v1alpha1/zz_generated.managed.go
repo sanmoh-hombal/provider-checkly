@@ -48,6 +48,46 @@ func (mg *EnvironmentVariable) SetWriteConnectionSecretToReference(r *xpv1.Local
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
+// GetCondition of this PrivateLocation.
+func (mg *PrivateLocation) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+	return mg.Status.GetCondition(ct)
+}
+
+// GetManagementPolicies of this PrivateLocation.
+func (mg *PrivateLocation) GetManagementPolicies() xpv1.ManagementPolicies {
+	return mg.Spec.ManagementPolicies
+}
+
+// GetProviderConfigReference of this PrivateLocation.
+func (mg *PrivateLocation) GetProviderConfigReference() *xpv1.ProviderConfigReference {
+	return mg.Spec.ProviderConfigReference
+}
+
+// GetWriteConnectionSecretToReference of this PrivateLocation.
+func (mg *PrivateLocation) GetWriteConnectionSecretToReference() *xpv1.LocalSecretReference {
+	return mg.Spec.WriteConnectionSecretToReference
+}
+
+// SetConditions of this PrivateLocation.
+func (mg *PrivateLocation) SetConditions(c ...xpv1.Condition) {
+	mg.Status.SetConditions(c...)
+}
+
+// SetManagementPolicies of this PrivateLocation.
+func (mg *PrivateLocation) SetManagementPolicies(r xpv1.ManagementPolicies) {
+	mg.Spec.ManagementPolicies = r
+}
+
+// SetProviderConfigReference of this PrivateLocation.
+func (mg *PrivateLocation) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
+	mg.Spec.ProviderConfigReference = r
+}
+
+// SetWriteConnectionSecretToReference of this PrivateLocation.
+func (mg *PrivateLocation) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
+	mg.Spec.WriteConnectionSecretToReference = r
+}
+
 // GetCondition of this Snippet.
 func (mg *Snippet) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
 	return mg.Status.GetCondition(ct)

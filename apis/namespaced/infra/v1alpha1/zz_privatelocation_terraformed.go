@@ -14,18 +14,18 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this Location
-func (mg *Location) GetTerraformResourceType() string {
+// GetTerraformResourceType returns Terraform resource type for this PrivateLocation
+func (mg *PrivateLocation) GetTerraformResourceType() string {
 	return "checkly_private_location"
 }
 
-// GetConnectionDetailsMapping for this Location
-func (tr *Location) GetConnectionDetailsMapping() map[string]string {
+// GetConnectionDetailsMapping for this PrivateLocation
+func (tr *PrivateLocation) GetConnectionDetailsMapping() map[string]string {
 	return map[string]string{"keys[*]": "status.atProvider.keys[*]"}
 }
 
-// GetObservation of this Location
-func (tr *Location) GetObservation() (map[string]any, error) {
+// GetObservation of this PrivateLocation
+func (tr *PrivateLocation) GetObservation() (map[string]any, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -34,8 +34,8 @@ func (tr *Location) GetObservation() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this Location
-func (tr *Location) SetObservation(obs map[string]any) error {
+// SetObservation for this PrivateLocation
+func (tr *PrivateLocation) SetObservation(obs map[string]any) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -43,16 +43,16 @@ func (tr *Location) SetObservation(obs map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetID returns ID of underlying Terraform resource of this Location
-func (tr *Location) GetID() string {
+// GetID returns ID of underlying Terraform resource of this PrivateLocation
+func (tr *PrivateLocation) GetID() string {
 	if tr.Status.AtProvider.ID == nil {
 		return ""
 	}
 	return *tr.Status.AtProvider.ID
 }
 
-// GetParameters of this Location
-func (tr *Location) GetParameters() (map[string]any, error) {
+// GetParameters of this PrivateLocation
+func (tr *PrivateLocation) GetParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (tr *Location) GetParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this Location
-func (tr *Location) SetParameters(params map[string]any) error {
+// SetParameters for this PrivateLocation
+func (tr *PrivateLocation) SetParameters(params map[string]any) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -70,8 +70,8 @@ func (tr *Location) SetParameters(params map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// GetInitParameters of this Location
-func (tr *Location) GetInitParameters() (map[string]any, error) {
+// GetInitParameters of this PrivateLocation
+func (tr *PrivateLocation) GetInitParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.InitProvider)
 	if err != nil {
 		return nil, err
@@ -80,8 +80,8 @@ func (tr *Location) GetInitParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// GetInitParameters of this Location
-func (tr *Location) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
+// GetInitParameters of this PrivateLocation
+func (tr *PrivateLocation) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
 	params, err := tr.GetParameters()
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get parameters for resource \"%s/%s\"", tr.GetNamespace(), tr.GetName())
@@ -110,10 +110,10 @@ func (tr *Location) GetMergedParameters(shouldMergeInitProvider bool) (map[strin
 	return params, nil
 }
 
-// LateInitialize this Location using its observed tfState.
+// LateInitialize this PrivateLocation using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *Location) LateInitialize(attrs []byte) (bool, error) {
-	params := &LocationParameters{}
+func (tr *PrivateLocation) LateInitialize(attrs []byte) (bool, error) {
+	params := &PrivateLocationParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -124,6 +124,6 @@ func (tr *Location) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *Location) GetTerraformSchemaVersion() int {
+func (tr *PrivateLocation) GetTerraformSchemaVersion() int {
 	return 0
 }

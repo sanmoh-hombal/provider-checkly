@@ -789,18 +789,18 @@ type EnforceLocationsInitParameters struct {
 	// +listType=set
 	Locations []*string `json:"locations,omitempty" tf:"locations,omitempty"`
 
-	// References to Location in private to populate privateLocations.
+	// References to PrivateLocation in infra to populate privateLocations.
 	// +kubebuilder:validation:Optional
 	PrivateLocationRefs []v1.Reference `json:"privateLocationRefs,omitempty" tf:"-"`
 
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/private/v1alpha1.Location
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
 	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +listType=set
 	PrivateLocations []*string `json:"privateLocations,omitempty" tf:"private_locations,omitempty"`
 
-	// Selector for a list of Location in private to populate privateLocations.
+	// Selector for a list of PrivateLocation in infra to populate privateLocations.
 	// +kubebuilder:validation:Optional
 	PrivateLocationsSelector *v1.Selector `json:"privateLocationsSelector,omitempty" tf:"-"`
 }
@@ -835,19 +835,19 @@ type EnforceLocationsParameters struct {
 	// +listType=set
 	Locations []*string `json:"locations,omitempty" tf:"locations,omitempty"`
 
-	// References to Location in private to populate privateLocations.
+	// References to PrivateLocation in infra to populate privateLocations.
 	// +kubebuilder:validation:Optional
 	PrivateLocationRefs []v1.Reference `json:"privateLocationRefs,omitempty" tf:"-"`
 
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/private/v1alpha1.Location
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
 	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +kubebuilder:validation:Optional
 	// +listType=set
 	PrivateLocations []*string `json:"privateLocations,omitempty" tf:"private_locations,omitempty"`
 
-	// Selector for a list of Location in private to populate privateLocations.
+	// Selector for a list of PrivateLocation in infra to populate privateLocations.
 	// +kubebuilder:validation:Optional
 	PrivateLocationsSelector *v1.Selector `json:"privateLocationsSelector,omitempty" tf:"-"`
 }

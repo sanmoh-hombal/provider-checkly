@@ -17,6 +17,15 @@ func (l *EnvironmentVariableList) GetItems() []resource.Managed {
 	return items
 }
 
+// GetItems of this PrivateLocationList.
+func (l *PrivateLocationList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
 // GetItems of this SnippetList.
 func (l *SnippetList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
