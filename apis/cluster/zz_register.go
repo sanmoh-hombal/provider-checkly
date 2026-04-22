@@ -12,7 +12,6 @@ import (
 
 	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1"
 	v1alpha1checks "github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1"
-	v1alpha1client "github.com/sanmoh-hombal/provider-checkly/apis/cluster/client/v1alpha1"
 	v1alpha1infra "github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1"
 	v1alpha1playwright "github.com/sanmoh-hombal/provider-checkly/apis/cluster/playwright/v1alpha1"
 	v1alpha1status "github.com/sanmoh-hombal/provider-checkly/apis/cluster/status/v1alpha1"
@@ -27,7 +26,6 @@ func init() {
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
 		v1alpha1checks.SchemeBuilder.AddToScheme,
-		v1alpha1client.SchemeBuilder.AddToScheme,
 		v1alpha1infra.SchemeBuilder.AddToScheme,
 		v1alpha1playwright.SchemeBuilder.AddToScheme,
 		v1alpha1status.SchemeBuilder.AddToScheme,

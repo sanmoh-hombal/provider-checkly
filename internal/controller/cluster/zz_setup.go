@@ -21,7 +21,7 @@ import (
 	tcpcheck "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/tcpcheck"
 	tcpmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/tcpmonitor"
 	urlmonitor "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/checks/urlmonitor"
-	certificate "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/client/certificate"
+	clientcertificate "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/clientcertificate"
 	environmentvariable "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/environmentvariable"
 	privatelocation "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/privatelocation"
 	snippet "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/infra/snippet"
@@ -51,7 +51,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		tcpcheck.Setup,
 		tcpmonitor.Setup,
 		urlmonitor.Setup,
-		certificate.Setup,
+		clientcertificate.Setup,
 		environmentvariable.Setup,
 		privatelocation.Setup,
 		snippet.Setup,
@@ -87,7 +87,7 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		tcpcheck.SetupGated,
 		tcpmonitor.SetupGated,
 		urlmonitor.SetupGated,
-		certificate.SetupGated,
+		clientcertificate.SetupGated,
 		environmentvariable.SetupGated,
 		privatelocation.SetupGated,
 		snippet.SetupGated,

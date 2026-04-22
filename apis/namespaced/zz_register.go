@@ -12,7 +12,6 @@ import (
 
 	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/alerts/v1alpha1"
 	v1alpha1checks "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1"
-	v1alpha1client "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/client/v1alpha1"
 	v1alpha1infra "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1"
 	v1alpha1playwright "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/playwright/v1alpha1"
 	v1alpha1status "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/status/v1alpha1"
@@ -27,7 +26,6 @@ func init() {
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
 		v1alpha1checks.SchemeBuilder.AddToScheme,
-		v1alpha1client.SchemeBuilder.AddToScheme,
 		v1alpha1infra.SchemeBuilder.AddToScheme,
 		v1alpha1playwright.SchemeBuilder.AddToScheme,
 		v1alpha1status.SchemeBuilder.AddToScheme,

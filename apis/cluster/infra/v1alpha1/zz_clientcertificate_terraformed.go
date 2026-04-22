@@ -14,18 +14,18 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this Certificate
-func (mg *Certificate) GetTerraformResourceType() string {
+// GetTerraformResourceType returns Terraform resource type for this ClientCertificate
+func (mg *ClientCertificate) GetTerraformResourceType() string {
 	return "checkly_client_certificate"
 }
 
-// GetConnectionDetailsMapping for this Certificate
-func (tr *Certificate) GetConnectionDetailsMapping() map[string]string {
-	return map[string]string{"passphrase": "passphraseSecretRef"}
+// GetConnectionDetailsMapping for this ClientCertificate
+func (tr *ClientCertificate) GetConnectionDetailsMapping() map[string]string {
+	return map[string]string{"certificate": "certificateSecretRef", "passphrase": "passphraseSecretRef", "private_key": "privateKeySecretRef"}
 }
 
-// GetObservation of this Certificate
-func (tr *Certificate) GetObservation() (map[string]any, error) {
+// GetObservation of this ClientCertificate
+func (tr *ClientCertificate) GetObservation() (map[string]any, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -34,8 +34,8 @@ func (tr *Certificate) GetObservation() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this Certificate
-func (tr *Certificate) SetObservation(obs map[string]any) error {
+// SetObservation for this ClientCertificate
+func (tr *ClientCertificate) SetObservation(obs map[string]any) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -43,16 +43,16 @@ func (tr *Certificate) SetObservation(obs map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetID returns ID of underlying Terraform resource of this Certificate
-func (tr *Certificate) GetID() string {
+// GetID returns ID of underlying Terraform resource of this ClientCertificate
+func (tr *ClientCertificate) GetID() string {
 	if tr.Status.AtProvider.ID == nil {
 		return ""
 	}
 	return *tr.Status.AtProvider.ID
 }
 
-// GetParameters of this Certificate
-func (tr *Certificate) GetParameters() (map[string]any, error) {
+// GetParameters of this ClientCertificate
+func (tr *ClientCertificate) GetParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (tr *Certificate) GetParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this Certificate
-func (tr *Certificate) SetParameters(params map[string]any) error {
+// SetParameters for this ClientCertificate
+func (tr *ClientCertificate) SetParameters(params map[string]any) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -70,8 +70,8 @@ func (tr *Certificate) SetParameters(params map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// GetInitParameters of this Certificate
-func (tr *Certificate) GetInitParameters() (map[string]any, error) {
+// GetInitParameters of this ClientCertificate
+func (tr *ClientCertificate) GetInitParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.InitProvider)
 	if err != nil {
 		return nil, err
@@ -80,8 +80,8 @@ func (tr *Certificate) GetInitParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// GetInitParameters of this Certificate
-func (tr *Certificate) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
+// GetInitParameters of this ClientCertificate
+func (tr *ClientCertificate) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
 	params, err := tr.GetParameters()
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get parameters for resource \"%s/%s\"", tr.GetNamespace(), tr.GetName())
@@ -110,10 +110,10 @@ func (tr *Certificate) GetMergedParameters(shouldMergeInitProvider bool) (map[st
 	return params, nil
 }
 
-// LateInitialize this Certificate using its observed tfState.
+// LateInitialize this ClientCertificate using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *Certificate) LateInitialize(attrs []byte) (bool, error) {
-	params := &CertificateParameters{}
+func (tr *ClientCertificate) LateInitialize(attrs []byte) (bool, error) {
+	params := &ClientCertificateParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -124,6 +124,6 @@ func (tr *Certificate) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *Certificate) GetTerraformSchemaVersion() int {
+func (tr *ClientCertificate) GetTerraformSchemaVersion() int {
 	return 0
 }
