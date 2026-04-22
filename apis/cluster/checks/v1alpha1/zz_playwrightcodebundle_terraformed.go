@@ -14,18 +14,18 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this CodeBundle
-func (mg *CodeBundle) GetTerraformResourceType() string {
+// GetTerraformResourceType returns Terraform resource type for this PlaywrightCodeBundle
+func (mg *PlaywrightCodeBundle) GetTerraformResourceType() string {
 	return "checkly_playwright_code_bundle"
 }
 
-// GetConnectionDetailsMapping for this CodeBundle
-func (tr *CodeBundle) GetConnectionDetailsMapping() map[string]string {
+// GetConnectionDetailsMapping for this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) GetConnectionDetailsMapping() map[string]string {
 	return nil
 }
 
-// GetObservation of this CodeBundle
-func (tr *CodeBundle) GetObservation() (map[string]any, error) {
+// GetObservation of this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) GetObservation() (map[string]any, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -34,8 +34,8 @@ func (tr *CodeBundle) GetObservation() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this CodeBundle
-func (tr *CodeBundle) SetObservation(obs map[string]any) error {
+// SetObservation for this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) SetObservation(obs map[string]any) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -43,16 +43,16 @@ func (tr *CodeBundle) SetObservation(obs map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetID returns ID of underlying Terraform resource of this CodeBundle
-func (tr *CodeBundle) GetID() string {
+// GetID returns ID of underlying Terraform resource of this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) GetID() string {
 	if tr.Status.AtProvider.ID == nil {
 		return ""
 	}
 	return *tr.Status.AtProvider.ID
 }
 
-// GetParameters of this CodeBundle
-func (tr *CodeBundle) GetParameters() (map[string]any, error) {
+// GetParameters of this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) GetParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (tr *CodeBundle) GetParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this CodeBundle
-func (tr *CodeBundle) SetParameters(params map[string]any) error {
+// SetParameters for this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) SetParameters(params map[string]any) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -70,8 +70,8 @@ func (tr *CodeBundle) SetParameters(params map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// GetInitParameters of this CodeBundle
-func (tr *CodeBundle) GetInitParameters() (map[string]any, error) {
+// GetInitParameters of this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) GetInitParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.InitProvider)
 	if err != nil {
 		return nil, err
@@ -80,8 +80,8 @@ func (tr *CodeBundle) GetInitParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// GetInitParameters of this CodeBundle
-func (tr *CodeBundle) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
+// GetInitParameters of this PlaywrightCodeBundle
+func (tr *PlaywrightCodeBundle) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
 	params, err := tr.GetParameters()
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get parameters for resource \"%s/%s\"", tr.GetNamespace(), tr.GetName())
@@ -110,10 +110,10 @@ func (tr *CodeBundle) GetMergedParameters(shouldMergeInitProvider bool) (map[str
 	return params, nil
 }
 
-// LateInitialize this CodeBundle using its observed tfState.
+// LateInitialize this PlaywrightCodeBundle using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *CodeBundle) LateInitialize(attrs []byte) (bool, error) {
-	params := &CodeBundleParameters{}
+func (tr *PlaywrightCodeBundle) LateInitialize(attrs []byte) (bool, error) {
+	params := &PlaywrightCodeBundleParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -124,6 +124,6 @@ func (tr *CodeBundle) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *CodeBundle) GetTerraformSchemaVersion() int {
+func (tr *PlaywrightCodeBundle) GetTerraformSchemaVersion() int {
 	return 0
 }
