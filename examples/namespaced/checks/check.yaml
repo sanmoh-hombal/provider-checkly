@@ -1,0 +1,28 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: homepage-api
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/check
+spec:
+  forProvider:
+    name: homepage-api
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - managed-by-crossplane
+    request:
+      method: GET
+      url: https://example.com
+      assertions:
+        - source: STATUS_CODE
+          property: ""
+          comparison: EQUALS
+          target: "200"
+  providerConfigRef:
+    name: default
