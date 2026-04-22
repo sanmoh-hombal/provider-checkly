@@ -49,7 +49,29 @@ type CardParameters struct {
 	ServiceAttachment []ServiceAttachmentParameters `json:"serviceAttachment" tf:"service_attachment,omitempty"`
 }
 
-type PageInitParameters struct {
+type ServiceAttachmentInitParameters struct {
+
+	// (String) The ID of the service.
+	// The ID of the service.
+	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
+}
+
+type ServiceAttachmentObservation struct {
+
+	// (String) The ID of the service.
+	// The ID of the service.
+	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
+}
+
+type ServiceAttachmentParameters struct {
+
+	// (String) The ID of the service.
+	// The ID of the service.
+	// +kubebuilder:validation:Optional
+	ServiceID *string `json:"serviceId" tf:"service_id,omitempty"`
+}
+
+type StatusPageInitParameters struct {
 
 	// (Block List, Min: 1) A list of cards to include on the status page. (see below for nested schema)
 	// A list of cards to include on the status page.
@@ -84,7 +106,7 @@ type PageInitParameters struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-type PageObservation struct {
+type StatusPageObservation struct {
 
 	// (Block List, Min: 1) A list of cards to include on the status page. (see below for nested schema)
 	// A list of cards to include on the status page.
@@ -122,7 +144,7 @@ type PageObservation struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-type PageParameters struct {
+type StatusPageParameters struct {
 
 	// (Block List, Min: 1) A list of cards to include on the status page. (see below for nested schema)
 	// A list of cards to include on the status page.
@@ -165,32 +187,10 @@ type PageParameters struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-type ServiceAttachmentInitParameters struct {
-
-	// (String) The ID of the service.
-	// The ID of the service.
-	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
-}
-
-type ServiceAttachmentObservation struct {
-
-	// (String) The ID of the service.
-	// The ID of the service.
-	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
-}
-
-type ServiceAttachmentParameters struct {
-
-	// (String) The ID of the service.
-	// The ID of the service.
-	// +kubebuilder:validation:Optional
-	ServiceID *string `json:"serviceId" tf:"service_id,omitempty"`
-}
-
-// PageSpec defines the desired state of Page
-type PageSpec struct {
+// StatusPageSpec defines the desired state of StatusPage
+type StatusPageSpec struct {
 	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            PageParameters `json:"forProvider"`
+	ForProvider            StatusPageParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -201,52 +201,52 @@ type PageSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider PageInitParameters `json:"initProvider,omitempty"`
+	InitProvider StatusPageInitParameters `json:"initProvider,omitempty"`
 }
 
-// PageStatus defines the observed state of Page.
-type PageStatus struct {
+// StatusPageStatus defines the observed state of StatusPage.
+type StatusPageStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        PageObservation `json:"atProvider,omitempty"`
+	AtProvider        StatusPageObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Page is the Schema for the Pages API. Checkly status pages allow you to easily communicate the uptime and health of your applications and services to your customers.
+// StatusPage is the Schema for the StatusPages API. Checkly status pages allow you to easily communicate the uptime and health of your applications and services to your customers.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,checkly}
-type Page struct {
+type StatusPage struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.card) || (has(self.initProvider) && has(self.initProvider.card))",message="spec.forProvider.card is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.url) || (has(self.initProvider) && has(self.initProvider.url))",message="spec.forProvider.url is a required parameter"
-	Spec   PageSpec   `json:"spec"`
-	Status PageStatus `json:"status,omitempty"`
+	Spec   StatusPageSpec   `json:"spec"`
+	Status StatusPageStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// PageList contains a list of Pages
-type PageList struct {
+// StatusPageList contains a list of StatusPages
+type StatusPageList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Page `json:"items"`
+	Items           []StatusPage `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	Page_Kind             = "Page"
-	Page_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Page_Kind}.String()
-	Page_KindAPIVersion   = Page_Kind + "." + CRDGroupVersion.String()
-	Page_GroupVersionKind = CRDGroupVersion.WithKind(Page_Kind)
+	StatusPage_Kind             = "StatusPage"
+	StatusPage_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: StatusPage_Kind}.String()
+	StatusPage_KindAPIVersion   = StatusPage_Kind + "." + CRDGroupVersion.String()
+	StatusPage_GroupVersionKind = CRDGroupVersion.WithKind(StatusPage_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&Page{}, &PageList{})
+	SchemeBuilder.Register(&StatusPage{}, &StatusPageList{})
 }

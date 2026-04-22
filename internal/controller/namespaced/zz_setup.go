@@ -28,9 +28,9 @@ import (
 	checksuite "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/playwright/checksuite"
 	codebundle "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/playwright/codebundle"
 	providerconfig "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/providerconfig"
-	page "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/status/page"
 	pageservice "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/status/pageservice"
 	dashboard "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/statuspage/dashboard"
+	statuspage "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/statuspage/statuspage"
 	checktrigger "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/trigger/check"
 	group "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced/trigger/group"
 )
@@ -58,9 +58,9 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		checksuite.Setup,
 		codebundle.Setup,
 		providerconfig.Setup,
-		page.Setup,
 		pageservice.Setup,
 		dashboard.Setup,
+		statuspage.Setup,
 		checktrigger.Setup,
 		group.Setup,
 	} {
@@ -94,9 +94,9 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		checksuite.SetupGated,
 		codebundle.SetupGated,
 		providerconfig.SetupGated,
-		page.SetupGated,
 		pageservice.SetupGated,
 		dashboard.SetupGated,
+		statuspage.SetupGated,
 		checktrigger.SetupGated,
 		group.SetupGated,
 	} {
