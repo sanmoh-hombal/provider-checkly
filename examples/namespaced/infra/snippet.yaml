@@ -1,0 +1,22 @@
+apiVersion: checkly.checkly.m.crossplane.io/v1alpha1
+kind: Snippet
+metadata:
+  name: setup-helper
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/snippet
+spec:
+  forProvider:
+    name: setup-helper
+    script: |
+      // Helper snippet for API check setup/teardown.
+      const assert = require('assert');
+
+      function setupAuth(request) {
+        request.headers['X-Custom-Header'] = 'managed-by-crossplane';
+        return request;
+      }
+
+      module.exports = { setupAuth };
+  providerConfigRef:
+    name: default
