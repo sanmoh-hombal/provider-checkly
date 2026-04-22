@@ -40,4 +40,43 @@ func TestDashboardRegistered(t *testing.T) {
 	if r.ShortGroup != "statuspage" || r.Kind != "Dashboard" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
+	if r.Sensitive.AdditionalConnectionDetailsFn == nil {
+		t.Fatal("expected AdditionalConnectionDetailsFn to be set")
+	}
+}
+
+func TestDashboardConnectionDetails(t *testing.T) {
+	p := config.GetProvider()
+	r := p.Resources["checkly_dashboard"]
+	fn := r.Sensitive.AdditionalConnectionDetailsFn
+
+	t.Run("with key", func(t *testing.T) {
+		out, err := fn(map[string]any{"key": "dash-secret"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(out["dashboard_key"]) != "dash-secret" {
+			t.Fatalf("expected dashboard_key=dash-secret, got %q", out["dashboard_key"])
+		}
+	})
+
+	t.Run("empty key", func(t *testing.T) {
+		out, err := fn(map[string]any{"key": ""})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(out) != 0 {
+			t.Fatalf("expected empty map, got %v", out)
+		}
+	})
+
+	t.Run("missing key", func(t *testing.T) {
+		out, err := fn(map[string]any{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(out) != 0 {
+			t.Fatalf("expected empty map, got %v", out)
+		}
+	})
 }
