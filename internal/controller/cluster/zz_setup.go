@@ -31,8 +31,8 @@ import (
 	dashboard "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/statuspage/dashboard"
 	statuspage "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/statuspage/statuspage"
 	statuspageservice "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/statuspage/statuspageservice"
-	group "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/trigger/group"
 	triggercheck "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/triggers/triggercheck"
+	triggergroup "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster/triggers/triggergroup"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
@@ -61,8 +61,8 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		dashboard.Setup,
 		statuspage.Setup,
 		statuspageservice.Setup,
-		group.Setup,
 		triggercheck.Setup,
+		triggergroup.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
@@ -97,8 +97,8 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		dashboard.SetupGated,
 		statuspage.SetupGated,
 		statuspageservice.SetupGated,
-		group.SetupGated,
 		triggercheck.SetupGated,
+		triggergroup.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
