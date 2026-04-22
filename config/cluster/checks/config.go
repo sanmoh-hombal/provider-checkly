@@ -6,8 +6,13 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 )
 
-// Configure adds per-resource overrides for checkly_check.
+// Configure adds per-resource overrides for the checks short-group.
 func Configure(p *ujconfig.Provider) {
+	configureCheck(p)
+	configureCheckGroup(p)
+}
+
+func configureCheck(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_check", func(r *ujconfig.Resource) {
 		r.ShortGroup = "checks"
 		r.Kind = "Check"
@@ -33,5 +38,25 @@ func Configure(p *ujconfig.Provider) {
 		r.LateInitializer.IgnoredFields = append(r.LateInitializer.IgnoredFields,
 			"request.follow_redirects", // has a default TF applies
 		)
+	})
+}
+
+func configureCheckGroup(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_check_group", func(r *ujconfig.Resource) {
+		r.ShortGroup = "checks"
+		r.Kind = "CheckGroup"
+
+		// Cross-resource references
+		r.References["alert_channel_subscription.channel_id"] = ujconfig.Reference{
+			TerraformName: "checkly_alert_channel",
+		}
+		r.References["private_locations"] = ujconfig.Reference{
+			TerraformName: "checkly_private_location",
+			RefFieldName:  "PrivateLocationRefs",
+		}
+
+		// Sensitive fields — environment_variable values may hold secrets.
+		envVarSchema := r.TerraformResource.Schema["environment_variable"].Elem.(*schema.Resource).Schema
+		envVarSchema["value"].Sensitive = true
 	})
 }
