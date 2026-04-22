@@ -1,0 +1,4 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: CheckGroupV2
+metadata:
+  name: e2e-checkgroupv2

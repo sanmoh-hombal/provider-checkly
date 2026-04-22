@@ -1,0 +1,4 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: DNSMonitor
+metadata:
+  name: e2e-dnsmonitor

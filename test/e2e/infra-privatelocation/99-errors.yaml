@@ -1,0 +1,4 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: PrivateLocation
+metadata:
+  name: e2e-private-loc

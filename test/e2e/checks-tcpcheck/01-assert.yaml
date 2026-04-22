@@ -1,0 +1,10 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: TCPCheck
+metadata:
+  name: e2e-tcpcheck
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

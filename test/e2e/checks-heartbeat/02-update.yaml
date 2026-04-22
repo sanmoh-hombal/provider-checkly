@@ -1,0 +1,19 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Heartbeat
+metadata:
+  name: e2e-heartbeat
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/heartbeat
+spec:
+  forProvider:
+    name: e2e-heartbeat
+    activated: true
+    tags:
+      - e2e-test
+    heartbeat:
+      - period: 120
+        periodUnit: seconds
+        grace: 120
+        graceUnit: seconds
+  providerConfigRef:
+    name: default

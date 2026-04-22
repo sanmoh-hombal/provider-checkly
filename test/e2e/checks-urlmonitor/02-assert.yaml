@@ -1,0 +1,13 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: URLMonitor
+metadata:
+  name: e2e-urlmonitor
+spec:
+  forProvider:
+    frequency: 10
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

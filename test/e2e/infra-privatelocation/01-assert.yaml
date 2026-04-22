@@ -1,0 +1,10 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: PrivateLocation
+metadata:
+  name: e2e-private-loc
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

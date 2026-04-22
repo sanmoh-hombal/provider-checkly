@@ -1,0 +1,4 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: ICMPMonitor
+metadata:
+  name: e2e-icmpmonitor

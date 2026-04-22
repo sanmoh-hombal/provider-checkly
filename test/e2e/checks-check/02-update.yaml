@@ -1,0 +1,27 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: e2e-check
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/check
+spec:
+  forProvider:
+    name: e2e-check
+    activated: true
+    frequency: 10
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - e2e-test
+    request:
+      - method: GET
+        url: https://example.com
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default

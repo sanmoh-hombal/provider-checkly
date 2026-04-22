@@ -1,0 +1,14 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Heartbeat
+metadata:
+  name: e2e-heartbeat
+spec:
+  forProvider:
+    heartbeat:
+      - period: 120
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

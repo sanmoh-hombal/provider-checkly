@@ -1,0 +1,15 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: Snippet
+metadata:
+  name: e2e-snippet
+  annotations:
+    meta.upbound.io/example-id: infra/v1alpha1/snippet
+spec:
+  forProvider:
+    name: e2e-snippet
+    script: |
+      // E2E test snippet
+      const assert = require('assert');
+      module.exports = { setup: () => {} };
+  providerConfigRef:
+    name: default

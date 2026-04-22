@@ -1,0 +1,4 @@
+apiVersion: triggers.checkly.crossplane.io/v1alpha1
+kind: TriggerGroup
+metadata:
+  name: e2e-triggergroup

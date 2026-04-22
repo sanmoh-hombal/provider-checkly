@@ -1,0 +1,13 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: ClientCertificate
+metadata:
+  name: e2e-client-cert
+spec:
+  forProvider:
+    host: api-v2.example.com
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

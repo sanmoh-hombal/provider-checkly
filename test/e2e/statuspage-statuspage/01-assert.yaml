@@ -1,0 +1,10 @@
+apiVersion: statuspage.checkly.crossplane.io/v1alpha1
+kind: StatusPage
+metadata:
+  name: e2e-statuspage
+status:
+  conditions:
+    - type: Synced
+      status: "True"
+    - type: Ready
+      status: "True"

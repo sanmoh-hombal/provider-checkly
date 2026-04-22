@@ -1,0 +1,4 @@
+apiVersion: infra.checkly.crossplane.io/v1alpha1
+kind: ClientCertificate
+metadata:
+  name: e2e-client-cert

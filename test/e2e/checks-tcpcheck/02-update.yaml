@@ -1,0 +1,21 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: TCPCheck
+metadata:
+  name: e2e-tcpcheck
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/tcpcheck
+spec:
+  forProvider:
+    name: e2e-tcpcheck
+    activated: true
+    frequency: 10
+    locations:
+      - us-east-1
+      - eu-west-1
+    request:
+      - hostname: smtp.example.com
+        port: 25
+    tags:
+      - e2e-test
+  providerConfigRef:
+    name: default
