@@ -1,0 +1,22 @@
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: TCPMonitor
+metadata:
+  name: smtp-tcp-monitor
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: checks/v1alpha1/tcpmonitor
+spec:
+  forProvider:
+    name: smtp-tcp-monitor
+    activated: true
+    frequency: 5
+    locations:
+      - us-east-1
+      - eu-west-1
+    request:
+      - hostname: smtp.example.com
+        port: 25
+    tags:
+      - managed-by-crossplane
+  providerConfigRef:
+    name: default

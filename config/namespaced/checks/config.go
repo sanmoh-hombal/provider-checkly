@@ -14,6 +14,7 @@ func Configure(p *ujconfig.Provider) {
 	configureHeartbeat(p)
 	configureHeartbeatMonitor(p)
 	configureTCPCheck(p)
+	configureTCPMonitor(p)
 }
 
 func configureCheck(p *ujconfig.Provider) {
@@ -93,6 +94,25 @@ func configureTCPCheck(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_tcp_check", func(r *ujconfig.Resource) {
 		r.ShortGroup = "checks"
 		r.Kind = "TCPCheck"
+
+		// Cross-resource references
+		r.References["group_id"] = ujconfig.Reference{
+			TerraformName: "checkly_check_group",
+		}
+		r.References["alert_channel_subscription.channel_id"] = ujconfig.Reference{
+			TerraformName: "checkly_alert_channel",
+		}
+		r.References["private_locations"] = ujconfig.Reference{
+			TerraformName: "checkly_private_location",
+			RefFieldName:  "PrivateLocationRefs",
+		}
+	})
+}
+
+func configureTCPMonitor(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_tcp_monitor", func(r *ujconfig.Resource) {
+		r.ShortGroup = "checks"
+		r.Kind = "TCPMonitor"
 
 		// Cross-resource references
 		r.References["group_id"] = ujconfig.Reference{
