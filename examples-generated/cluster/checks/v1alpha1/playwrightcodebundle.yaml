@@ -1,8 +1,8 @@
-apiVersion: playwright.checkly.crossplane.io/v1alpha1
-kind: CodeBundle
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: PlaywrightCodeBundle
 metadata:
   annotations:
-    meta.upbound.io/example-id: playwright/v1alpha1/codebundle
+    meta.upbound.io/example-id: checks/v1alpha1/playwrightcodebundle
   labels:
     testing.upbound.io/example-name: example-1
   name: example-1

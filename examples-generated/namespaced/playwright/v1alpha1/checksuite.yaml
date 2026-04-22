@@ -21,8 +21,8 @@ spec:
 
 ---
 
-apiVersion: playwright.checkly.m.crossplane.io/v1alpha1
-kind: CodeBundle
+apiVersion: checks.checkly.m.crossplane.io/v1alpha1
+kind: PlaywrightCodeBundle
 metadata:
   annotations:
     meta.upbound.io/example-id: playwright/v1alpha1/checksuite

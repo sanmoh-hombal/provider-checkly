@@ -18,6 +18,7 @@ func Configure(p *ujconfig.Provider) {
 	configureTCPMonitor(p)
 	configureICMPMonitor(p)
 	configureURLMonitor(p)
+	configurePlaywrightCodeBundle(p)
 }
 
 func configureCheck(p *ujconfig.Provider) {
@@ -177,6 +178,13 @@ func configureURLMonitor(p *ujconfig.Provider) {
 			TerraformName: "checkly_private_location",
 			RefFieldName:  "PrivateLocationRefs",
 		}
+	})
+}
+
+func configurePlaywrightCodeBundle(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_playwright_code_bundle", func(r *ujconfig.Resource) {
+		r.ShortGroup = "checks"
+		r.Kind = "PlaywrightCodeBundle"
 	})
 }
 

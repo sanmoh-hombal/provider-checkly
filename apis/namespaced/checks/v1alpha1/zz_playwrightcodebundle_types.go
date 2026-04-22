@@ -14,14 +14,14 @@ import (
 	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 )
 
-type CodeBundleInitParameters struct {
+type PlaywrightCodeBundleInitParameters struct {
 
 	// (Block List, Min: 1, Max: 1) A prebuilt archive containing the code bundle. (see below for nested schema)
 	// A prebuilt archive containing the code bundle.
 	PrebuiltArchive []PrebuiltArchiveInitParameters `json:"prebuiltArchive,omitempty" tf:"prebuilt_archive,omitempty"`
 }
 
-type CodeBundleObservation struct {
+type PlaywrightCodeBundleObservation struct {
 
 	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
@@ -35,7 +35,7 @@ type CodeBundleObservation struct {
 	PrebuiltArchive []PrebuiltArchiveObservation `json:"prebuiltArchive,omitempty" tf:"prebuilt_archive,omitempty"`
 }
 
-type CodeBundleParameters struct {
+type PlaywrightCodeBundleParameters struct {
 
 	// (Block List, Min: 1, Max: 1) A prebuilt archive containing the code bundle. (see below for nested schema)
 	// A prebuilt archive containing the code bundle.
@@ -65,10 +65,10 @@ type PrebuiltArchiveParameters struct {
 	File *string `json:"file" tf:"file,omitempty"`
 }
 
-// CodeBundleSpec defines the desired state of CodeBundle
-type CodeBundleSpec struct {
+// PlaywrightCodeBundleSpec defines the desired state of PlaywrightCodeBundle
+type PlaywrightCodeBundleSpec struct {
 	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            CodeBundleParameters `json:"forProvider"`
+	ForProvider            PlaywrightCodeBundleParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -79,50 +79,50 @@ type CodeBundleSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider CodeBundleInitParameters `json:"initProvider,omitempty"`
+	InitProvider PlaywrightCodeBundleInitParameters `json:"initProvider,omitempty"`
 }
 
-// CodeBundleStatus defines the observed state of CodeBundle.
-type CodeBundleStatus struct {
+// PlaywrightCodeBundleStatus defines the observed state of PlaywrightCodeBundle.
+type PlaywrightCodeBundleStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        CodeBundleObservation `json:"atProvider,omitempty"`
+	AtProvider        PlaywrightCodeBundleObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// CodeBundle is the Schema for the CodeBundles API. A managed code bundle which can be used in Playwright Check Suite resources.
+// PlaywrightCodeBundle is the Schema for the PlaywrightCodeBundles API. A managed code bundle which can be used in Playwright Check Suite resources.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,checkly}
-type CodeBundle struct {
+type PlaywrightCodeBundle struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.prebuiltArchive) || (has(self.initProvider) && has(self.initProvider.prebuiltArchive))",message="spec.forProvider.prebuiltArchive is a required parameter"
-	Spec   CodeBundleSpec   `json:"spec"`
-	Status CodeBundleStatus `json:"status,omitempty"`
+	Spec   PlaywrightCodeBundleSpec   `json:"spec"`
+	Status PlaywrightCodeBundleStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// CodeBundleList contains a list of CodeBundles
-type CodeBundleList struct {
+// PlaywrightCodeBundleList contains a list of PlaywrightCodeBundles
+type PlaywrightCodeBundleList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []CodeBundle `json:"items"`
+	Items           []PlaywrightCodeBundle `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	CodeBundle_Kind             = "CodeBundle"
-	CodeBundle_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: CodeBundle_Kind}.String()
-	CodeBundle_KindAPIVersion   = CodeBundle_Kind + "." + CRDGroupVersion.String()
-	CodeBundle_GroupVersionKind = CRDGroupVersion.WithKind(CodeBundle_Kind)
+	PlaywrightCodeBundle_Kind             = "PlaywrightCodeBundle"
+	PlaywrightCodeBundle_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: PlaywrightCodeBundle_Kind}.String()
+	PlaywrightCodeBundle_KindAPIVersion   = PlaywrightCodeBundle_Kind + "." + CRDGroupVersion.String()
+	PlaywrightCodeBundle_GroupVersionKind = CRDGroupVersion.WithKind(PlaywrightCodeBundle_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&CodeBundle{}, &CodeBundleList{})
+	SchemeBuilder.Register(&PlaywrightCodeBundle{}, &PlaywrightCodeBundleList{})
 }
