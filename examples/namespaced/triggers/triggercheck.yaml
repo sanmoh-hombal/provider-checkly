@@ -1,0 +1,15 @@
+apiVersion: triggers.checkly.m.crossplane.io/v1alpha1
+kind: TriggerCheck
+metadata:
+  name: trigger-check-example
+  namespace: default
+  annotations:
+    meta.upbound.io/example-id: triggers/v1alpha1/triggercheck
+spec:
+  forProvider:
+    checkId: "00000000-0000-0000-0000-000000000000"
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: trigger-check-example-conn
+    namespace: default
