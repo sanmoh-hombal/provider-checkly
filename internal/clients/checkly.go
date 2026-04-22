@@ -3,6 +3,7 @@ package clients
 import (
 	"context"
 	"encoding/json"
+	"os"
 
 	"github.com/crossplane/crossplane-runtime/v2/pkg/resource"
 	"github.com/pkg/errors"
@@ -21,7 +22,8 @@ const (
 	errGetProviderConfig    = "cannot get referenced ProviderConfig"
 	errTrackUsage           = "cannot track ProviderConfig usage"
 	errExtractCredentials   = "cannot extract credentials"
-	errUnmarshalCredentials = "cannot unmarshal template credentials as JSON"
+	errUnmarshalCredentials = "cannot unmarshal checkly credentials as JSON"
+	errMissingAPIKey        = "api_key is required (set it in the Secret or via CHECKLY_API_KEY)"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -46,16 +48,45 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 			return ps, errors.Wrap(err, errExtractCredentials)
 		}
 		creds := map[string]string{}
-		if err := json.Unmarshal(data, &creds); err != nil {
-			return ps, errors.Wrap(err, errUnmarshalCredentials)
+		if len(data) > 0 {
+			if err := json.Unmarshal(data, &creds); err != nil {
+				return ps, errors.Wrap(err, errUnmarshalCredentials)
+			}
 		}
 
-		// Set credentials in Terraform provider configuration.
-		/*ps.Configuration = map[string]any{
-			"username": creds["username"],
-			"password": creds["password"],
-		}*/
+		applyEnvDefaults(creds)
+
+		if creds[keyAPIKey] == "" {
+			return ps, errors.New(errMissingAPIKey)
+		}
+
+		ps.Configuration = map[string]any{
+			keyAPIKey: creds[keyAPIKey],
+			keyAPIURL: creds[keyAPIURL],
+		}
+		if creds[keyAccountID] != "" {
+			ps.Configuration[keyAccountID] = creds[keyAccountID]
+		}
+
 		return ps, nil
+	}
+}
+
+// applyEnvDefaults fills missing credential keys from environment variables,
+// mirroring the upstream Terraform provider's fallback behaviour.
+func applyEnvDefaults(creds map[string]string) {
+	if creds[keyAPIKey] == "" {
+		creds[keyAPIKey] = os.Getenv(envAPIKey)
+	}
+	if creds[keyAccountID] == "" {
+		creds[keyAccountID] = os.Getenv(envAccountID)
+	}
+	if creds[keyAPIURL] == "" {
+		if v := os.Getenv(envAPIURL); v != "" {
+			creds[keyAPIURL] = v
+		} else {
+			creds[keyAPIURL] = defaultAPIURL
+		}
 	}
 }
 
