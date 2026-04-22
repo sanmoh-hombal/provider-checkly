@@ -1,5 +1,5 @@
-apiVersion: trigger.checkly.m.crossplane.io/v1alpha1
-kind: Group
+apiVersion: triggers.checkly.m.crossplane.io/v1alpha1
+kind: TriggerGroup
 metadata:
   name: trigger-group-example
   namespace: default

@@ -1,0 +1,13 @@
+apiVersion: triggers.checkly.crossplane.io/v1alpha1
+kind: TriggerGroup
+metadata:
+  annotations:
+    meta.upbound.io/example-id: triggers/v1alpha1/triggergroup
+  labels:
+    testing.upbound.io/example-name: test_trigger_group
+  name: test-trigger-group
+spec:
+  forProvider:
+    groupIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: example

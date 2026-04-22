@@ -11,14 +11,22 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 )
 
-type GroupInitParameters struct {
+type TriggerGroupInitParameters struct {
 
 	// (Number) The id of the group that you want to attach the trigger to.
 	// The id of the group that you want to attach the trigger to.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.CheckGroup
 	GroupID *float64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
+
+	// Reference to a CheckGroup in checks to populate groupId.
+	// +kubebuilder:validation:Optional
+	GroupIDRef *v1.Reference `json:"groupIdRef,omitempty" tf:"-"`
+
+	// Selector for a CheckGroup in checks to populate groupId.
+	// +kubebuilder:validation:Optional
+	GroupIDSelector *v1.Selector `json:"groupIdSelector,omitempty" tf:"-"`
 
 	// (String) The token value created to trigger the group
 	// The token value created to trigger the group
@@ -29,7 +37,7 @@ type GroupInitParameters struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-type GroupObservation struct {
+type TriggerGroupObservation struct {
 
 	// (Number) The id of the group that you want to attach the trigger to.
 	// The id of the group that you want to attach the trigger to.
@@ -47,12 +55,21 @@ type GroupObservation struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-type GroupParameters struct {
+type TriggerGroupParameters struct {
 
 	// (Number) The id of the group that you want to attach the trigger to.
 	// The id of the group that you want to attach the trigger to.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.CheckGroup
 	// +kubebuilder:validation:Optional
 	GroupID *float64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
+
+	// Reference to a CheckGroup in checks to populate groupId.
+	// +kubebuilder:validation:Optional
+	GroupIDRef *v1.Reference `json:"groupIdRef,omitempty" tf:"-"`
+
+	// Selector for a CheckGroup in checks to populate groupId.
+	// +kubebuilder:validation:Optional
+	GroupIDSelector *v1.Selector `json:"groupIdSelector,omitempty" tf:"-"`
 
 	// (String) The token value created to trigger the group
 	// The token value created to trigger the group
@@ -65,10 +82,10 @@ type GroupParameters struct {
 	URL *string `json:"url,omitempty" tf:"url,omitempty"`
 }
 
-// GroupSpec defines the desired state of Group
-type GroupSpec struct {
-	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            GroupParameters `json:"forProvider"`
+// TriggerGroupSpec defines the desired state of TriggerGroup
+type TriggerGroupSpec struct {
+	v1.ResourceSpec `json:",inline"`
+	ForProvider     TriggerGroupParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -79,50 +96,49 @@ type GroupSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider GroupInitParameters `json:"initProvider,omitempty"`
+	InitProvider TriggerGroupInitParameters `json:"initProvider,omitempty"`
 }
 
-// GroupStatus defines the observed state of Group.
-type GroupStatus struct {
+// TriggerGroupStatus defines the observed state of TriggerGroup.
+type TriggerGroupStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        GroupObservation `json:"atProvider,omitempty"`
+	AtProvider        TriggerGroupObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Group is the Schema for the Groups API.
+// TriggerGroup is the Schema for the TriggerGroups API.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,checkly}
-type Group struct {
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,checkly}
+type TriggerGroup struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.groupId) || (has(self.initProvider) && has(self.initProvider.groupId))",message="spec.forProvider.groupId is a required parameter"
-	Spec   GroupSpec   `json:"spec"`
-	Status GroupStatus `json:"status,omitempty"`
+	Spec              TriggerGroupSpec   `json:"spec"`
+	Status            TriggerGroupStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// GroupList contains a list of Groups
-type GroupList struct {
+// TriggerGroupList contains a list of TriggerGroups
+type TriggerGroupList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Group `json:"items"`
+	Items           []TriggerGroup `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	Group_Kind             = "Group"
-	Group_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Group_Kind}.String()
-	Group_KindAPIVersion   = Group_Kind + "." + CRDGroupVersion.String()
-	Group_GroupVersionKind = CRDGroupVersion.WithKind(Group_Kind)
+	TriggerGroup_Kind             = "TriggerGroup"
+	TriggerGroup_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: TriggerGroup_Kind}.String()
+	TriggerGroup_KindAPIVersion   = TriggerGroup_Kind + "." + CRDGroupVersion.String()
+	TriggerGroup_GroupVersionKind = CRDGroupVersion.WithKind(TriggerGroup_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&Group{}, &GroupList{})
+	SchemeBuilder.Register(&TriggerGroup{}, &TriggerGroupList{})
 }
