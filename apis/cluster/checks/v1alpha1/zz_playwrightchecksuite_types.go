@@ -11,123 +11,22 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 )
-
-type AlertChannelSubscriptionInitParameters struct {
-
-	// (Boolean) Determines whether the check will run periodically or not after being deployed.
-	// Whether an alert should be sent to this channel.
-	Activated *bool `json:"activated,omitempty" tf:"activated,omitempty"`
-
-	// (Number) The ID of the alert channel.
-	// The ID of the alert channel.
-	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
-}
-
-type AlertChannelSubscriptionObservation struct {
-
-	// (Boolean) Determines whether the check will run periodically or not after being deployed.
-	// Whether an alert should be sent to this channel.
-	Activated *bool `json:"activated,omitempty" tf:"activated,omitempty"`
-
-	// (Number) The ID of the alert channel.
-	// The ID of the alert channel.
-	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
-}
-
-type AlertChannelSubscriptionParameters struct {
-
-	// (Boolean) Determines whether the check will run periodically or not after being deployed.
-	// Whether an alert should be sent to this channel.
-	// +kubebuilder:validation:Optional
-	Activated *bool `json:"activated" tf:"activated,omitempty"`
-
-	// (Number) The ID of the alert channel.
-	// The ID of the alert channel.
-	// +kubebuilder:validation:Optional
-	ChannelID *float64 `json:"channelId" tf:"channel_id,omitempty"`
-}
-
-type AlertSettingsInitParameters struct {
-
-	// (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
-	// Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
-	EscalationType *string `json:"escalationType,omitempty" tf:"escalation_type,omitempty"`
-
-	// (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
-	// Configuration for parallel run failure threshold.
-	ParallelRunFailureThreshold []ParallelRunFailureThresholdInitParameters `json:"parallelRunFailureThreshold,omitempty" tf:"parallel_run_failure_threshold,omitempty"`
-
-	// (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
-	// Defines how often to send reminder notifications after initial alert.
-	Reminders []RemindersInitParameters `json:"reminders,omitempty" tf:"reminders,omitempty"`
-
-	// based escalation. (see below for nested schema)
-	// Configuration for run-based escalation.
-	RunBasedEscalation []RunBasedEscalationInitParameters `json:"runBasedEscalation,omitempty" tf:"run_based_escalation,omitempty"`
-
-	// based escalation. (see below for nested schema)
-	// Configuration for time-based escalation.
-	TimeBasedEscalation []TimeBasedEscalationInitParameters `json:"timeBasedEscalation,omitempty" tf:"time_based_escalation,omitempty"`
-}
-
-type AlertSettingsObservation struct {
-
-	// (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
-	// Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
-	EscalationType *string `json:"escalationType,omitempty" tf:"escalation_type,omitempty"`
-
-	// (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
-	// Configuration for parallel run failure threshold.
-	ParallelRunFailureThreshold []ParallelRunFailureThresholdObservation `json:"parallelRunFailureThreshold,omitempty" tf:"parallel_run_failure_threshold,omitempty"`
-
-	// (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
-	// Defines how often to send reminder notifications after initial alert.
-	Reminders []RemindersObservation `json:"reminders,omitempty" tf:"reminders,omitempty"`
-
-	// based escalation. (see below for nested schema)
-	// Configuration for run-based escalation.
-	RunBasedEscalation []RunBasedEscalationObservation `json:"runBasedEscalation,omitempty" tf:"run_based_escalation,omitempty"`
-
-	// based escalation. (see below for nested schema)
-	// Configuration for time-based escalation.
-	TimeBasedEscalation []TimeBasedEscalationObservation `json:"timeBasedEscalation,omitempty" tf:"time_based_escalation,omitempty"`
-}
-
-type AlertSettingsParameters struct {
-
-	// (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
-	// Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
-	// +kubebuilder:validation:Optional
-	EscalationType *string `json:"escalationType,omitempty" tf:"escalation_type,omitempty"`
-
-	// (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
-	// Configuration for parallel run failure threshold.
-	// +kubebuilder:validation:Optional
-	ParallelRunFailureThreshold []ParallelRunFailureThresholdParameters `json:"parallelRunFailureThreshold,omitempty" tf:"parallel_run_failure_threshold,omitempty"`
-
-	// (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
-	// Defines how often to send reminder notifications after initial alert.
-	// +kubebuilder:validation:Optional
-	Reminders []RemindersParameters `json:"reminders,omitempty" tf:"reminders,omitempty"`
-
-	// based escalation. (see below for nested schema)
-	// Configuration for run-based escalation.
-	// +kubebuilder:validation:Optional
-	RunBasedEscalation []RunBasedEscalationParameters `json:"runBasedEscalation,omitempty" tf:"run_based_escalation,omitempty"`
-
-	// based escalation. (see below for nested schema)
-	// Configuration for time-based escalation.
-	// +kubebuilder:validation:Optional
-	TimeBasedEscalation []TimeBasedEscalationParameters `json:"timeBasedEscalation,omitempty" tf:"time_based_escalation,omitempty"`
-}
 
 type BundleInitParameters struct {
 
 	// (String) The ID of this resource.
 	// The ID of the code bundle.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.PlaywrightCodeBundle
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+
+	// Reference to a PlaywrightCodeBundle in checks to populate id.
+	// +kubebuilder:validation:Optional
+	IDRef *v1.Reference `json:"idRef,omitempty" tf:"-"`
+
+	// Selector for a PlaywrightCodeBundle in checks to populate id.
+	// +kubebuilder:validation:Optional
+	IDSelector *v1.Selector `json:"idSelector,omitempty" tf:"-"`
 
 	// (String) The generated metadata of the code bundle.
 	// The generated metadata of the code bundle.
@@ -149,8 +48,17 @@ type BundleParameters struct {
 
 	// (String) The ID of this resource.
 	// The ID of the code bundle.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.PlaywrightCodeBundle
 	// +kubebuilder:validation:Optional
-	ID *string `json:"id" tf:"id,omitempty"`
+	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+
+	// Reference to a PlaywrightCodeBundle in checks to populate id.
+	// +kubebuilder:validation:Optional
+	IDRef *v1.Reference `json:"idRef,omitempty" tf:"-"`
+
+	// Selector for a PlaywrightCodeBundle in checks to populate id.
+	// +kubebuilder:validation:Optional
+	IDSelector *v1.Selector `json:"idSelector,omitempty" tf:"-"`
 
 	// (String) The generated metadata of the code bundle.
 	// The generated metadata of the code bundle.
@@ -158,7 +66,349 @@ type BundleParameters struct {
 	Metadata *string `json:"metadata" tf:"metadata,omitempty"`
 }
 
-type CheckSuiteInitParameters struct {
+type DeviceInitParameters struct {
+
+	// (String) The type of the device.
+	// The type of the device.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type DeviceObservation struct {
+
+	// (String) The type of the device.
+	// The type of the device.
+	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+}
+
+type DeviceParameters struct {
+
+	// (String) The type of the device.
+	// The type of the device.
+	// +kubebuilder:validation:Optional
+	Type *string `json:"type" tf:"type,omitempty"`
+}
+
+type InstallInitParameters struct {
+
+	// (String) The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. npm install for npm).
+	// The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. `npm install` for `npm`).
+	Command *string `json:"command,omitempty" tf:"command,omitempty"`
+}
+
+type InstallObservation struct {
+
+	// (String) The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. npm install for npm).
+	// The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. `npm install` for `npm`).
+	Command *string `json:"command,omitempty" tf:"command,omitempty"`
+}
+
+type InstallParameters struct {
+
+	// (String) The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. npm install for npm).
+	// The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. `npm install` for `npm`).
+	// +kubebuilder:validation:Optional
+	Command *string `json:"command,omitempty" tf:"command,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertChannelSubscriptionInitParameters struct {
+
+	// (Boolean) Determines whether the check will run periodically or not after being deployed.
+	// Whether an alert should be sent to this channel.
+	Activated *bool `json:"activated,omitempty" tf:"activated,omitempty"`
+
+	// (Number) The ID of the alert channel.
+	// The ID of the alert channel.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
+	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
+
+	// Reference to a AlertChannel in alerts to populate channelId.
+	// +kubebuilder:validation:Optional
+	ChannelIDRef *v1.Reference `json:"channelIdRef,omitempty" tf:"-"`
+
+	// Selector for a AlertChannel in alerts to populate channelId.
+	// +kubebuilder:validation:Optional
+	ChannelIDSelector *v1.Selector `json:"channelIdSelector,omitempty" tf:"-"`
+}
+
+type PlaywrightCheckSuiteAlertChannelSubscriptionObservation struct {
+
+	// (Boolean) Determines whether the check will run periodically or not after being deployed.
+	// Whether an alert should be sent to this channel.
+	Activated *bool `json:"activated,omitempty" tf:"activated,omitempty"`
+
+	// (Number) The ID of the alert channel.
+	// The ID of the alert channel.
+	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertChannelSubscriptionParameters struct {
+
+	// (Boolean) Determines whether the check will run periodically or not after being deployed.
+	// Whether an alert should be sent to this channel.
+	// +kubebuilder:validation:Optional
+	Activated *bool `json:"activated" tf:"activated,omitempty"`
+
+	// (Number) The ID of the alert channel.
+	// The ID of the alert channel.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
+	// +kubebuilder:validation:Optional
+	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
+
+	// Reference to a AlertChannel in alerts to populate channelId.
+	// +kubebuilder:validation:Optional
+	ChannelIDRef *v1.Reference `json:"channelIdRef,omitempty" tf:"-"`
+
+	// Selector for a AlertChannel in alerts to populate channelId.
+	// +kubebuilder:validation:Optional
+	ChannelIDSelector *v1.Selector `json:"channelIdSelector,omitempty" tf:"-"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsInitParameters struct {
+
+	// (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+	// Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+	EscalationType *string `json:"escalationType,omitempty" tf:"escalation_type,omitempty"`
+
+	// (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+	// Configuration for parallel run failure threshold.
+	ParallelRunFailureThreshold []PlaywrightCheckSuiteAlertSettingsParallelRunFailureThresholdInitParameters `json:"parallelRunFailureThreshold,omitempty" tf:"parallel_run_failure_threshold,omitempty"`
+
+	// (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+	// Defines how often to send reminder notifications after initial alert.
+	Reminders []PlaywrightCheckSuiteAlertSettingsRemindersInitParameters `json:"reminders,omitempty" tf:"reminders,omitempty"`
+
+	// based escalation. (see below for nested schema)
+	// Configuration for run-based escalation.
+	RunBasedEscalation []PlaywrightCheckSuiteAlertSettingsRunBasedEscalationInitParameters `json:"runBasedEscalation,omitempty" tf:"run_based_escalation,omitempty"`
+
+	// based escalation. (see below for nested schema)
+	// Configuration for time-based escalation.
+	TimeBasedEscalation []PlaywrightCheckSuiteAlertSettingsTimeBasedEscalationInitParameters `json:"timeBasedEscalation,omitempty" tf:"time_based_escalation,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsObservation struct {
+
+	// (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+	// Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+	EscalationType *string `json:"escalationType,omitempty" tf:"escalation_type,omitempty"`
+
+	// (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+	// Configuration for parallel run failure threshold.
+	ParallelRunFailureThreshold []PlaywrightCheckSuiteAlertSettingsParallelRunFailureThresholdObservation `json:"parallelRunFailureThreshold,omitempty" tf:"parallel_run_failure_threshold,omitempty"`
+
+	// (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+	// Defines how often to send reminder notifications after initial alert.
+	Reminders []PlaywrightCheckSuiteAlertSettingsRemindersObservation `json:"reminders,omitempty" tf:"reminders,omitempty"`
+
+	// based escalation. (see below for nested schema)
+	// Configuration for run-based escalation.
+	RunBasedEscalation []PlaywrightCheckSuiteAlertSettingsRunBasedEscalationObservation `json:"runBasedEscalation,omitempty" tf:"run_based_escalation,omitempty"`
+
+	// based escalation. (see below for nested schema)
+	// Configuration for time-based escalation.
+	TimeBasedEscalation []PlaywrightCheckSuiteAlertSettingsTimeBasedEscalationObservation `json:"timeBasedEscalation,omitempty" tf:"time_based_escalation,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsParallelRunFailureThresholdInitParameters struct {
+
+	// (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+	// Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+	Enabled *bool `json:"enabled,omitempty" tf:"enabled,omitempty"`
+
+	// (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+	// Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+	Percentage *float64 `json:"percentage,omitempty" tf:"percentage,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsParallelRunFailureThresholdObservation struct {
+
+	// (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+	// Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+	Enabled *bool `json:"enabled,omitempty" tf:"enabled,omitempty"`
+
+	// (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+	// Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+	Percentage *float64 `json:"percentage,omitempty" tf:"percentage,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsParallelRunFailureThresholdParameters struct {
+
+	// (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
+	// Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
+	// +kubebuilder:validation:Optional
+	Enabled *bool `json:"enabled,omitempty" tf:"enabled,omitempty"`
+
+	// (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
+	// Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
+	// +kubebuilder:validation:Optional
+	Percentage *float64 `json:"percentage,omitempty" tf:"percentage,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsParameters struct {
+
+	// (String) Determines the type of escalation to use. Possible values are RUN_BASED and TIME_BASED. (Default RUN_BASED).
+	// Determines the type of escalation to use. Possible values are `RUN_BASED` and `TIME_BASED`. (Default `RUN_BASED`).
+	// +kubebuilder:validation:Optional
+	EscalationType *string `json:"escalationType,omitempty" tf:"escalation_type,omitempty"`
+
+	// (Block List) Configuration for parallel run failure threshold. (see below for nested schema)
+	// Configuration for parallel run failure threshold.
+	// +kubebuilder:validation:Optional
+	ParallelRunFailureThreshold []PlaywrightCheckSuiteAlertSettingsParallelRunFailureThresholdParameters `json:"parallelRunFailureThreshold,omitempty" tf:"parallel_run_failure_threshold,omitempty"`
+
+	// (Block List) Defines how often to send reminder notifications after initial alert. (see below for nested schema)
+	// Defines how often to send reminder notifications after initial alert.
+	// +kubebuilder:validation:Optional
+	Reminders []PlaywrightCheckSuiteAlertSettingsRemindersParameters `json:"reminders,omitempty" tf:"reminders,omitempty"`
+
+	// based escalation. (see below for nested schema)
+	// Configuration for run-based escalation.
+	// +kubebuilder:validation:Optional
+	RunBasedEscalation []PlaywrightCheckSuiteAlertSettingsRunBasedEscalationParameters `json:"runBasedEscalation,omitempty" tf:"run_based_escalation,omitempty"`
+
+	// based escalation. (see below for nested schema)
+	// Configuration for time-based escalation.
+	// +kubebuilder:validation:Optional
+	TimeBasedEscalation []PlaywrightCheckSuiteAlertSettingsTimeBasedEscalationParameters `json:"timeBasedEscalation,omitempty" tf:"time_based_escalation,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsRemindersInitParameters struct {
+
+	// (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+	// Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+	Amount *float64 `json:"amount,omitempty" tf:"amount,omitempty"`
+
+	// (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+	// Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+	Interval *float64 `json:"interval,omitempty" tf:"interval,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsRemindersObservation struct {
+
+	// (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+	// Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+	Amount *float64 `json:"amount,omitempty" tf:"amount,omitempty"`
+
+	// (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+	// Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+	Interval *float64 `json:"interval,omitempty" tf:"interval,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsRemindersParameters struct {
+
+	// (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
+	// Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
+	// +kubebuilder:validation:Optional
+	Amount *float64 `json:"amount,omitempty" tf:"amount,omitempty"`
+
+	// (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
+	// Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+	// +kubebuilder:validation:Optional
+	Interval *float64 `json:"interval,omitempty" tf:"interval,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsRunBasedEscalationInitParameters struct {
+
+	// (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+	// Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+	FailedRunThreshold *float64 `json:"failedRunThreshold,omitempty" tf:"failed_run_threshold,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsRunBasedEscalationObservation struct {
+
+	// (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+	// Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+	FailedRunThreshold *float64 `json:"failedRunThreshold,omitempty" tf:"failed_run_threshold,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsRunBasedEscalationParameters struct {
+
+	// (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
+	// Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
+	// +kubebuilder:validation:Optional
+	FailedRunThreshold *float64 `json:"failedRunThreshold,omitempty" tf:"failed_run_threshold,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsTimeBasedEscalationInitParameters struct {
+
+	// (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+	// Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+	MinutesFailingThreshold *float64 `json:"minutesFailingThreshold,omitempty" tf:"minutes_failing_threshold,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsTimeBasedEscalationObservation struct {
+
+	// (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+	// Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+	MinutesFailingThreshold *float64 `json:"minutesFailingThreshold,omitempty" tf:"minutes_failing_threshold,omitempty"`
+}
+
+type PlaywrightCheckSuiteAlertSettingsTimeBasedEscalationParameters struct {
+
+	// (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
+	// Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
+	// +kubebuilder:validation:Optional
+	MinutesFailingThreshold *float64 `json:"minutesFailingThreshold,omitempty" tf:"minutes_failing_threshold,omitempty"`
+}
+
+type PlaywrightCheckSuiteEnvironmentVariableInitParameters struct {
+
+	// (String) The name of the environment variable or secret.
+	// The name of the environment variable or secret.
+	Key *string `json:"key,omitempty" tf:"key,omitempty"`
+
+	// (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+	// If true, the value is not shown by default, but it can be accessed. (Default `false`).
+	Locked *bool `json:"locked,omitempty" tf:"locked,omitempty"`
+
+	// (Boolean) If true, the value will never be visible. (Default false).
+	// If true, the value will never be visible. (Default `false`).
+	Secret *bool `json:"secret,omitempty" tf:"secret,omitempty"`
+
+	// (String) The value of the environment variable or secret.
+	// The value of the environment variable or secret.
+	ValueSecretRef v1.SecretKeySelector `json:"valueSecretRef" tf:"-"`
+}
+
+type PlaywrightCheckSuiteEnvironmentVariableObservation struct {
+
+	// (String) The name of the environment variable or secret.
+	// The name of the environment variable or secret.
+	Key *string `json:"key,omitempty" tf:"key,omitempty"`
+
+	// (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+	// If true, the value is not shown by default, but it can be accessed. (Default `false`).
+	Locked *bool `json:"locked,omitempty" tf:"locked,omitempty"`
+
+	// (Boolean) If true, the value will never be visible. (Default false).
+	// If true, the value will never be visible. (Default `false`).
+	Secret *bool `json:"secret,omitempty" tf:"secret,omitempty"`
+}
+
+type PlaywrightCheckSuiteEnvironmentVariableParameters struct {
+
+	// (String) The name of the environment variable or secret.
+	// The name of the environment variable or secret.
+	// +kubebuilder:validation:Optional
+	Key *string `json:"key" tf:"key,omitempty"`
+
+	// (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
+	// If true, the value is not shown by default, but it can be accessed. (Default `false`).
+	// +kubebuilder:validation:Optional
+	Locked *bool `json:"locked,omitempty" tf:"locked,omitempty"`
+
+	// (Boolean) If true, the value will never be visible. (Default false).
+	// If true, the value will never be visible. (Default `false`).
+	// +kubebuilder:validation:Optional
+	Secret *bool `json:"secret,omitempty" tf:"secret,omitempty"`
+
+	// (String) The value of the environment variable or secret.
+	// The value of the environment variable or secret.
+	// +kubebuilder:validation:Optional
+	ValueSecretRef v1.SecretKeySelector `json:"valueSecretRef" tf:"-"`
+}
+
+type PlaywrightCheckSuiteInitParameters struct {
 
 	// (Boolean) Determines whether the check will run periodically or not after being deployed.
 	// Determines whether the check will run periodically or not after being deployed.
@@ -166,11 +416,11 @@ type CheckSuiteInitParameters struct {
 
 	// (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
 	// An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
-	AlertChannelSubscription []AlertChannelSubscriptionInitParameters `json:"alertChannelSubscription,omitempty" tf:"alert_channel_subscription,omitempty"`
+	AlertChannelSubscription []PlaywrightCheckSuiteAlertChannelSubscriptionInitParameters `json:"alertChannelSubscription,omitempty" tf:"alert_channel_subscription,omitempty"`
 
 	// (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
 	// Determines the alert escalation policy for the check.
-	AlertSettings []AlertSettingsInitParameters `json:"alertSettings,omitempty" tf:"alert_settings,omitempty"`
+	AlertSettings []PlaywrightCheckSuiteAlertSettingsInitParameters `json:"alertSettings,omitempty" tf:"alert_settings,omitempty"`
 
 	// (Block List, Min: 1, Max: 1) Attaches a code bundle to the check. (see below for nested schema)
 	// Attaches a code bundle to the check.
@@ -182,7 +432,7 @@ type CheckSuiteInitParameters struct {
 
 	// (Block List) Insert environment variables into the execution environment. (see below for nested schema)
 	// Insert environment variables into the execution environment.
-	EnvironmentVariable []EnvironmentVariableInitParameters `json:"environmentVariable,omitempty" tf:"environment_variable,omitempty"`
+	EnvironmentVariable []PlaywrightCheckSuiteEnvironmentVariableInitParameters `json:"environmentVariable,omitempty" tf:"environment_variable,omitempty"`
 
 	// (Number) Controls how often the check should run. Defined in minutes. The allowed values are 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
 	// Controls how often the check should run. Defined in minutes. The allowed values are `1` (1 minute), `2` (2 minutes), `5` (5 minutes), `10` (10 minutes), `15` (15 minutes), `30` (30 minutes), `60` (1 hour), `120` (2 hours), `180` (3 hours), `360` (6 hours), `720` (12 hours) and `1440` (24 hours).
@@ -209,10 +459,20 @@ type CheckSuiteInitParameters struct {
 	// The name of the check.
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
+	// References to PrivateLocation in infra to populate privateLocations.
+	// +kubebuilder:validation:Optional
+	PrivateLocationRefs []v1.Reference `json:"privateLocationRefs,omitempty" tf:"-"`
+
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
+	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +listType=set
 	PrivateLocations []*string `json:"privateLocations,omitempty" tf:"private_locations,omitempty"`
+
+	// Selector for a list of PrivateLocation in infra to populate privateLocations.
+	// +kubebuilder:validation:Optional
+	PrivateLocationsSelector *v1.Selector `json:"privateLocationsSelector,omitempty" tf:"-"`
 
 	// robin. (Default false).
 	// Determines whether the check should run on all selected locations in parallel or round-robin. (Default `false`).
@@ -229,14 +489,14 @@ type CheckSuiteInitParameters struct {
 
 	// (Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)
 	// Create and resolve an incident based on the alert configuration. Useful for status page automation.
-	TriggerIncident []TriggerIncidentInitParameters `json:"triggerIncident,omitempty" tf:"trigger_incident,omitempty"`
+	TriggerIncident []PlaywrightCheckSuiteTriggerIncidentInitParameters `json:"triggerIncident,omitempty" tf:"trigger_incident,omitempty"`
 
 	// (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check. (Default true).
 	// When true, the account level alert settings will be used, not the alert setting defined on this check. (Default `true`).
 	UseGlobalAlertSettings *bool `json:"useGlobalAlertSettings,omitempty" tf:"use_global_alert_settings,omitempty"`
 }
 
-type CheckSuiteObservation struct {
+type PlaywrightCheckSuiteObservation struct {
 
 	// (Boolean) Determines whether the check will run periodically or not after being deployed.
 	// Determines whether the check will run periodically or not after being deployed.
@@ -244,11 +504,11 @@ type CheckSuiteObservation struct {
 
 	// (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
 	// An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
-	AlertChannelSubscription []AlertChannelSubscriptionObservation `json:"alertChannelSubscription,omitempty" tf:"alert_channel_subscription,omitempty"`
+	AlertChannelSubscription []PlaywrightCheckSuiteAlertChannelSubscriptionObservation `json:"alertChannelSubscription,omitempty" tf:"alert_channel_subscription,omitempty"`
 
 	// (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
 	// Determines the alert escalation policy for the check.
-	AlertSettings []AlertSettingsObservation `json:"alertSettings,omitempty" tf:"alert_settings,omitempty"`
+	AlertSettings []PlaywrightCheckSuiteAlertSettingsObservation `json:"alertSettings,omitempty" tf:"alert_settings,omitempty"`
 
 	// (Block List, Min: 1, Max: 1) Attaches a code bundle to the check. (see below for nested schema)
 	// Attaches a code bundle to the check.
@@ -260,7 +520,7 @@ type CheckSuiteObservation struct {
 
 	// (Block List) Insert environment variables into the execution environment. (see below for nested schema)
 	// Insert environment variables into the execution environment.
-	EnvironmentVariable []EnvironmentVariableObservation `json:"environmentVariable,omitempty" tf:"environment_variable,omitempty"`
+	EnvironmentVariable []PlaywrightCheckSuiteEnvironmentVariableObservation `json:"environmentVariable,omitempty" tf:"environment_variable,omitempty"`
 
 	// (Number) Controls how often the check should run. Defined in minutes. The allowed values are 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
 	// Controls how often the check should run. Defined in minutes. The allowed values are `1` (1 minute), `2` (2 minutes), `5` (5 minutes), `10` (10 minutes), `15` (15 minutes), `30` (30 minutes), `60` (1 hour), `120` (2 hours), `180` (3 hours), `360` (6 hours), `720` (12 hours) and `1440` (24 hours).
@@ -310,14 +570,14 @@ type CheckSuiteObservation struct {
 
 	// (Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)
 	// Create and resolve an incident based on the alert configuration. Useful for status page automation.
-	TriggerIncident []TriggerIncidentObservation `json:"triggerIncident,omitempty" tf:"trigger_incident,omitempty"`
+	TriggerIncident []PlaywrightCheckSuiteTriggerIncidentObservation `json:"triggerIncident,omitempty" tf:"trigger_incident,omitempty"`
 
 	// (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check. (Default true).
 	// When true, the account level alert settings will be used, not the alert setting defined on this check. (Default `true`).
 	UseGlobalAlertSettings *bool `json:"useGlobalAlertSettings,omitempty" tf:"use_global_alert_settings,omitempty"`
 }
 
-type CheckSuiteParameters struct {
+type PlaywrightCheckSuiteParameters struct {
 
 	// (Boolean) Determines whether the check will run periodically or not after being deployed.
 	// Determines whether the check will run periodically or not after being deployed.
@@ -327,12 +587,12 @@ type CheckSuiteParameters struct {
 	// (Block Set) An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing. (see below for nested schema)
 	// An array of channel IDs and whether they're activated or not. If you don't set at least one alert channel subscription for your check, we won't be able to alert you even if it starts failing.
 	// +kubebuilder:validation:Optional
-	AlertChannelSubscription []AlertChannelSubscriptionParameters `json:"alertChannelSubscription,omitempty" tf:"alert_channel_subscription,omitempty"`
+	AlertChannelSubscription []PlaywrightCheckSuiteAlertChannelSubscriptionParameters `json:"alertChannelSubscription,omitempty" tf:"alert_channel_subscription,omitempty"`
 
 	// (Block List, Max: 1) Determines the alert escalation policy for the check. (see below for nested schema)
 	// Determines the alert escalation policy for the check.
 	// +kubebuilder:validation:Optional
-	AlertSettings []AlertSettingsParameters `json:"alertSettings,omitempty" tf:"alert_settings,omitempty"`
+	AlertSettings []PlaywrightCheckSuiteAlertSettingsParameters `json:"alertSettings,omitempty" tf:"alert_settings,omitempty"`
 
 	// (Block List, Min: 1, Max: 1) Attaches a code bundle to the check. (see below for nested schema)
 	// Attaches a code bundle to the check.
@@ -347,7 +607,7 @@ type CheckSuiteParameters struct {
 	// (Block List) Insert environment variables into the execution environment. (see below for nested schema)
 	// Insert environment variables into the execution environment.
 	// +kubebuilder:validation:Optional
-	EnvironmentVariable []EnvironmentVariableParameters `json:"environmentVariable,omitempty" tf:"environment_variable,omitempty"`
+	EnvironmentVariable []PlaywrightCheckSuiteEnvironmentVariableParameters `json:"environmentVariable,omitempty" tf:"environment_variable,omitempty"`
 
 	// (Number) Controls how often the check should run. Defined in minutes. The allowed values are 1 (1 minute), 2 (2 minutes), 5 (5 minutes), 10 (10 minutes), 15 (15 minutes), 30 (30 minutes), 60 (1 hour), 120 (2 hours), 180 (3 hours), 360 (6 hours), 720 (12 hours) and 1440 (24 hours).
 	// Controls how often the check should run. Defined in minutes. The allowed values are `1` (1 minute), `2` (2 minutes), `5` (5 minutes), `10` (10 minutes), `15` (15 minutes), `30` (30 minutes), `60` (1 hour), `120` (2 hours), `180` (3 hours), `360` (6 hours), `720` (12 hours) and `1440` (24 hours).
@@ -380,11 +640,21 @@ type CheckSuiteParameters struct {
 	// +kubebuilder:validation:Optional
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
+	// References to PrivateLocation in infra to populate privateLocations.
+	// +kubebuilder:validation:Optional
+	PrivateLocationRefs []v1.Reference `json:"privateLocationRefs,omitempty" tf:"-"`
+
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
+	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
+	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +kubebuilder:validation:Optional
 	// +listType=set
 	PrivateLocations []*string `json:"privateLocations,omitempty" tf:"private_locations,omitempty"`
+
+	// Selector for a list of PrivateLocation in infra to populate privateLocations.
+	// +kubebuilder:validation:Optional
+	PrivateLocationsSelector *v1.Selector `json:"privateLocationsSelector,omitempty" tf:"-"`
 
 	// robin. (Default false).
 	// Determines whether the check should run on all selected locations in parallel or round-robin. (Default `false`).
@@ -405,7 +675,7 @@ type CheckSuiteParameters struct {
 	// (Block Set, Max: 1) Create and resolve an incident based on the alert configuration. Useful for status page automation. (see below for nested schema)
 	// Create and resolve an incident based on the alert configuration. Useful for status page automation.
 	// +kubebuilder:validation:Optional
-	TriggerIncident []TriggerIncidentParameters `json:"triggerIncident,omitempty" tf:"trigger_incident,omitempty"`
+	TriggerIncident []PlaywrightCheckSuiteTriggerIncidentParameters `json:"triggerIncident,omitempty" tf:"trigger_incident,omitempty"`
 
 	// (Boolean) When true, the account level alert settings will be used, not the alert setting defined on this check. (Default true).
 	// When true, the account level alert settings will be used, not the alert setting defined on this check. (Default `true`).
@@ -413,144 +683,78 @@ type CheckSuiteParameters struct {
 	UseGlobalAlertSettings *bool `json:"useGlobalAlertSettings,omitempty" tf:"use_global_alert_settings,omitempty"`
 }
 
-type DeviceInitParameters struct {
+type PlaywrightCheckSuiteTriggerIncidentInitParameters struct {
 
-	// (String) The type of the device.
-	// The type of the device.
-	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+	// (String) A description of the check.
+	// A detailed description of the incident.
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (String) The name of the check.
+	// The name of the incident.
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Boolean) Whether to notify subscribers when the incident is triggered.
+	// Whether to notify subscribers when the incident is triggered.
+	NotifySubscribers *bool `json:"notifySubscribers,omitempty" tf:"notify_subscribers,omitempty"`
+
+	// (String) The status page service that this incident will be associated with.
+	// The status page service that this incident will be associated with.
+	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
+
+	// (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+	// The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
+	Severity *string `json:"severity,omitempty" tf:"severity,omitempty"`
 }
 
-type DeviceObservation struct {
+type PlaywrightCheckSuiteTriggerIncidentObservation struct {
 
-	// (String) The type of the device.
-	// The type of the device.
-	Type *string `json:"type,omitempty" tf:"type,omitempty"`
+	// (String) A description of the check.
+	// A detailed description of the incident.
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (String) The name of the check.
+	// The name of the incident.
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
+	// (Boolean) Whether to notify subscribers when the incident is triggered.
+	// Whether to notify subscribers when the incident is triggered.
+	NotifySubscribers *bool `json:"notifySubscribers,omitempty" tf:"notify_subscribers,omitempty"`
+
+	// (String) The status page service that this incident will be associated with.
+	// The status page service that this incident will be associated with.
+	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
+
+	// (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+	// The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
+	Severity *string `json:"severity,omitempty" tf:"severity,omitempty"`
 }
 
-type DeviceParameters struct {
+type PlaywrightCheckSuiteTriggerIncidentParameters struct {
 
-	// (String) The type of the device.
-	// The type of the device.
+	// (String) A description of the check.
+	// A detailed description of the incident.
 	// +kubebuilder:validation:Optional
-	Type *string `json:"type" tf:"type,omitempty"`
-}
+	Description *string `json:"description" tf:"description,omitempty"`
 
-type EnvironmentVariableInitParameters struct {
-
-	// (String) The name of the environment variable or secret.
-	// The name of the environment variable or secret.
-	Key *string `json:"key,omitempty" tf:"key,omitempty"`
-
-	// (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
-	// If true, the value is not shown by default, but it can be accessed. (Default `false`).
-	Locked *bool `json:"locked,omitempty" tf:"locked,omitempty"`
-
-	// (Boolean) If true, the value will never be visible. (Default false).
-	// If true, the value will never be visible. (Default `false`).
-	Secret *bool `json:"secret,omitempty" tf:"secret,omitempty"`
-
-	// (String) The value of the environment variable or secret.
-	// The value of the environment variable or secret.
-	Value *string `json:"value,omitempty" tf:"value,omitempty"`
-}
-
-type EnvironmentVariableObservation struct {
-
-	// (String) The name of the environment variable or secret.
-	// The name of the environment variable or secret.
-	Key *string `json:"key,omitempty" tf:"key,omitempty"`
-
-	// (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
-	// If true, the value is not shown by default, but it can be accessed. (Default `false`).
-	Locked *bool `json:"locked,omitempty" tf:"locked,omitempty"`
-
-	// (Boolean) If true, the value will never be visible. (Default false).
-	// If true, the value will never be visible. (Default `false`).
-	Secret *bool `json:"secret,omitempty" tf:"secret,omitempty"`
-
-	// (String) The value of the environment variable or secret.
-	// The value of the environment variable or secret.
-	Value *string `json:"value,omitempty" tf:"value,omitempty"`
-}
-
-type EnvironmentVariableParameters struct {
-
-	// (String) The name of the environment variable or secret.
-	// The name of the environment variable or secret.
+	// (String) The name of the check.
+	// The name of the incident.
 	// +kubebuilder:validation:Optional
-	Key *string `json:"key" tf:"key,omitempty"`
+	Name *string `json:"name" tf:"name,omitempty"`
 
-	// (Boolean) If true, the value is not shown by default, but it can be accessed. (Default false).
-	// If true, the value is not shown by default, but it can be accessed. (Default `false`).
+	// (Boolean) Whether to notify subscribers when the incident is triggered.
+	// Whether to notify subscribers when the incident is triggered.
 	// +kubebuilder:validation:Optional
-	Locked *bool `json:"locked,omitempty" tf:"locked,omitempty"`
+	NotifySubscribers *bool `json:"notifySubscribers" tf:"notify_subscribers,omitempty"`
 
-	// (Boolean) If true, the value will never be visible. (Default false).
-	// If true, the value will never be visible. (Default `false`).
+	// (String) The status page service that this incident will be associated with.
+	// The status page service that this incident will be associated with.
 	// +kubebuilder:validation:Optional
-	Secret *bool `json:"secret,omitempty" tf:"secret,omitempty"`
+	ServiceID *string `json:"serviceId" tf:"service_id,omitempty"`
 
-	// (String) The value of the environment variable or secret.
-	// The value of the environment variable or secret.
+	// (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
+	// The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
 	// +kubebuilder:validation:Optional
-	Value *string `json:"value" tf:"value,omitempty"`
-}
-
-type InstallInitParameters struct {
-
-	// (String) The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. npm install for npm).
-	// The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. `npm install` for `npm`).
-	Command *string `json:"command,omitempty" tf:"command,omitempty"`
-}
-
-type InstallObservation struct {
-
-	// (String) The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. npm install for npm).
-	// The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. `npm install` for `npm`).
-	Command *string `json:"command,omitempty" tf:"command,omitempty"`
-}
-
-type InstallParameters struct {
-
-	// (String) The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. npm install for npm).
-	// The command used to install dependencies prior to running Playwright. The default value is the appropriate install command for your package manager (e.g. `npm install` for `npm`).
-	// +kubebuilder:validation:Optional
-	Command *string `json:"command,omitempty" tf:"command,omitempty"`
-}
-
-type ParallelRunFailureThresholdInitParameters struct {
-
-	// (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
-	// Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
-	Enabled *bool `json:"enabled,omitempty" tf:"enabled,omitempty"`
-
-	// (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
-	// Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
-	Percentage *float64 `json:"percentage,omitempty" tf:"percentage,omitempty"`
-}
-
-type ParallelRunFailureThresholdObservation struct {
-
-	// (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
-	// Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
-	Enabled *bool `json:"enabled,omitempty" tf:"enabled,omitempty"`
-
-	// (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
-	// Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
-	Percentage *float64 `json:"percentage,omitempty" tf:"percentage,omitempty"`
-}
-
-type ParallelRunFailureThresholdParameters struct {
-
-	// (Boolean) Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default false).
-	// Whether parallel run failure threshold is enabled. Only applies if the check is scheduled for multiple locations in parallel. (Default `false`).
-	// +kubebuilder:validation:Optional
-	Enabled *bool `json:"enabled,omitempty" tf:"enabled,omitempty"`
-
-	// (Number) Percentage of runs that must fail to trigger alert. Possible values are 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100. (Default 10).
-	// Percentage of runs that must fail to trigger alert. Possible values are `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, and `100`. (Default `10`).
-	// +kubebuilder:validation:Optional
-	Percentage *float64 `json:"percentage,omitempty" tf:"percentage,omitempty"`
+	Severity *string `json:"severity" tf:"severity,omitempty"`
 }
 
 type PlaywrightInitParameters struct {
@@ -586,63 +790,6 @@ type PlaywrightParameters struct {
 	// The Playwright version to use. Defaults to the version detected from the code bundle's lockfile.
 	// +kubebuilder:validation:Optional
 	Version *string `json:"version,omitempty" tf:"version,omitempty"`
-}
-
-type RemindersInitParameters struct {
-
-	// (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
-	// Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
-	Amount *float64 `json:"amount,omitempty" tf:"amount,omitempty"`
-
-	// (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
-	// Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
-	Interval *float64 `json:"interval,omitempty" tf:"interval,omitempty"`
-}
-
-type RemindersObservation struct {
-
-	// (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
-	// Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
-	Amount *float64 `json:"amount,omitempty" tf:"amount,omitempty"`
-
-	// (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
-	// Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
-	Interval *float64 `json:"interval,omitempty" tf:"interval,omitempty"`
-}
-
-type RemindersParameters struct {
-
-	// (Number) Number of reminder notifications to send. Possible values are 0, 1, 2, 3, 4, 5, and 100000 (0 to disable, 100000 for unlimited). (Default 0).
-	// Number of reminder notifications to send. Possible values are `0`, `1`, `2`, `3`, `4`, `5`, and `100000` (`0` to disable, `100000` for unlimited). (Default `0`).
-	// +kubebuilder:validation:Optional
-	Amount *float64 `json:"amount,omitempty" tf:"amount,omitempty"`
-
-	// (Number) Interval between reminder notifications in minutes. Possible values are 5, 10, 15, and 30. (Default 5).
-	// Interval between reminder notifications in minutes. Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
-	// +kubebuilder:validation:Optional
-	Interval *float64 `json:"interval,omitempty" tf:"interval,omitempty"`
-}
-
-type RunBasedEscalationInitParameters struct {
-
-	// (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
-	// Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
-	FailedRunThreshold *float64 `json:"failedRunThreshold,omitempty" tf:"failed_run_threshold,omitempty"`
-}
-
-type RunBasedEscalationObservation struct {
-
-	// (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
-	// Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
-	FailedRunThreshold *float64 `json:"failedRunThreshold,omitempty" tf:"failed_run_threshold,omitempty"`
-}
-
-type RunBasedEscalationParameters struct {
-
-	// (Number) Send an alert notification after the given number of consecutive check runs have failed. Possible values are between 1 and 5. (Default 1).
-	// Send an alert notification after the given number of consecutive check runs have failed. Possible values are between `1` and `5`. (Default `1`).
-	// +kubebuilder:validation:Optional
-	FailedRunThreshold *float64 `json:"failedRunThreshold,omitempty" tf:"failed_run_threshold,omitempty"`
 }
 
 type RuntimeInitParameters struct {
@@ -763,106 +910,10 @@ type TestParameters struct {
 	Command *string `json:"command,omitempty" tf:"command,omitempty"`
 }
 
-type TimeBasedEscalationInitParameters struct {
-
-	// (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
-	// Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
-	MinutesFailingThreshold *float64 `json:"minutesFailingThreshold,omitempty" tf:"minutes_failing_threshold,omitempty"`
-}
-
-type TimeBasedEscalationObservation struct {
-
-	// (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
-	// Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
-	MinutesFailingThreshold *float64 `json:"minutesFailingThreshold,omitempty" tf:"minutes_failing_threshold,omitempty"`
-}
-
-type TimeBasedEscalationParameters struct {
-
-	// (Number) Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are 5, 10, 15, and 30. (Default 5).
-	// Send an alert notification after the check has been failing for the given amount of time (in minutes). Possible values are `5`, `10`, `15`, and `30`. (Default `5`).
-	// +kubebuilder:validation:Optional
-	MinutesFailingThreshold *float64 `json:"minutesFailingThreshold,omitempty" tf:"minutes_failing_threshold,omitempty"`
-}
-
-type TriggerIncidentInitParameters struct {
-
-	// (String) A description of the check.
-	// A detailed description of the incident.
-	Description *string `json:"description,omitempty" tf:"description,omitempty"`
-
-	// (String) The name of the check.
-	// The name of the incident.
-	Name *string `json:"name,omitempty" tf:"name,omitempty"`
-
-	// (Boolean) Whether to notify subscribers when the incident is triggered.
-	// Whether to notify subscribers when the incident is triggered.
-	NotifySubscribers *bool `json:"notifySubscribers,omitempty" tf:"notify_subscribers,omitempty"`
-
-	// (String) The status page service that this incident will be associated with.
-	// The status page service that this incident will be associated with.
-	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
-
-	// (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
-	// The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
-	Severity *string `json:"severity,omitempty" tf:"severity,omitempty"`
-}
-
-type TriggerIncidentObservation struct {
-
-	// (String) A description of the check.
-	// A detailed description of the incident.
-	Description *string `json:"description,omitempty" tf:"description,omitempty"`
-
-	// (String) The name of the check.
-	// The name of the incident.
-	Name *string `json:"name,omitempty" tf:"name,omitempty"`
-
-	// (Boolean) Whether to notify subscribers when the incident is triggered.
-	// Whether to notify subscribers when the incident is triggered.
-	NotifySubscribers *bool `json:"notifySubscribers,omitempty" tf:"notify_subscribers,omitempty"`
-
-	// (String) The status page service that this incident will be associated with.
-	// The status page service that this incident will be associated with.
-	ServiceID *string `json:"serviceId,omitempty" tf:"service_id,omitempty"`
-
-	// (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
-	// The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
-	Severity *string `json:"severity,omitempty" tf:"severity,omitempty"`
-}
-
-type TriggerIncidentParameters struct {
-
-	// (String) A description of the check.
-	// A detailed description of the incident.
-	// +kubebuilder:validation:Optional
-	Description *string `json:"description" tf:"description,omitempty"`
-
-	// (String) The name of the check.
-	// The name of the incident.
-	// +kubebuilder:validation:Optional
-	Name *string `json:"name" tf:"name,omitempty"`
-
-	// (Boolean) Whether to notify subscribers when the incident is triggered.
-	// Whether to notify subscribers when the incident is triggered.
-	// +kubebuilder:validation:Optional
-	NotifySubscribers *bool `json:"notifySubscribers" tf:"notify_subscribers,omitempty"`
-
-	// (String) The status page service that this incident will be associated with.
-	// The status page service that this incident will be associated with.
-	// +kubebuilder:validation:Optional
-	ServiceID *string `json:"serviceId" tf:"service_id,omitempty"`
-
-	// (String) The severity level of the incident. Possible values are MINOR, MEDIUM, MAJOR, and CRITICAL.
-	// The severity level of the incident. Possible values are `MINOR`, `MEDIUM`, `MAJOR`, and `CRITICAL`.
-	// +kubebuilder:validation:Optional
-	Severity *string `json:"severity" tf:"severity,omitempty"`
-}
-
-// CheckSuiteSpec defines the desired state of CheckSuite
-type CheckSuiteSpec struct {
-	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            CheckSuiteParameters `json:"forProvider"`
+// PlaywrightCheckSuiteSpec defines the desired state of PlaywrightCheckSuite
+type PlaywrightCheckSuiteSpec struct {
+	v1.ResourceSpec `json:",inline"`
+	ForProvider     PlaywrightCheckSuiteParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -873,53 +924,53 @@ type CheckSuiteSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider CheckSuiteInitParameters `json:"initProvider,omitempty"`
+	InitProvider PlaywrightCheckSuiteInitParameters `json:"initProvider,omitempty"`
 }
 
-// CheckSuiteStatus defines the observed state of CheckSuite.
-type CheckSuiteStatus struct {
+// PlaywrightCheckSuiteStatus defines the observed state of PlaywrightCheckSuite.
+type PlaywrightCheckSuiteStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        CheckSuiteObservation `json:"atProvider,omitempty"`
+	AtProvider        PlaywrightCheckSuiteObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// CheckSuite is the Schema for the CheckSuites API. Creates a Playwright check from a code bundle.
+// PlaywrightCheckSuite is the Schema for the PlaywrightCheckSuites API. Creates a Playwright check from a code bundle.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,checkly}
-type CheckSuite struct {
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,checkly}
+type PlaywrightCheckSuite struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.activated) || (has(self.initProvider) && has(self.initProvider.activated))",message="spec.forProvider.activated is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.bundle) || (has(self.initProvider) && has(self.initProvider.bundle))",message="spec.forProvider.bundle is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.frequency) || (has(self.initProvider) && has(self.initProvider.frequency))",message="spec.forProvider.frequency is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
-	Spec   CheckSuiteSpec   `json:"spec"`
-	Status CheckSuiteStatus `json:"status,omitempty"`
+	Spec   PlaywrightCheckSuiteSpec   `json:"spec"`
+	Status PlaywrightCheckSuiteStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// CheckSuiteList contains a list of CheckSuites
-type CheckSuiteList struct {
+// PlaywrightCheckSuiteList contains a list of PlaywrightCheckSuites
+type PlaywrightCheckSuiteList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []CheckSuite `json:"items"`
+	Items           []PlaywrightCheckSuite `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	CheckSuite_Kind             = "CheckSuite"
-	CheckSuite_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: CheckSuite_Kind}.String()
-	CheckSuite_KindAPIVersion   = CheckSuite_Kind + "." + CRDGroupVersion.String()
-	CheckSuite_GroupVersionKind = CRDGroupVersion.WithKind(CheckSuite_Kind)
+	PlaywrightCheckSuite_Kind             = "PlaywrightCheckSuite"
+	PlaywrightCheckSuite_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: PlaywrightCheckSuite_Kind}.String()
+	PlaywrightCheckSuite_KindAPIVersion   = PlaywrightCheckSuite_Kind + "." + CRDGroupVersion.String()
+	PlaywrightCheckSuite_GroupVersionKind = CRDGroupVersion.WithKind(PlaywrightCheckSuite_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&CheckSuite{}, &CheckSuiteList{})
+	SchemeBuilder.Register(&PlaywrightCheckSuite{}, &PlaywrightCheckSuiteList{})
 }

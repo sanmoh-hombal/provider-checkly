@@ -14,18 +14,18 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this CheckSuite
-func (mg *CheckSuite) GetTerraformResourceType() string {
+// GetTerraformResourceType returns Terraform resource type for this PlaywrightCheckSuite
+func (mg *PlaywrightCheckSuite) GetTerraformResourceType() string {
 	return "checkly_playwright_check_suite"
 }
 
-// GetConnectionDetailsMapping for this CheckSuite
-func (tr *CheckSuite) GetConnectionDetailsMapping() map[string]string {
-	return nil
+// GetConnectionDetailsMapping for this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) GetConnectionDetailsMapping() map[string]string {
+	return map[string]string{"environment_variable[*].value": "environmentVariable[*].valueSecretRef"}
 }
 
-// GetObservation of this CheckSuite
-func (tr *CheckSuite) GetObservation() (map[string]any, error) {
+// GetObservation of this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) GetObservation() (map[string]any, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -34,8 +34,8 @@ func (tr *CheckSuite) GetObservation() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this CheckSuite
-func (tr *CheckSuite) SetObservation(obs map[string]any) error {
+// SetObservation for this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) SetObservation(obs map[string]any) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -43,16 +43,16 @@ func (tr *CheckSuite) SetObservation(obs map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetID returns ID of underlying Terraform resource of this CheckSuite
-func (tr *CheckSuite) GetID() string {
+// GetID returns ID of underlying Terraform resource of this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) GetID() string {
 	if tr.Status.AtProvider.ID == nil {
 		return ""
 	}
 	return *tr.Status.AtProvider.ID
 }
 
-// GetParameters of this CheckSuite
-func (tr *CheckSuite) GetParameters() (map[string]any, error) {
+// GetParameters of this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) GetParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (tr *CheckSuite) GetParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this CheckSuite
-func (tr *CheckSuite) SetParameters(params map[string]any) error {
+// SetParameters for this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) SetParameters(params map[string]any) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -70,8 +70,8 @@ func (tr *CheckSuite) SetParameters(params map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// GetInitParameters of this CheckSuite
-func (tr *CheckSuite) GetInitParameters() (map[string]any, error) {
+// GetInitParameters of this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) GetInitParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.InitProvider)
 	if err != nil {
 		return nil, err
@@ -80,8 +80,8 @@ func (tr *CheckSuite) GetInitParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// GetInitParameters of this CheckSuite
-func (tr *CheckSuite) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
+// GetInitParameters of this PlaywrightCheckSuite
+func (tr *PlaywrightCheckSuite) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
 	params, err := tr.GetParameters()
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get parameters for resource \"%s/%s\"", tr.GetNamespace(), tr.GetName())
@@ -110,10 +110,10 @@ func (tr *CheckSuite) GetMergedParameters(shouldMergeInitProvider bool) (map[str
 	return params, nil
 }
 
-// LateInitialize this CheckSuite using its observed tfState.
+// LateInitialize this PlaywrightCheckSuite using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *CheckSuite) LateInitialize(attrs []byte) (bool, error) {
-	params := &CheckSuiteParameters{}
+func (tr *PlaywrightCheckSuite) LateInitialize(attrs []byte) (bool, error) {
+	params := &PlaywrightCheckSuiteParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -124,6 +124,6 @@ func (tr *CheckSuite) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *CheckSuite) GetTerraformSchemaVersion() int {
+func (tr *PlaywrightCheckSuite) GetTerraformSchemaVersion() int {
 	return 0
 }

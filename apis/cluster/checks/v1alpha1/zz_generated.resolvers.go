@@ -645,6 +645,127 @@ func (mg *ICMPMonitor) ResolveReferences(ctx context.Context, c client.Reader) e
 	return nil
 }
 
+// ResolveReferences of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPIResolver(c, mg)
+
+	var rsp reference.ResolutionResponse
+	var mrsp reference.MultiResolutionResponse
+	var err error
+
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.AlertChannelSubscription); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromFloatPtrValue(mg.Spec.ForProvider.AlertChannelSubscription[i3].ChannelID),
+			Extract:      reference.ExternalName(),
+			Namespace:    mg.GetNamespace(),
+			Reference:    mg.Spec.ForProvider.AlertChannelSubscription[i3].ChannelIDRef,
+			Selector:     mg.Spec.ForProvider.AlertChannelSubscription[i3].ChannelIDSelector,
+			To: reference.To{
+				List:    &v1alpha1.AlertChannelList{},
+				Managed: &v1alpha1.AlertChannel{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.AlertChannelSubscription[i3].ChannelID")
+		}
+		mg.Spec.ForProvider.AlertChannelSubscription[i3].ChannelID = reference.ToFloatPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.AlertChannelSubscription[i3].ChannelIDRef = rsp.ResolvedReference
+
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Bundle); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Bundle[i3].ID),
+			Extract:      reference.ExternalName(),
+			Namespace:    mg.GetNamespace(),
+			Reference:    mg.Spec.ForProvider.Bundle[i3].IDRef,
+			Selector:     mg.Spec.ForProvider.Bundle[i3].IDSelector,
+			To: reference.To{
+				List:    &PlaywrightCodeBundleList{},
+				Managed: &PlaywrightCodeBundle{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.ForProvider.Bundle[i3].ID")
+		}
+		mg.Spec.ForProvider.Bundle[i3].ID = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.ForProvider.Bundle[i3].IDRef = rsp.ResolvedReference
+
+	}
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: reference.FromPtrValues(mg.Spec.ForProvider.PrivateLocations),
+		Extract:       reference.ExternalName(),
+		Namespace:     mg.GetNamespace(),
+		References:    mg.Spec.ForProvider.PrivateLocationRefs,
+		Selector:      mg.Spec.ForProvider.PrivateLocationsSelector,
+		To: reference.To{
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.PrivateLocations")
+	}
+	mg.Spec.ForProvider.PrivateLocations = reference.ToPtrValues(mrsp.ResolvedValues)
+	mg.Spec.ForProvider.PrivateLocationRefs = mrsp.ResolvedReferences
+
+	for i3 := 0; i3 < len(mg.Spec.InitProvider.AlertChannelSubscription); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromFloatPtrValue(mg.Spec.InitProvider.AlertChannelSubscription[i3].ChannelID),
+			Extract:      reference.ExternalName(),
+			Namespace:    mg.GetNamespace(),
+			Reference:    mg.Spec.InitProvider.AlertChannelSubscription[i3].ChannelIDRef,
+			Selector:     mg.Spec.InitProvider.AlertChannelSubscription[i3].ChannelIDSelector,
+			To: reference.To{
+				List:    &v1alpha1.AlertChannelList{},
+				Managed: &v1alpha1.AlertChannel{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.InitProvider.AlertChannelSubscription[i3].ChannelID")
+		}
+		mg.Spec.InitProvider.AlertChannelSubscription[i3].ChannelID = reference.ToFloatPtrValue(rsp.ResolvedValue)
+		mg.Spec.InitProvider.AlertChannelSubscription[i3].ChannelIDRef = rsp.ResolvedReference
+
+	}
+	for i3 := 0; i3 < len(mg.Spec.InitProvider.Bundle); i3++ {
+		rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+			CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.Bundle[i3].ID),
+			Extract:      reference.ExternalName(),
+			Namespace:    mg.GetNamespace(),
+			Reference:    mg.Spec.InitProvider.Bundle[i3].IDRef,
+			Selector:     mg.Spec.InitProvider.Bundle[i3].IDSelector,
+			To: reference.To{
+				List:    &PlaywrightCodeBundleList{},
+				Managed: &PlaywrightCodeBundle{},
+			},
+		})
+		if err != nil {
+			return errors.Wrap(err, "mg.Spec.InitProvider.Bundle[i3].ID")
+		}
+		mg.Spec.InitProvider.Bundle[i3].ID = reference.ToPtrValue(rsp.ResolvedValue)
+		mg.Spec.InitProvider.Bundle[i3].IDRef = rsp.ResolvedReference
+
+	}
+	mrsp, err = r.ResolveMultiple(ctx, reference.MultiResolutionRequest{
+		CurrentValues: reference.FromPtrValues(mg.Spec.InitProvider.PrivateLocations),
+		Extract:       reference.ExternalName(),
+		Namespace:     mg.GetNamespace(),
+		References:    mg.Spec.InitProvider.PrivateLocationRefs,
+		Selector:      mg.Spec.InitProvider.PrivateLocationsSelector,
+		To: reference.To{
+			List:    &v1alpha11.PrivateLocationList{},
+			Managed: &v1alpha11.PrivateLocation{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.InitProvider.PrivateLocations")
+	}
+	mg.Spec.InitProvider.PrivateLocations = reference.ToPtrValues(mrsp.ResolvedValues)
+	mg.Spec.InitProvider.PrivateLocationRefs = mrsp.ResolvedReferences
+
+	return nil
+}
+
 // ResolveReferences of this TCPCheck.
 func (mg *TCPCheck) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPIResolver(c, mg)

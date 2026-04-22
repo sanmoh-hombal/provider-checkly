@@ -288,6 +288,46 @@ func (mg *ICMPMonitor) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretRe
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
+// GetCondition of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+	return mg.Status.GetCondition(ct)
+}
+
+// GetManagementPolicies of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) GetManagementPolicies() xpv1.ManagementPolicies {
+	return mg.Spec.ManagementPolicies
+}
+
+// GetProviderConfigReference of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) GetProviderConfigReference() *xpv1.ProviderConfigReference {
+	return mg.Spec.ProviderConfigReference
+}
+
+// GetWriteConnectionSecretToReference of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) GetWriteConnectionSecretToReference() *xpv1.LocalSecretReference {
+	return mg.Spec.WriteConnectionSecretToReference
+}
+
+// SetConditions of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) SetConditions(c ...xpv1.Condition) {
+	mg.Status.SetConditions(c...)
+}
+
+// SetManagementPolicies of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) SetManagementPolicies(r xpv1.ManagementPolicies) {
+	mg.Spec.ManagementPolicies = r
+}
+
+// SetProviderConfigReference of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
+	mg.Spec.ProviderConfigReference = r
+}
+
+// SetWriteConnectionSecretToReference of this PlaywrightCheckSuite.
+func (mg *PlaywrightCheckSuite) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
+	mg.Spec.WriteConnectionSecretToReference = r
+}
+
 // GetCondition of this PlaywrightCodeBundle.
 func (mg *PlaywrightCodeBundle) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
 	return mg.Status.GetCondition(ct)

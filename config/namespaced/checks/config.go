@@ -19,6 +19,7 @@ func Configure(p *ujconfig.Provider) {
 	configureICMPMonitor(p)
 	configureURLMonitor(p)
 	configurePlaywrightCodeBundle(p)
+	configurePlaywrightCheckSuite(p)
 }
 
 func configureCheck(p *ujconfig.Provider) {
@@ -185,6 +186,29 @@ func configurePlaywrightCodeBundle(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_playwright_code_bundle", func(r *ujconfig.Resource) {
 		r.ShortGroup = "checks"
 		r.Kind = "PlaywrightCodeBundle"
+	})
+}
+
+func configurePlaywrightCheckSuite(p *ujconfig.Provider) {
+	p.AddResourceConfigurator("checkly_playwright_check_suite", func(r *ujconfig.Resource) {
+		r.ShortGroup = "checks"
+		r.Kind = "PlaywrightCheckSuite"
+
+		// Cross-resource references
+		r.References["bundle.id"] = ujconfig.Reference{
+			TerraformName: "checkly_playwright_code_bundle",
+		}
+		r.References["alert_channel_subscription.channel_id"] = ujconfig.Reference{
+			TerraformName: "checkly_alert_channel",
+		}
+		r.References["private_locations"] = ujconfig.Reference{
+			TerraformName: "checkly_private_location",
+			RefFieldName:  "PrivateLocationRefs",
+		}
+
+		// Sensitive fields — environment_variable values may hold secrets.
+		envVarSchema := r.TerraformResource.Schema["environment_variable"].Elem.(*schema.Resource).Schema
+		envVarSchema["value"].Sensitive = true
 	})
 }
 
