@@ -23,10 +23,6 @@ if [[ -f "${ROOT}/.env" ]]; then
   source "${ROOT}/.env"
 fi
 
-# TEMPORARY: force failure to test CI issue-creation path
-echo "Deliberate failure to test issue-creation path" > e2e.log
-exit 1
-
 : "${CHECKLY_API_KEY_SANDBOX:?CHECKLY_API_KEY_SANDBOX must be set}"
 : "${CHECKLY_ACCOUNT_ID_SANDBOX:?CHECKLY_ACCOUNT_ID_SANDBOX must be set}"
 
