@@ -231,7 +231,12 @@ NATIVE_SRC="${ROOT}/.work/terraform/.terraform/providers/registry.terraform.io/$
 if [[ -f "${NATIVE_SRC}" ]]; then
   cp -f "${NATIVE_SRC}" "${MIRROR_DIR}/"
 else
-  echo "WARNING: Native provider not found at ${NATIVE_SRC}, terraform init will download it"
+  echo "    Native provider not cached locally, downloading from GitHub releases..."
+  DOWNLOAD_URL="https://github.com/checkly/terraform-provider-checkly/releases/download/v${TERRAFORM_PROVIDER_VERSION}/terraform-provider-checkly_${TERRAFORM_PROVIDER_VERSION}_${GOOS}_${GOARCH}.zip"
+  curl -fsSL "${DOWNLOAD_URL}" -o /tmp/tf-provider.zip
+  unzip -o /tmp/tf-provider.zip -d "${MIRROR_DIR}"
+  rm -f /tmp/tf-provider.zip
+  chmod +x "${MIRROR_DIR}/${TERRAFORM_NATIVE_PROVIDER_BINARY}"
 fi
 
 export TF_CLI_CONFIG_FILE="${ROOT}/_output/terraform-mirror/.terraformrc"
