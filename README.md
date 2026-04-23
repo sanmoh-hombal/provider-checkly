@@ -31,7 +31,7 @@ Under the hood the provider is generated with [Upjet](https://github.com/crosspl
 
 ## Installation
 
-> **Prerequisites:** A running Kubernetes cluster with [Crossplane](https://docs.crossplane.io/latest/software/install/) installed (v1.14+).
+> **Prerequisites:** A running Kubernetes cluster with [Crossplane](https://docs.crossplane.io/latest/software/install/) **v2.x** installed.
 
 ```bash
 # Install the provider
@@ -249,7 +249,7 @@ All commits must include a `Signed-off-by` line (DCO). Use `git commit -s` to ad
 
 | Version | Status | Crossplane | Terraform Provider |
 |---|---|---|---|
-| `v0.1.0` | Pre-release | v1.14+ | `checkly/checkly` v1.22.0 |
+| `v0.1.0` | Pre-release | v2.x | `checkly/checkly` v1.22.0 |
 
 - **Releases** follow [Semantic Versioning](https://semver.org). See the [Releases](https://github.com/sanmoh-hombal/provider-checkly/releases) page for changelogs.
 - **Issues**: Report bugs and request features via [GitHub Issues](https://github.com/sanmoh-hombal/provider-checkly/issues).
