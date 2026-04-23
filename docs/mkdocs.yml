@@ -1,0 +1,96 @@
+site_name: provider-checkly
+site_url: https://sanmoh-hombal.github.io/provider-checkly/
+site_description: Crossplane provider for Checkly — manage synthetic monitoring as Kubernetes custom resources.
+repo_url: https://github.com/sanmoh-hombal/provider-checkly
+repo_name: sanmoh-hombal/provider-checkly
+edit_uri: edit/main/docs/docs/
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - tables
+  - toc:
+      permalink: true
+  - attr_list
+  - def_list
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Resources:
+    - Overview: resources/index.md
+    - Checks:
+      - Check: resources/check.md
+      - CheckGroup: resources/checkgroup.md
+      - CheckGroupV2: resources/checkgroupv2.md
+      - Heartbeat: resources/heartbeat.md
+      - HeartbeatMonitor: resources/heartbeatmonitor.md
+      - TCPCheck: resources/tcpcheck.md
+      - TCPMonitor: resources/tcpmonitor.md
+      - URLMonitor: resources/urlmonitor.md
+      - DNSMonitor: resources/dnsmonitor.md
+      - ICMPMonitor: resources/icmpmonitor.md
+      - PlaywrightCheckSuite: resources/playwrightchecksuite.md
+      - PlaywrightCodeBundle: resources/playwrightcodebundle.md
+    - Alerts:
+      - AlertChannel: resources/alertchannel.md
+      - MaintenanceWindow: resources/maintenancewindow.md
+    - Infrastructure:
+      - Snippet: resources/snippet.md
+      - EnvironmentVariable: resources/environmentvariable.md
+      - PrivateLocation: resources/privatelocation.md
+      - ClientCertificate: resources/clientcertificate.md
+    - Status Pages:
+      - Dashboard: resources/dashboard.md
+      - StatusPage: resources/statuspage.md
+      - StatusPageService: resources/statuspageservice.md
+    - Triggers:
+      - TriggerCheck: resources/triggercheck.md
+      - TriggerGroup: resources/triggergroup.md
+  - Configuration: configuration.md
+  - Troubleshooting: troubleshooting.md
+  - Changelog: changelog.md
+  - Conformance: conformance.md
