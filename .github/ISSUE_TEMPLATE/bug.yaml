@@ -1,0 +1,69 @@
+name: Bug Report
+description: Report a bug in provider-checkly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for filing a bug report. Please fill out the sections below
+        so we can reproduce and fix the issue.
+
+  - type: input
+    id: version
+    attributes:
+      label: Provider version
+      description: Output of the provider image tag or Helm chart version.
+      placeholder: v1.2.0
+    validations:
+      required: true
+
+  - type: input
+    id: crossplane-version
+    attributes:
+      label: Crossplane version
+      placeholder: v1.18.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: resource
+    attributes:
+      label: Affected resource(s)
+      description: Which managed resource or claim is affected?
+      placeholder: Alert, AlertChannel, CheckGroup, ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal YAML or steps to trigger the bug.
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / events
+      description: Provider pod logs, Kubernetes events, or error messages.
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Anything else that might help (screenshots, related issues, etc.).
+    validations:
+      required: false
