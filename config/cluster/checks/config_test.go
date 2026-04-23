@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	config "github.com/sanmoh-hombal/provider-checkly/config"
+	checks "github.com/sanmoh-hombal/provider-checkly/config/cluster/checks"
 )
 
 // ---------- Check ----------
@@ -14,7 +15,7 @@ func TestCheckRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_check not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "Check" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "Check" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
@@ -37,7 +38,7 @@ func TestCheckGroupRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_check_group not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "CheckGroup" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "CheckGroup" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
@@ -59,7 +60,7 @@ func TestCheckGroupV2Registered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_check_group_v2 not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "CheckGroupV2" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "CheckGroupV2" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
@@ -83,7 +84,7 @@ func TestDNSMonitorRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_dns_monitor not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "DNSMonitor" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "DNSMonitor" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
@@ -105,7 +106,7 @@ func TestHeartbeatRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_heartbeat not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "Heartbeat" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "Heartbeat" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 	if _, ok := r.References["alert_channel_subscription.channel_id"]; !ok {
@@ -121,7 +122,7 @@ func TestHeartbeatMonitorRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_heartbeat_monitor not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "HeartbeatMonitor" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "HeartbeatMonitor" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 	if _, ok := r.References["alert_channel_subscription.channel_id"]; !ok {
@@ -137,7 +138,7 @@ func TestTCPCheckRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_tcp_check not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "TCPCheck" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "TCPCheck" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
@@ -160,7 +161,7 @@ func TestTCPMonitorRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_tcp_monitor not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "TCPMonitor" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "TCPMonitor" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
@@ -183,7 +184,7 @@ func TestICMPMonitorRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_icmp_monitor not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "ICMPMonitor" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "ICMPMonitor" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
@@ -205,7 +206,7 @@ func TestURLMonitorRegistered(t *testing.T) {
 	if !ok {
 		t.Fatal("checkly_url_monitor not registered")
 	}
-	if r.ShortGroup != "checks" || r.Kind != "URLMonitor" {
+	if r.ShortGroup != checks.ShortGroup || r.Kind != "URLMonitor" {
 		t.Fatalf("unexpected group/kind: %s/%s", r.ShortGroup, r.Kind)
 	}
 
