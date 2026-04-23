@@ -8,6 +8,9 @@ cover.out
 kubeconfig
 .env
 
+# mkdocs build output
+docs/site/
+
 # ignore IDE folders
 .vscode/
 .idea/
