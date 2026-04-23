@@ -1,0 +1,214 @@
+---
+# Check group for all API endpoints
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: CheckGroup
+metadata:
+  name: api-checks
+  namespace: default
+  labels:
+    scenario: multi-region-api
+spec:
+  forProvider:
+    name: api-checks
+    activated: true
+    concurrency: 3
+    locations:
+      - eu-west-1
+      - us-east-1
+      - ap-south-1
+      - us-west-1
+      - eu-central-1
+    tags:
+      - api
+      - multi-region
+      - managed-by-crossplane
+  providerConfigRef:
+    name: default
+---
+# Check 1 — /api/users
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: api-users
+  namespace: default
+  labels:
+    scenario: multi-region-api
+spec:
+  forProvider:
+    name: api-users
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+      - ap-south-1
+    tags:
+      - api
+      - multi-region
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://api.example.com/api/users
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 2 — /api/products
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: api-products
+  namespace: default
+  labels:
+    scenario: multi-region-api
+spec:
+  forProvider:
+    name: api-products
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+      - ap-south-1
+    tags:
+      - api
+      - multi-region
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://api.example.com/api/products
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 3 — /api/orders
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: api-orders
+  namespace: default
+  labels:
+    scenario: multi-region-api
+spec:
+  forProvider:
+    name: api-orders
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+      - ap-south-1
+    tags:
+      - api
+      - multi-region
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://api.example.com/api/orders
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 4 — /api/search
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: api-search
+  namespace: default
+  labels:
+    scenario: multi-region-api
+spec:
+  forProvider:
+    name: api-search
+    activated: true
+    frequency: 10
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+      - ap-south-1
+    tags:
+      - api
+      - multi-region
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://api.example.com/api/search?q=test
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 5 — /healthz
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: api-health
+  namespace: default
+  labels:
+    scenario: multi-region-api
+spec:
+  forProvider:
+    name: api-health
+    activated: true
+    frequency: 1
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+      - ap-south-1
+      - us-west-1
+      - eu-central-1
+    tags:
+      - api
+      - multi-region
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://api.example.com/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Maintenance window — weekly Sunday deploy window
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: MaintenanceWindow
+metadata:
+  name: deploy-window
+  namespace: default
+  labels:
+    scenario: multi-region-api
+spec:
+  forProvider:
+    name: Weekly Sunday deploy window
+    startsAt: "2025-01-05T02:00:00Z"
+    endsAt: "2025-01-05T04:00:00Z"
+    repeatUnit: WEEK
+    repeatInterval: 1
+    tags:
+      - api
+      - multi-region
+  providerConfigRef:
+    name: default

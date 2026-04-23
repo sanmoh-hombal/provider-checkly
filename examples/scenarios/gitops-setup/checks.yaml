@@ -1,0 +1,270 @@
+---
+# Check 1 — user-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-user
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-user
+    activated: true
+    frequency: 5
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/user/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 2 — billing-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-billing
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-billing
+    activated: true
+    frequency: 5
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/billing/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 3 — inventory-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-inventory
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-inventory
+    activated: true
+    frequency: 5
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/inventory/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 4 — notification-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-notification
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-notification
+    activated: true
+    frequency: 5
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/notification/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 5 — search-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-search
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-search
+    activated: true
+    frequency: 5
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/search/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 6 — analytics-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-analytics
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-analytics
+    activated: true
+    frequency: 10
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/analytics/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 7 — gateway-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-gateway
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-gateway
+    activated: true
+    frequency: 1
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/gateway/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 8 — auth-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-auth
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-auth
+    activated: true
+    frequency: 5
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/auth/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 9 — media-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-media
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-media
+    activated: true
+    frequency: 10
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/media/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check 10 — config-service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: svc-config
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: svc-config
+    activated: true
+    frequency: 5
+    type: API
+    locations: [eu-west-1, us-east-1]
+    tags: [gitops, managed-by-crossplane]
+    request:
+      - method: GET
+        url: https://api.example.com/config/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default

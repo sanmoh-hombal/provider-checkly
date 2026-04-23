@@ -224,6 +224,20 @@ The provider generates **both** cluster-scoped and namespace-scoped variants of 
 
 All examples and documentation default to **namespaced** resources, as this is the direction the Crossplane ecosystem is heading. Use cluster-scoped variants when you need backward compatibility or a single-tenant setup.
 
+## Examples
+
+Multi-resource scenario walkthroughs live in [`examples/scenarios/`](examples/scenarios/):
+
+| Scenario | Description |
+|---|---|
+| [`ecommerce-homepage/`](examples/scenarios/ecommerce-homepage/) | API + browser check, grouped, with email/Slack/PagerDuty alerts |
+| [`multi-region-api/`](examples/scenarios/multi-region-api/) | 5 API checks across regions with a weekly maintenance window |
+| [`status-page-for-saas/`](examples/scenarios/status-page-for-saas/) | Status page + 4 services, each backed by health checks |
+| [`playwright-full-suite/`](examples/scenarios/playwright-full-suite/) | Playwright code bundle + check suite + trigger |
+| [`gitops-setup/`](examples/scenarios/gitops-setup/) | Kustomization composing ProviderConfig + snippet + 10 checks |
+
+Each folder contains a README with before/after expectations and can be applied with `kubectl apply -k`.
+
 ## Terraform Provider Fallback
 
 For Checkly resources or configurations not yet wrapped by this provider, you can use [`provider-terraform`](https://github.com/upbound/provider-terraform) as a fallback. This lets you write raw HCL blocks as Crossplane resources until native support is added here.
