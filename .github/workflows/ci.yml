@@ -240,6 +240,30 @@ jobs:
       - name: Deploying locally built provider package
         run: make local-deploy
 
+  reviewable:
+    # Summary job for branch protection. Gate on this single check instead of
+    # listing every CI job individually — adding/renaming jobs won't break the
+    # branch-protection rule.
+    runs-on: ubuntu-24.04
+    needs:
+      - detect-noop
+      - report-breaking-changes
+      - lint
+      - check-diff
+      - unit-tests
+      - local-deploy
+    if: always()
+    steps:
+      - name: Check job results
+        run: |
+          # Succeed when all jobs passed or were skipped (noop).
+          if [[ "${{ needs.detect-noop.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.report-breaking-changes.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.lint.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.check-diff.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.unit-tests.result }}" == "failure" ]]; then exit 1; fi
+          if [[ "${{ needs.local-deploy.result }}" == "failure" ]]; then exit 1; fi
+
   publish-artifacts:
     runs-on: ubuntu-24.04
     needs:
