@@ -15,6 +15,7 @@ export TERRAFORM_PROVIDER_REPO         := https://github.com/checkly/terraform-p
 export TERRAFORM_PROVIDER_VERSION      := 1.22.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME:= terraform-provider-checkly
 export TERRAFORM_NATIVE_PROVIDER_BINARY:= terraform-provider-checkly_v1.22.0
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX := https://github.com/checkly/terraform-provider-checkly/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_DOCS_PATH             := docs/resources
 
 
