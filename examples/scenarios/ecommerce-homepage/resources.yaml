@@ -1,0 +1,151 @@
+---
+# Alert channel — email
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  name: alert-email
+  namespace: default
+  labels:
+    scenario: ecommerce-homepage
+spec:
+  forProvider:
+    sendFailure: true
+    sendRecovery: true
+    sendDegraded: false
+    email:
+      - address: oncall@example.com
+  providerConfigRef:
+    name: default
+---
+# Alert channel — Slack
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  name: alert-slack
+  namespace: default
+  labels:
+    scenario: ecommerce-homepage
+spec:
+  forProvider:
+    sendFailure: true
+    sendRecovery: true
+    sendDegraded: false
+    slack:
+      - channel: "#store-alerts"
+        urlSecretRef:
+          name: slack-webhook-url
+          namespace: default
+          key: url
+  providerConfigRef:
+    name: default
+---
+# Alert channel — PagerDuty
+apiVersion: alerts.checkly.crossplane.io/v1alpha1
+kind: AlertChannel
+metadata:
+  name: alert-pagerduty
+  namespace: default
+  labels:
+    scenario: ecommerce-homepage
+spec:
+  forProvider:
+    sendFailure: true
+    sendRecovery: true
+    sendDegraded: false
+    pagerduty:
+      - account: example
+        serviceKeySecretRef:
+          name: pagerduty-service-key
+          namespace: default
+          key: key
+        serviceName: storefront
+  providerConfigRef:
+    name: default
+---
+# Check group — homepage
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: CheckGroup
+metadata:
+  name: homepage-group
+  namespace: default
+  labels:
+    scenario: ecommerce-homepage
+spec:
+  forProvider:
+    name: homepage-group
+    activated: true
+    concurrency: 2
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - ecommerce
+      - homepage
+      - managed-by-crossplane
+  providerConfigRef:
+    name: default
+---
+# API check — homepage returns 200
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: homepage-api
+  namespace: default
+  labels:
+    scenario: ecommerce-homepage
+spec:
+  forProvider:
+    name: homepage-api
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - ecommerce
+      - homepage
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://store.example.com
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Browser check — homepage renders correctly
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: homepage-browser
+  namespace: default
+  labels:
+    scenario: ecommerce-homepage
+spec:
+  forProvider:
+    name: homepage-browser
+    activated: true
+    frequency: 10
+    type: BROWSER
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - ecommerce
+      - homepage
+      - managed-by-crossplane
+    script: |
+      const { chromium } = require('playwright');
+      const assert = require('assert');
+      const browser = await chromium.launch();
+      const page = await browser.newPage();
+      await page.goto('https://store.example.com');
+      const title = await page.title();
+      assert(title.includes('Store'), 'Page title should contain "Store"');
+      await browser.close();
+  providerConfigRef:
+    name: default

@@ -1,0 +1,216 @@
+---
+# Status page
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPage
+metadata:
+  name: saas-status-page
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: Acme SaaS Status
+    url: status-saas-crossplane
+    card:
+      - name: Core Services
+        serviceAttachment:
+          - serviceId: "1"
+  providerConfigRef:
+    kind: ProviderConfig
+    name: default
+---
+# Service 1 — API
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPageService
+metadata:
+  name: svc-api
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: API
+    statusPageIdRef:
+      name: saas-status-page
+  providerConfigRef:
+    kind: ProviderConfig
+    name: default
+---
+# Service 2 — Dashboard
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPageService
+metadata:
+  name: svc-dashboard
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: Dashboard
+    statusPageIdRef:
+      name: saas-status-page
+  providerConfigRef:
+    kind: ProviderConfig
+    name: default
+---
+# Service 3 — Authentication
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPageService
+metadata:
+  name: svc-auth
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: Authentication
+    statusPageIdRef:
+      name: saas-status-page
+  providerConfigRef:
+    kind: ProviderConfig
+    name: default
+---
+# Service 4 — Webhooks
+apiVersion: statuspage.checkly.m.crossplane.io/v1alpha1
+kind: StatusPageService
+metadata:
+  name: svc-webhooks
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: Webhooks
+    statusPageIdRef:
+      name: saas-status-page
+  providerConfigRef:
+    kind: ProviderConfig
+    name: default
+---
+# Check — API service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: check-api
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: check-api
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - saas
+      - status-page
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://api.acme.example.com/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check — Dashboard service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: check-dashboard
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: check-dashboard
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - saas
+      - status-page
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://app.acme.example.com/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check — Auth service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: check-auth
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: check-auth
+    activated: true
+    frequency: 5
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - saas
+      - status-page
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://auth.acme.example.com/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default
+---
+# Check — Webhooks service
+apiVersion: checks.checkly.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: check-webhooks
+  namespace: default
+  labels:
+    scenario: status-page-for-saas
+spec:
+  forProvider:
+    name: check-webhooks
+    activated: true
+    frequency: 10
+    type: API
+    locations:
+      - eu-west-1
+      - us-east-1
+    tags:
+      - saas
+      - status-page
+      - managed-by-crossplane
+    request:
+      - method: GET
+        url: https://webhooks.acme.example.com/healthz
+        assertion:
+          - source: STATUS_CODE
+            property: ""
+            comparison: EQUALS
+            target: "200"
+  providerConfigRef:
+    name: default

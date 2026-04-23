@@ -1,0 +1,22 @@
+---
+apiVersion: infra.checkly.m.crossplane.io/v1alpha1
+kind: Snippet
+metadata:
+  name: auth-helper
+  namespace: default
+  labels:
+    scenario: gitops-setup
+spec:
+  forProvider:
+    name: auth-helper
+    script: |
+      // Shared auth helper for all API checks.
+      const assert = require('assert');
+      function addAuth(request) {
+        request.headers['Authorization'] = 'Bearer ' + process.env.API_TOKEN;
+        return request;
+      }
+      module.exports = { addAuth };
+  providerConfigRef:
+    kind: ProviderConfig
+    name: default
