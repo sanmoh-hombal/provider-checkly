@@ -136,8 +136,9 @@ pull-docs:
 	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
 sanitize-docs: pull-docs
-	@find $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)/$(TERRAFORM_DOCS_PATH) -name '*.md' -exec \
-		sed -i '' 's|https://hooks.slack.com/services/[A-Za-z0-9/_-]*|REPLACE_WITH_SLACK_WEBHOOK_URL|g' {} +
+	@find $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)/$(TERRAFORM_DOCS_PATH) -name '*.md' | while read f; do \
+		sed 's|https://hooks.slack.com/services/[A-Za-z0-9/_-]*|REPLACE_WITH_SLACK_WEBHOOK_URL|g' "$$f" > "$$f.tmp" && mv "$$f.tmp" "$$f"; \
+	done
 	@$(OK) sanitized secrets from upstream docs
 
 generate.init: $(TERRAFORM_PROVIDER_SCHEMA) sanitize-docs
