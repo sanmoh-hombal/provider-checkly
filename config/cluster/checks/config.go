@@ -6,6 +6,8 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 )
 
+const ShortGroup = "checks"
+
 // Configure adds per-resource overrides for the checks short-group.
 func Configure(p *ujconfig.Provider) {
 	configureCheck(p)
@@ -24,7 +26,7 @@ func Configure(p *ujconfig.Provider) {
 
 func configureCheck(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_check", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "Check"
 
 		// Cross-resource references
@@ -53,7 +55,7 @@ func configureCheck(p *ujconfig.Provider) {
 
 func configureCheckGroup(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_check_group", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "CheckGroup"
 
 		// Cross-resource references
@@ -73,7 +75,7 @@ func configureCheckGroup(p *ujconfig.Provider) {
 
 func configureDNSMonitor(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_dns_monitor", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "DNSMonitor"
 
 		// Cross-resource references
@@ -88,7 +90,7 @@ func configureDNSMonitor(p *ujconfig.Provider) {
 
 func configureHeartbeat(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_heartbeat", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "Heartbeat"
 
 		// Cross-resource references
@@ -100,7 +102,7 @@ func configureHeartbeat(p *ujconfig.Provider) {
 
 func configureHeartbeatMonitor(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_heartbeat_monitor", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "HeartbeatMonitor"
 
 		// Cross-resource references
@@ -112,7 +114,7 @@ func configureHeartbeatMonitor(p *ujconfig.Provider) {
 
 func configureTCPCheck(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_tcp_check", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "TCPCheck"
 
 		// Cross-resource references
@@ -131,7 +133,7 @@ func configureTCPCheck(p *ujconfig.Provider) {
 
 func configureTCPMonitor(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_tcp_monitor", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "TCPMonitor"
 
 		// Cross-resource references
@@ -150,7 +152,7 @@ func configureTCPMonitor(p *ujconfig.Provider) {
 
 func configureICMPMonitor(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_icmp_monitor", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "ICMPMonitor"
 
 		// Cross-resource references
@@ -165,7 +167,7 @@ func configureICMPMonitor(p *ujconfig.Provider) {
 
 func configureURLMonitor(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_url_monitor", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "URLMonitor"
 
 		// Cross-resource references
@@ -184,14 +186,14 @@ func configureURLMonitor(p *ujconfig.Provider) {
 
 func configurePlaywrightCodeBundle(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_playwright_code_bundle", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "PlaywrightCodeBundle"
 	})
 }
 
 func configurePlaywrightCheckSuite(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_playwright_check_suite", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "PlaywrightCheckSuite"
 
 		// Cross-resource references
@@ -214,7 +216,7 @@ func configurePlaywrightCheckSuite(p *ujconfig.Provider) {
 
 func configureCheckGroupV2(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_check_group_v2", func(r *ujconfig.Resource) {
-		r.ShortGroup = "checks"
+		r.ShortGroup = ShortGroup
 		r.Kind = "CheckGroupV2"
 
 		// Cross-resource references

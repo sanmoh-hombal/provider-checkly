@@ -6,18 +6,18 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
 	// per-group configurators — cluster-scoped
-	alertsCluster     "github.com/sanmoh-hombal/provider-checkly/config/cluster/alerts"
-	checksCluster     "github.com/sanmoh-hombal/provider-checkly/config/cluster/checks"
-	infraCluster      "github.com/sanmoh-hombal/provider-checkly/config/cluster/infra"
+	alertsCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/alerts"
+	checksCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/checks"
+	infraCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/infra"
 	statuspageCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/statuspage"
-	triggersCluster   "github.com/sanmoh-hombal/provider-checkly/config/cluster/triggers"
+	triggersCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/triggers"
 
 	// per-group configurators — namespaced
-	alertsNamespaced     "github.com/sanmoh-hombal/provider-checkly/config/namespaced/alerts"
-	checksNamespaced     "github.com/sanmoh-hombal/provider-checkly/config/namespaced/checks"
-	infraNamespaced      "github.com/sanmoh-hombal/provider-checkly/config/namespaced/infra"
+	alertsNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/alerts"
+	checksNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/checks"
+	infraNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/infra"
 	statuspageNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/statuspage"
-	triggersNamespaced   "github.com/sanmoh-hombal/provider-checkly/config/namespaced/triggers"
+	triggersNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/triggers"
 )
 
 const (
