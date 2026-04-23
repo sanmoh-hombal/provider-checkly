@@ -14,10 +14,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 
-	clusterv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/v1beta1"
 	clusterChecks "github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1"
-	namespacedv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1beta1"
+	clusterv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/v1beta1"
 	namespacedChecks "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1"
+	namespacedv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1beta1"
 )
 
 // testScheme returns a runtime.Scheme with the types needed by these tests.
@@ -44,8 +44,7 @@ func testScheme(t *testing.T) *runtime.Scheme {
 func clusterScopeInterceptor() interceptor.Funcs {
 	return interceptor.Funcs{
 		Get: func(ctx context.Context, c client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
-			switch obj.(type) {
-			case *namespacedv1beta1.ClusterProviderConfig:
+			if _, ok := obj.(*namespacedv1beta1.ClusterProviderConfig); ok {
 				key.Namespace = ""
 			}
 			return c.Get(ctx, key, obj, opts...)
@@ -518,4 +517,3 @@ func TestEnvFallbackDefaults(t *testing.T) {
 		t.Errorf("defaultAPIURL = %q, want https://api.checklyhq.com", defaultAPIURL)
 	}
 }
-

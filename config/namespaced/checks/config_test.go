@@ -9,9 +9,9 @@ import (
 func TestNamespacedCheckRegistered(t *testing.T) {
 	p := config.GetProviderNamespaced()
 	resources := []struct {
-		name      string
-		shortGrp  string
-		kind      string
+		name     string
+		shortGrp string
+		kind     string
 	}{
 		{"checkly_check", "checks", "Check"},
 		{"checkly_check_group", "checks", "CheckGroup"},
