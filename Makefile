@@ -48,7 +48,7 @@ GO_REQUIRED_VERSION ?= 1.24
 GOLANGCILINT_VERSION ?= 2.7.2
 GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider $(GO_PROJECT)/cmd/generator
 GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
-GO_SUBDIRS += cmd internal apis
+GO_SUBDIRS += cmd internal apis config
 -include build/makelib/golang.mk
 
 # ====================================================================================
