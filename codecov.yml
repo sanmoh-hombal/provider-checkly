@@ -1,0 +1,18 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 2%
+    patch:
+      default:
+        target: 80%
+
+ignore:
+  # Upjet-generated API types and controllers (zz_ prefix)
+  - "apis/**"
+  - "internal/controller/**"
+  # Code generator entrypoint
+  - "cmd/generator/**"
+  # Provider main (not unit-testable — requires a running cluster)
+  - "cmd/provider/**"
