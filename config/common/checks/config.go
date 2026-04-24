@@ -4,6 +4,7 @@ package checks
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 )
@@ -27,10 +28,23 @@ func Configure(p *ujconfig.Provider) {
 	configurePlaywrightCheckSuite(p)
 }
 
+// addResponseTimeValidation sets ValidateFunc on degraded_response_time and
+// max_response_time schema attributes to enforce the documented [0, max] range.
+func addResponseTimeValidation(s map[string]*schema.Schema, max int) {
+	if f, ok := s["degraded_response_time"]; ok {
+		f.ValidateFunc = validation.IntBetween(0, max)
+	}
+	if f, ok := s["max_response_time"]; ok {
+		f.ValidateFunc = validation.IntBetween(0, max)
+	}
+}
+
 func configureCheck(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_check", func(r *ujconfig.Resource) {
 		r.ShortGroup = ShortGroup
 		r.Kind = "Check"
+
+		addResponseTimeValidation(r.TerraformResource.Schema, 30000)
 
 		// Cross-resource references
 		r.References["group_id"] = ujconfig.Reference{
@@ -81,6 +95,8 @@ func configureDNSMonitor(p *ujconfig.Provider) {
 		r.ShortGroup = ShortGroup
 		r.Kind = "DNSMonitor"
 
+		addResponseTimeValidation(r.TerraformResource.Schema, 5000)
+
 		// Cross-resource references
 		r.References["group_id"] = ujconfig.Reference{
 			TerraformName: "checkly_check_group",
@@ -120,6 +136,8 @@ func configureTCPCheck(p *ujconfig.Provider) {
 		r.ShortGroup = ShortGroup
 		r.Kind = "TCPCheck"
 
+		addResponseTimeValidation(r.TerraformResource.Schema, 5000)
+
 		// Cross-resource references
 		r.References["group_id"] = ujconfig.Reference{
 			TerraformName: "checkly_check_group",
@@ -138,6 +156,8 @@ func configureTCPMonitor(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_tcp_monitor", func(r *ujconfig.Resource) {
 		r.ShortGroup = ShortGroup
 		r.Kind = "TCPMonitor"
+
+		addResponseTimeValidation(r.TerraformResource.Schema, 5000)
 
 		// Cross-resource references
 		r.References["group_id"] = ujconfig.Reference{
@@ -172,6 +192,8 @@ func configureURLMonitor(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("checkly_url_monitor", func(r *ujconfig.Resource) {
 		r.ShortGroup = ShortGroup
 		r.Kind = "URLMonitor"
+
+		addResponseTimeValidation(r.TerraformResource.Schema, 30000)
 
 		// Cross-resource references
 		r.References["group_id"] = ujconfig.Reference{
