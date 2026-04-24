@@ -16,6 +16,7 @@
   <a href="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/pr-title.yaml"><img alt="PR Title" src="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/pr-title.yaml/badge.svg" /></a>
   <a href="https://github.com/sanmoh-hombal/provider-checkly/releases/latest"><img alt="GitHub release" src="https://img.shields.io/github/v/release/sanmoh-hombal/provider-checkly?include_prereleases&sort=semver&label=release" /></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/sanmoh-hombal/provider-checkly" /></a>
+  <a href="https://codecov.io/gh/sanmoh-hombal/provider-checkly"><img alt="Coverage" src="https://codecov.io/gh/sanmoh-hombal/provider-checkly/branch/main/graph/badge.svg" /></a>
   <a href="https://goreportcard.com/report/github.com/sanmoh-hombal/provider-checkly"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/sanmoh-hombal/provider-checkly" /></a>
 </p>
 

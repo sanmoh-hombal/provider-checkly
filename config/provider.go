@@ -5,24 +5,19 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
-	// per-group configurators — cluster-scoped
-	alertsCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/alerts"
-	checksCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/checks"
-	infraCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/infra"
-	statuspageCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/statuspage"
-	triggersCluster "github.com/sanmoh-hombal/provider-checkly/config/cluster/triggers"
-
-	// per-group configurators — namespaced
-	alertsNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/alerts"
-	checksNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/checks"
-	infraNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/infra"
-	statuspageNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/statuspage"
-	triggersNamespaced "github.com/sanmoh-hombal/provider-checkly/config/namespaced/triggers"
+	"github.com/sanmoh-hombal/provider-checkly/config/common/alerts"
+	"github.com/sanmoh-hombal/provider-checkly/config/common/checks"
+	"github.com/sanmoh-hombal/provider-checkly/config/common/infra"
+	"github.com/sanmoh-hombal/provider-checkly/config/common/statuspage"
+	"github.com/sanmoh-hombal/provider-checkly/config/common/triggers"
 )
 
 const (
 	resourcePrefix = "checkly"
 	modulePath     = "github.com/sanmoh-hombal/provider-checkly"
+
+	rootGroupCluster    = "checkly.crossplane.io"
+	rootGroupNamespaced = "checkly.m.crossplane.io"
 )
 
 //go:embed schema.json
@@ -31,10 +26,32 @@ var providerSchema string
 //go:embed provider-metadata.yaml
 var providerMetadata string
 
+// configurators is the ordered list of per-group Configure functions
+// shared by both cluster-scoped and namespaced providers.
+var configurators = []func(*ujconfig.Provider){
+	checks.Configure,
+	alerts.Configure,
+	infra.Configure,
+	statuspage.Configure,
+	triggers.Configure,
+}
+
 // GetProvider returns the provider configuration for cluster-scoped CRDs.
 func GetProvider() *ujconfig.Provider {
+	return buildProvider(rootGroupCluster)
+}
+
+// GetProviderNamespaced returns the provider configuration for namespaced CRDs.
+func GetProviderNamespaced() *ujconfig.Provider {
+	return buildProvider(rootGroupNamespaced)
+}
+
+// buildProvider constructs a fully-configured ujconfig.Provider. The only
+// axis of variation is the root API group, which determines whether the
+// generated CRDs are cluster-scoped or namespaced.
+func buildProvider(rootGroup string) *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
-		ujconfig.WithRootGroup("checkly.crossplane.io"),
+		ujconfig.WithRootGroup(rootGroup),
 		ujconfig.WithShortName("checkly"),
 		ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
@@ -47,42 +64,7 @@ func GetProvider() *ujconfig.Provider {
 		}),
 	)
 
-	for _, configure := range []func(provider *ujconfig.Provider){
-		checksCluster.Configure,
-		alertsCluster.Configure,
-		infraCluster.Configure,
-		statuspageCluster.Configure,
-		triggersCluster.Configure,
-	} {
-		configure(pc)
-	}
-
-	pc.ConfigureResources()
-	return pc
-}
-
-// GetProviderNamespaced returns the provider configuration for namespaced CRDs.
-func GetProviderNamespaced() *ujconfig.Provider {
-	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
-		ujconfig.WithRootGroup("checkly.m.crossplane.io"),
-		ujconfig.WithShortName("checkly"),
-		ujconfig.WithIncludeList(ExternalNameConfigured()),
-		ujconfig.WithFeaturesPackage("internal/features"),
-		ujconfig.WithDefaultResourceOptions(
-			ExternalNameConfigurations(),
-		),
-		ujconfig.WithSkipList([]string{
-			"checkly_static_ips$",
-		}),
-	)
-
-	for _, configure := range []func(provider *ujconfig.Provider){
-		checksNamespaced.Configure,
-		alertsNamespaced.Configure,
-		infraNamespaced.Configure,
-		statuspageNamespaced.Configure,
-		triggersNamespaced.Configure,
-	} {
+	for _, configure := range configurators {
 		configure(pc)
 	}
 
