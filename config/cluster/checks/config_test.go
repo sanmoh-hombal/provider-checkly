@@ -28,6 +28,12 @@ func TestCheckRegistered(t *testing.T) {
 			t.Errorf("missing reference: %s", ref)
 		}
 	}
+
+	for _, field := range []string{"degraded_response_time", "max_response_time"} {
+		if r.TerraformResource.Schema[field].ValidateFunc == nil {
+			t.Errorf("missing ValidateFunc on %s", field)
+		}
+	}
 }
 
 // ---------- CheckGroup ----------
@@ -96,6 +102,12 @@ func TestDNSMonitorRegistered(t *testing.T) {
 			t.Errorf("missing reference: %s", ref)
 		}
 	}
+
+	for _, field := range []string{"degraded_response_time", "max_response_time"} {
+		if r.TerraformResource.Schema[field].ValidateFunc == nil {
+			t.Errorf("missing ValidateFunc on %s", field)
+		}
+	}
 }
 
 // ---------- Heartbeat ----------
@@ -151,6 +163,12 @@ func TestTCPCheckRegistered(t *testing.T) {
 			t.Errorf("missing reference: %s", ref)
 		}
 	}
+
+	for _, field := range []string{"degraded_response_time", "max_response_time"} {
+		if r.TerraformResource.Schema[field].ValidateFunc == nil {
+			t.Errorf("missing ValidateFunc on %s", field)
+		}
+	}
 }
 
 // ---------- TCPMonitor ----------
@@ -172,6 +190,12 @@ func TestTCPMonitorRegistered(t *testing.T) {
 	} {
 		if _, ok := r.References[ref]; !ok {
 			t.Errorf("missing reference: %s", ref)
+		}
+	}
+
+	for _, field := range []string{"degraded_response_time", "max_response_time"} {
+		if r.TerraformResource.Schema[field].ValidateFunc == nil {
+			t.Errorf("missing ValidateFunc on %s", field)
 		}
 	}
 }
@@ -217,6 +241,12 @@ func TestURLMonitorRegistered(t *testing.T) {
 	} {
 		if _, ok := r.References[ref]; !ok {
 			t.Errorf("missing reference: %s", ref)
+		}
+	}
+
+	for _, field := range []string{"degraded_response_time", "max_response_time"} {
+		if r.TerraformResource.Schema[field].ValidateFunc == nil {
+			t.Errorf("missing ValidateFunc on %s", field)
 		}
 	}
 }
