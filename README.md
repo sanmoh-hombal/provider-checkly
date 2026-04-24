@@ -18,12 +18,12 @@
 </h4>
 
 <p align="center">
-  <a href="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
-  <a href="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/e2e.yaml"><img alt="E2E" src="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/e2e.yaml/badge.svg" /></a>
-  <a href="https://codecov.io/gh/sanmoh-hombal/provider-checkly"><img alt="Coverage" src="https://codecov.io/gh/sanmoh-hombal/provider-checkly/branch/main/graph/badge.svg" /></a>
-  <a href="https://github.com/sanmoh-hombal/provider-checkly/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/sanmoh-hombal/provider-checkly?include_prereleases&sort=semver&label=release&color=blue" /></a>
-  <a href="https://goreportcard.com/report/github.com/sanmoh-hombal/provider-checkly"><img alt="Go Report" src="https://goreportcard.com/badge/github.com/sanmoh-hombal/provider-checkly" /></a>
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/sanmoh-hombal/provider-checkly?color=blue" /></a>
+  <a href="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/sanmoh-hombal/provider-checkly/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions&logoColor=white" /></a>
+  <a href="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/e2e.yaml"><img alt="E2E" src="https://img.shields.io/github/actions/workflow/status/sanmoh-hombal/provider-checkly/e2e.yaml?branch=main&style=for-the-badge&label=E2E&logo=githubactions&logoColor=white" /></a>
+  <a href="https://codecov.io/gh/sanmoh-hombal/provider-checkly"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/sanmoh-hombal/provider-checkly?style=for-the-badge&logo=codecov&logoColor=white" /></a>
+  <a href="https://github.com/sanmoh-hombal/provider-checkly/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/sanmoh-hombal/provider-checkly?include_prereleases&sort=semver&style=for-the-badge&label=release&logo=github&color=blue" /></a>
+  <a href="https://goreportcard.com/report/github.com/sanmoh-hombal/provider-checkly"><img alt="Go Report" src="https://img.shields.io/badge/go%20report-A+-brightgreen?style=for-the-badge&logo=go&logoColor=white" /></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/sanmoh-hombal/provider-checkly?style=for-the-badge&color=blue" /></a>
 </p>
 
 <br />
