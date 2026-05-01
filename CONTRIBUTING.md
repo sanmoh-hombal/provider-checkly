@@ -8,7 +8,7 @@ request.
 
 | Tool | Version | Notes |
 |------|---------|-------|
-| Go | 1.25+ | `go version` |
+| Go | 1.24+ | `go version` |
 | Docker | latest stable | For `kind` clusters and image builds |
 | kind | v0.20+ | Local Kubernetes clusters |
 | kubectl | 1.28+ | Cluster interaction |
