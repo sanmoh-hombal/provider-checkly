@@ -345,6 +345,18 @@ All commits must include a `Signed-off-by` line (DCO). Use `git commit -s` to ad
 
 <br />
 
+## Transfer to crossplane-contrib
+
+> **Note:** This repository is being transferred to
+> [`crossplane-contrib`](https://github.com/crossplane-contrib) — see
+> [crossplane/org#121](https://github.com/crossplane/org/issues/121).
+> References (badges, image registry, Go module path) already point to
+> `crossplane-contrib/provider-checkly`. CI badges and container pushes will
+> fail until the transfer completes and GitHub redirects take effect, at which
+> point everything self-resolves — no further code changes needed.
+
+<br />
+
 ## Releases and Support
 
 | Version | Status | Crossplane | Terraform Provider |
