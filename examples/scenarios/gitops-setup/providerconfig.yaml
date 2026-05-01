@@ -1,5 +1,5 @@
 ---
-apiVersion: template.crossplane.io/v1beta1
+apiVersion: checkly.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: default

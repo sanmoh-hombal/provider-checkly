@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: providerconfigusages.template.m.crossplane.io
+  name: providerconfigusages.checkly.m.crossplane.io
 spec:
-  group: template.m.crossplane.io
+  group: checkly.m.crossplane.io
   names:
     categories:
     - crossplane

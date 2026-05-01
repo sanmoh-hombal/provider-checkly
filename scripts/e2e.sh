@@ -166,7 +166,7 @@ done
 
 # Cluster-scoped ProviderConfig
 kubectl apply -f - <<'EOF'
-apiVersion: template.crossplane.io/v1beta1
+apiVersion: checkly.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: default
@@ -181,7 +181,7 @@ EOF
 
 # Namespaced ProviderConfig (in default ns)
 kubectl apply -f - <<'EOF'
-apiVersion: template.m.crossplane.io/v1beta1
+apiVersion: checkly.m.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: default
