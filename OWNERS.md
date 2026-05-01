@@ -12,6 +12,6 @@ repository maintainers in their own `OWNERS.md` file.
 
 ## Maintainers
 
-* Sanmoh Hombal <sanmoh.hombal@atlan.com> ([sanmoh-hombal](https://github.com/sanmoh-hombal))
+* Sanmoh Hombal <sanmoh.hombal@gmail.com> ([sanmoh-hombal](https://github.com/sanmoh-hombal))
 
 See [CODEOWNERS](./CODEOWNERS) for automatic PR assignment.
