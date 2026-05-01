@@ -439,7 +439,7 @@ type EnforceAlertSettingsAlertChannelSubscriptionInitParameters struct {
 
 	// (Number) The ID of the alert channel.
 	// The ID of the alert channel.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
 	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
 
 	// Reference to a AlertChannel in alerts to populate channelId.
@@ -471,7 +471,7 @@ type EnforceAlertSettingsAlertChannelSubscriptionParameters struct {
 
 	// (Number) The ID of the alert channel.
 	// The ID of the alert channel.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
 	// +kubebuilder:validation:Optional
 	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
 
@@ -795,7 +795,7 @@ type EnforceLocationsInitParameters struct {
 
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
 	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +listType=set
 	PrivateLocations []*string `json:"privateLocations,omitempty" tf:"private_locations,omitempty"`
@@ -841,7 +841,7 @@ type EnforceLocationsParameters struct {
 
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
 	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +kubebuilder:validation:Optional
 	// +listType=set
@@ -1039,7 +1039,7 @@ type SetupScriptInitParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 
 	// Reference to a Snippet in infra to populate snippetId.
@@ -1071,7 +1071,7 @@ type SetupScriptParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
 	// +kubebuilder:validation:Optional
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 
@@ -1092,7 +1092,7 @@ type TeardownScriptInitParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 
 	// Reference to a Snippet in infra to populate snippetId.
@@ -1124,7 +1124,7 @@ type TeardownScriptParameters struct {
 
 	// (Number) The ID of a code snippet. Code snippets are not available for new plans.
 	// The ID of a code snippet. Code snippets are not available for new plans.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.Snippet
 	// +kubebuilder:validation:Optional
 	SnippetID *float64 `json:"snippetId,omitempty" tf:"snippet_id,omitempty"`
 

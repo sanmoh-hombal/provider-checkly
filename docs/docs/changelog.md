@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented here. This project follows [Semantic Versioning](https://semver.org).
 
-For the full commit history, see [GitHub Releases](https://github.com/sanmoh-hombal/provider-checkly/releases).
+For the full commit history, see [GitHub Releases](https://github.com/crossplane-contrib/provider-checkly/releases).
 
 ## v0.1.0 (Pre-release)
 

@@ -21,8 +21,8 @@ import (
 	"github.com/pkg/errors"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/alerts/v1alpha1"
-	features "github.com/sanmoh-hombal/provider-checkly/internal/features"
+	v1alpha1 "github.com/crossplane-contrib/provider-checkly/apis/namespaced/alerts/v1alpha1"
+	features "github.com/crossplane-contrib/provider-checkly/internal/features"
 )
 
 // SetupGated adds a controller that reconciles AlertChannel managed resources.

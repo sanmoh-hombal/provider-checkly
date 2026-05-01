@@ -3,7 +3,7 @@ package conndetails_test
 import (
 	"testing"
 
-	"github.com/sanmoh-hombal/provider-checkly/config/conndetails"
+	"github.com/crossplane-contrib/provider-checkly/config/conndetails"
 )
 
 func TestStringKeys(t *testing.T) {

@@ -17,7 +17,7 @@ type TriggerGroupInitParameters struct {
 
 	// (Number) The id of the group that you want to attach the trigger to.
 	// The id of the group that you want to attach the trigger to.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.CheckGroup
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/checks/v1alpha1.CheckGroup
 	GroupID *float64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
 
 	// Reference to a CheckGroup in checks to populate groupId.
@@ -59,7 +59,7 @@ type TriggerGroupParameters struct {
 
 	// (Number) The id of the group that you want to attach the trigger to.
 	// The id of the group that you want to attach the trigger to.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.CheckGroup
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/checks/v1alpha1.CheckGroup
 	// +kubebuilder:validation:Optional
 	GroupID *float64 `json:"groupId,omitempty" tf:"group_id,omitempty"`
 

@@ -10,13 +10,13 @@ package cluster
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1"
-	v1alpha1checks "github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1"
-	v1alpha1infra "github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1"
-	v1alpha1statuspage "github.com/sanmoh-hombal/provider-checkly/apis/cluster/statuspage/v1alpha1"
-	v1alpha1triggers "github.com/sanmoh-hombal/provider-checkly/apis/cluster/triggers/v1alpha1"
-	v1alpha1cluster "github.com/sanmoh-hombal/provider-checkly/apis/cluster/v1alpha1"
-	v1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/v1beta1"
+	v1alpha1 "github.com/crossplane-contrib/provider-checkly/apis/cluster/alerts/v1alpha1"
+	v1alpha1checks "github.com/crossplane-contrib/provider-checkly/apis/cluster/checks/v1alpha1"
+	v1alpha1infra "github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1"
+	v1alpha1statuspage "github.com/crossplane-contrib/provider-checkly/apis/cluster/statuspage/v1alpha1"
+	v1alpha1triggers "github.com/crossplane-contrib/provider-checkly/apis/cluster/triggers/v1alpha1"
+	v1alpha1cluster "github.com/crossplane-contrib/provider-checkly/apis/cluster/v1alpha1"
+	v1beta1 "github.com/crossplane-contrib/provider-checkly/apis/cluster/v1beta1"
 )
 
 func init() {

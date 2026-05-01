@@ -17,7 +17,7 @@ type BundleInitParameters struct {
 
 	// (String) The ID of this resource.
 	// The ID of the code bundle.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.PlaywrightCodeBundle
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/checks/v1alpha1.PlaywrightCodeBundle
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
 	// Reference to a PlaywrightCodeBundle in checks to populate id.
@@ -48,7 +48,7 @@ type BundleParameters struct {
 
 	// (String) The ID of this resource.
 	// The ID of the code bundle.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1.PlaywrightCodeBundle
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/checks/v1alpha1.PlaywrightCodeBundle
 	// +kubebuilder:validation:Optional
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
@@ -118,7 +118,7 @@ type PlaywrightCheckSuiteAlertChannelSubscriptionInitParameters struct {
 
 	// (Number) The ID of the alert channel.
 	// The ID of the alert channel.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
 	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
 
 	// Reference to a AlertChannel in alerts to populate channelId.
@@ -150,7 +150,7 @@ type PlaywrightCheckSuiteAlertChannelSubscriptionParameters struct {
 
 	// (Number) The ID of the alert channel.
 	// The ID of the alert channel.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/alerts/v1alpha1.AlertChannel
 	// +kubebuilder:validation:Optional
 	ChannelID *float64 `json:"channelId,omitempty" tf:"channel_id,omitempty"`
 
@@ -465,7 +465,7 @@ type PlaywrightCheckSuiteInitParameters struct {
 
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
 	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +listType=set
 	PrivateLocations []*string `json:"privateLocations,omitempty" tf:"private_locations,omitempty"`
@@ -646,7 +646,7 @@ type PlaywrightCheckSuiteParameters struct {
 
 	// (Set of String) An array of one or more private locations slugs.
 	// An array of one or more private locations slugs.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/cluster/infra/v1alpha1.PrivateLocation
 	// +crossplane:generate:reference:refFieldName=PrivateLocationRefs
 	// +kubebuilder:validation:Optional
 	// +listType=set

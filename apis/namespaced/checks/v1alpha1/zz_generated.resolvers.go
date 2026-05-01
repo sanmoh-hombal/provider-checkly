@@ -8,10 +8,10 @@ package v1alpha1
 
 import (
 	"context"
+	v1alpha1 "github.com/crossplane-contrib/provider-checkly/apis/namespaced/alerts/v1alpha1"
+	v1alpha11 "github.com/crossplane-contrib/provider-checkly/apis/namespaced/infra/v1alpha1"
 	reference "github.com/crossplane/crossplane-runtime/v2/pkg/reference"
 	errors "github.com/pkg/errors"
-	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/alerts/v1alpha1"
-	v1alpha11 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1"
 	client "sigs.k8s.io/controller-runtime/pkg/client"
 )
 

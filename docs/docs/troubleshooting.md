@@ -74,6 +74,6 @@ kubectl get checks.checks.checkly.m.crossplane.io
 
 ## Getting help
 
-- [GitHub Issues](https://github.com/sanmoh-hombal/provider-checkly/issues) — bug reports and feature requests.
+- [GitHub Issues](https://github.com/crossplane-contrib/provider-checkly/issues) — bug reports and feature requests.
 - [Crossplane Slack](https://slack.crossplane.io/) — community support.
 - [Checkly documentation](https://www.checklyhq.com/docs/) — Checkly API and feature reference.

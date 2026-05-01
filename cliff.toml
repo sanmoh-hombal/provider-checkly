@@ -4,7 +4,7 @@ header = """
 """
 body = """
 {%- macro remote_url() -%}
-  https://github.com/sanmoh-hombal/provider-checkly
+  https://github.com/crossplane-contrib/provider-checkly
 {%- endmacro -%}
 
 {% if version -%}

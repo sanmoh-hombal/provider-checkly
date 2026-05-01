@@ -1,8 +1,8 @@
 site_name: provider-checkly
-site_url: https://sanmoh-hombal.github.io/provider-checkly/
+site_url: https://crossplane-contrib.github.io/provider-checkly/
 site_description: Crossplane provider for Checkly — manage synthetic monitoring as Kubernetes custom resources.
-repo_url: https://github.com/sanmoh-hombal/provider-checkly
-repo_name: sanmoh-hombal/provider-checkly
+repo_url: https://github.com/crossplane-contrib/provider-checkly
+repo_name: crossplane-contrib/provider-checkly
 edit_uri: edit/main/docs/docs/
 
 docs_dir: docs

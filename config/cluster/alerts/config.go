@@ -3,7 +3,7 @@ package alerts
 import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
-	common "github.com/sanmoh-hombal/provider-checkly/config/common/alerts"
+	common "github.com/crossplane-contrib/provider-checkly/config/common/alerts"
 )
 
 // Configure delegates to the shared alerts configurator.

@@ -5,16 +5,16 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
-	"github.com/sanmoh-hombal/provider-checkly/config/common/alerts"
-	"github.com/sanmoh-hombal/provider-checkly/config/common/checks"
-	"github.com/sanmoh-hombal/provider-checkly/config/common/infra"
-	"github.com/sanmoh-hombal/provider-checkly/config/common/statuspage"
-	"github.com/sanmoh-hombal/provider-checkly/config/common/triggers"
+	"github.com/crossplane-contrib/provider-checkly/config/common/alerts"
+	"github.com/crossplane-contrib/provider-checkly/config/common/checks"
+	"github.com/crossplane-contrib/provider-checkly/config/common/infra"
+	"github.com/crossplane-contrib/provider-checkly/config/common/statuspage"
+	"github.com/crossplane-contrib/provider-checkly/config/common/triggers"
 )
 
 const (
 	resourcePrefix = "checkly"
-	modulePath     = "github.com/sanmoh-hombal/provider-checkly"
+	modulePath     = "github.com/crossplane-contrib/provider-checkly"
 
 	rootGroupCluster    = "checkly.crossplane.io"
 	rootGroupNamespaced = "checkly.m.crossplane.io"

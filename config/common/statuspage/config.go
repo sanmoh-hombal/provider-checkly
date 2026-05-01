@@ -7,7 +7,7 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
-	"github.com/sanmoh-hombal/provider-checkly/config/conndetails"
+	"github.com/crossplane-contrib/provider-checkly/config/conndetails"
 )
 
 // Configure adds per-resource overrides for the statuspage short-group.

@@ -35,14 +35,14 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	apisCluster "github.com/sanmoh-hombal/provider-checkly/apis/cluster"
-	apisNamespaced "github.com/sanmoh-hombal/provider-checkly/apis/namespaced"
-	"github.com/sanmoh-hombal/provider-checkly/config"
-	"github.com/sanmoh-hombal/provider-checkly/internal/clients"
-	controllerCluster "github.com/sanmoh-hombal/provider-checkly/internal/controller/cluster"
-	controllerNamespaced "github.com/sanmoh-hombal/provider-checkly/internal/controller/namespaced"
-	"github.com/sanmoh-hombal/provider-checkly/internal/features"
-	"github.com/sanmoh-hombal/provider-checkly/internal/version"
+	apisCluster "github.com/crossplane-contrib/provider-checkly/apis/cluster"
+	apisNamespaced "github.com/crossplane-contrib/provider-checkly/apis/namespaced"
+	"github.com/crossplane-contrib/provider-checkly/config"
+	"github.com/crossplane-contrib/provider-checkly/internal/clients"
+	controllerCluster "github.com/crossplane-contrib/provider-checkly/internal/controller/cluster"
+	controllerNamespaced "github.com/crossplane-contrib/provider-checkly/internal/controller/namespaced"
+	"github.com/crossplane-contrib/provider-checkly/internal/features"
+	"github.com/crossplane-contrib/provider-checkly/internal/version"
 )
 
 const (

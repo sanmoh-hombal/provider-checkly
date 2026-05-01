@@ -18,7 +18,7 @@ type TriggerCheckInitParameters struct {
 
 	// (String) The id of the check that you want to attach the trigger to.
 	// The id of the check that you want to attach the trigger to.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1.Check
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/namespaced/checks/v1alpha1.Check
 	CheckID *string `json:"checkId,omitempty" tf:"check_id,omitempty"`
 
 	// Reference to a Check in checks to populate checkId.
@@ -60,7 +60,7 @@ type TriggerCheckParameters struct {
 
 	// (String) The id of the check that you want to attach the trigger to.
 	// The id of the check that you want to attach the trigger to.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1.Check
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/namespaced/checks/v1alpha1.Check
 	// +kubebuilder:validation:Optional
 	CheckID *string `json:"checkId,omitempty" tf:"check_id,omitempty"`
 

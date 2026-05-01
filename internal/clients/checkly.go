@@ -12,8 +12,8 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/terraform"
 
-	clusterv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/v1beta1"
-	namespacedv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1beta1"
+	clusterv1beta1 "github.com/crossplane-contrib/provider-checkly/apis/cluster/v1beta1"
+	namespacedv1beta1 "github.com/crossplane-contrib/provider-checkly/apis/namespaced/v1beta1"
 )
 
 const (

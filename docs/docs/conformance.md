@@ -15,7 +15,7 @@ provider-checkly passes the Crossplane v2.0 conformance suite with a 100% pass r
 
 All 17 test classes pass with zero failures.
 
-For the full conformance report with reproduction steps, see [`docs/conformance/v0.1.0.md`](https://github.com/sanmoh-hombal/provider-checkly/blob/main/docs/conformance/v0.1.0.md).
+For the full conformance report with reproduction steps, see [`docs/conformance/v0.1.0.md`](https://github.com/crossplane-contrib/provider-checkly/blob/main/docs/conformance/v0.1.0.md).
 
 ## How to run conformance tests
 

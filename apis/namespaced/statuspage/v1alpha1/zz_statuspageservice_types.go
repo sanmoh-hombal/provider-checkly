@@ -42,7 +42,7 @@ type StatusPageServiceParameters struct {
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// (String) The ID of this resource.
-	// +crossplane:generate:reference:type=github.com/sanmoh-hombal/provider-checkly/apis/namespaced/statuspage/v1alpha1.StatusPage
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-checkly/apis/namespaced/statuspage/v1alpha1.StatusPage
 	// +kubebuilder:validation:Optional
 	StatusPageID *string `json:"statusPageId,omitempty" tf:"status_page_id,omitempty"`
 

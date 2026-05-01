@@ -18,12 +18,12 @@
 </h4>
 
 <p align="center">
-  <a href="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/sanmoh-hombal/provider-checkly/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions&logoColor=white" /></a>
-  <a href="https://github.com/sanmoh-hombal/provider-checkly/actions/workflows/e2e.yaml"><img alt="E2E" src="https://img.shields.io/github/actions/workflow/status/sanmoh-hombal/provider-checkly/e2e.yaml?branch=main&style=for-the-badge&label=E2E&logo=githubactions&logoColor=white" /></a>
-  <a href="https://codecov.io/gh/sanmoh-hombal/provider-checkly"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/sanmoh-hombal/provider-checkly?style=for-the-badge&logo=codecov&logoColor=white" /></a>
-  <a href="https://github.com/sanmoh-hombal/provider-checkly/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/sanmoh-hombal/provider-checkly?include_prereleases&sort=semver&style=for-the-badge&label=release&logo=github&color=blue" /></a>
-  <a href="https://goreportcard.com/report/github.com/sanmoh-hombal/provider-checkly"><img alt="Go Report" src="https://img.shields.io/badge/go%20report-A+-brightgreen?style=for-the-badge&logo=go&logoColor=white" /></a>
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/sanmoh-hombal/provider-checkly?style=for-the-badge&color=blue" /></a>
+  <a href="https://github.com/crossplane-contrib/provider-checkly/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/crossplane-contrib/provider-checkly/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions&logoColor=white" /></a>
+  <a href="https://github.com/crossplane-contrib/provider-checkly/actions/workflows/e2e.yaml"><img alt="E2E" src="https://img.shields.io/github/actions/workflow/status/crossplane-contrib/provider-checkly/e2e.yaml?branch=main&style=for-the-badge&label=E2E&logo=githubactions&logoColor=white" /></a>
+  <a href="https://codecov.io/gh/crossplane-contrib/provider-checkly"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/crossplane-contrib/provider-checkly?style=for-the-badge&logo=codecov&logoColor=white" /></a>
+  <a href="https://github.com/crossplane-contrib/provider-checkly/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/crossplane-contrib/provider-checkly?include_prereleases&sort=semver&style=for-the-badge&label=release&logo=github&color=blue" /></a>
+  <a href="https://goreportcard.com/report/github.com/crossplane-contrib/provider-checkly"><img alt="Go Report" src="https://img.shields.io/badge/go%20report-A+-brightgreen?style=for-the-badge&logo=go&logoColor=white" /></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/crossplane-contrib/provider-checkly?style=for-the-badge&color=blue" /></a>
 </p>
 
 <br />
@@ -62,13 +62,13 @@ Under the hood, the provider is generated with [Upjet](https://github.com/crossp
 > **Prerequisites:** A running Kubernetes cluster with [Crossplane](https://docs.crossplane.io/latest/software/install/) **v2.x** installed.
 
 ```bash
-crossplane xpkg install provider ghcr.io/sanmoh-hombal/provider-checkly:v0.1.1
+crossplane xpkg install provider ghcr.io/crossplane-contrib/provider-checkly:v0.1.1
 ```
 
 Or apply the install manifest directly:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/sanmoh-hombal/provider-checkly/main/examples/install.yaml
+kubectl apply -f https://raw.githubusercontent.com/crossplane-contrib/provider-checkly/main/examples/install.yaml
 ```
 
 <br />
@@ -99,7 +99,7 @@ helm install crossplane crossplane-stable/crossplane \
 ### 3. Install provider-checkly
 
 ```bash
-crossplane xpkg install provider ghcr.io/sanmoh-hombal/provider-checkly:v0.1.1
+crossplane xpkg install provider ghcr.io/crossplane-contrib/provider-checkly:v0.1.1
 ```
 
 Wait for the provider to become healthy:
@@ -352,9 +352,9 @@ All commits must include a `Signed-off-by` line (DCO). Use `git commit -s` to ad
 | `v0.1.1` | Latest | v2.x | `checkly/checkly` v1.22.0 |
 | `v0.1.0` | Pre-release | v2.x | `checkly/checkly` v1.22.0 |
 
-Releases follow [Semantic Versioning](https://semver.org). See the [Releases](https://github.com/sanmoh-hombal/provider-checkly/releases) page for changelogs.
+Releases follow [Semantic Versioning](https://semver.org). See the [Releases](https://github.com/crossplane-contrib/provider-checkly/releases) page for changelogs.
 
-**Issues** &mdash; Report bugs and request features via [GitHub Issues](https://github.com/sanmoh-hombal/provider-checkly/issues).
+**Issues** &mdash; Report bugs and request features via [GitHub Issues](https://github.com/crossplane-contrib/provider-checkly/issues).
 **Security** &mdash; Report vulnerabilities privately per the [Security Policy](SECURITY.md).
 
 <br />

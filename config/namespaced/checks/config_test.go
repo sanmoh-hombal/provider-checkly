@@ -3,8 +3,8 @@ package checks_test
 import (
 	"testing"
 
-	config "github.com/sanmoh-hombal/provider-checkly/config"
-	checks "github.com/sanmoh-hombal/provider-checkly/config/namespaced/checks"
+	config "github.com/crossplane-contrib/provider-checkly/config"
+	checks "github.com/crossplane-contrib/provider-checkly/config/namespaced/checks"
 )
 
 func TestNamespacedCheckRegistered(t *testing.T) {

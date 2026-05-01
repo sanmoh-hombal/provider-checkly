@@ -14,10 +14,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 
-	clusterChecks "github.com/sanmoh-hombal/provider-checkly/apis/cluster/checks/v1alpha1"
-	clusterv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/cluster/v1beta1"
-	namespacedChecks "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1"
-	namespacedv1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1beta1"
+	clusterChecks "github.com/crossplane-contrib/provider-checkly/apis/cluster/checks/v1alpha1"
+	clusterv1beta1 "github.com/crossplane-contrib/provider-checkly/apis/cluster/v1beta1"
+	namespacedChecks "github.com/crossplane-contrib/provider-checkly/apis/namespaced/checks/v1alpha1"
+	namespacedv1beta1 "github.com/crossplane-contrib/provider-checkly/apis/namespaced/v1beta1"
 )
 
 // testScheme returns a runtime.Scheme with the types needed by these tests.

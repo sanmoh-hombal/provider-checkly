@@ -1,4 +1,4 @@
-module github.com/sanmoh-hombal/provider-checkly
+module github.com/crossplane-contrib/provider-checkly
 
 go 1.24.11
 

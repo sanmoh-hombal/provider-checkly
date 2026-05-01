@@ -10,13 +10,13 @@ package namespaced
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	v1alpha1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/alerts/v1alpha1"
-	v1alpha1checks "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/checks/v1alpha1"
-	v1alpha1infra "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/infra/v1alpha1"
-	v1alpha1statuspage "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/statuspage/v1alpha1"
-	v1alpha1triggers "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/triggers/v1alpha1"
-	v1alpha1namespaced "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1alpha1"
-	v1beta1 "github.com/sanmoh-hombal/provider-checkly/apis/namespaced/v1beta1"
+	v1alpha1 "github.com/crossplane-contrib/provider-checkly/apis/namespaced/alerts/v1alpha1"
+	v1alpha1checks "github.com/crossplane-contrib/provider-checkly/apis/namespaced/checks/v1alpha1"
+	v1alpha1infra "github.com/crossplane-contrib/provider-checkly/apis/namespaced/infra/v1alpha1"
+	v1alpha1statuspage "github.com/crossplane-contrib/provider-checkly/apis/namespaced/statuspage/v1alpha1"
+	v1alpha1triggers "github.com/crossplane-contrib/provider-checkly/apis/namespaced/triggers/v1alpha1"
+	v1alpha1namespaced "github.com/crossplane-contrib/provider-checkly/apis/namespaced/v1alpha1"
+	v1beta1 "github.com/crossplane-contrib/provider-checkly/apis/namespaced/v1beta1"
 )
 
 func init() {

@@ -7,7 +7,7 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/pipeline"
 
-	"github.com/sanmoh-hombal/provider-checkly/config"
+	"github.com/crossplane-contrib/provider-checkly/config"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package checks_test
 import (
 	"testing"
 
-	config "github.com/sanmoh-hombal/provider-checkly/config"
+	config "github.com/crossplane-contrib/provider-checkly/config"
 )
 
 // resourceResponseTimeBounds maps each resource that exposes response-time

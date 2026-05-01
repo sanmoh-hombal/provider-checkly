@@ -30,7 +30,7 @@ helm install crossplane crossplane-stable/crossplane \
 ## 3. Install provider-checkly
 
 ```bash
-crossplane xpkg install provider ghcr.io/sanmoh-hombal/provider-checkly:v0.1.0
+crossplane xpkg install provider ghcr.io/crossplane-contrib/provider-checkly:v0.1.0
 ```
 
 Wait for the provider to become healthy:
@@ -122,4 +122,4 @@ kubectl get checks -w
 
 - Browse all [Resources](resources/index.md) to see what you can manage.
 - See [Configuration](configuration.md) for credential options and provider tuning.
-- Check out [example scenarios](https://github.com/sanmoh-hombal/provider-checkly/tree/main/examples/scenarios) for real-world patterns.
+- Check out [example scenarios](https://github.com/crossplane-contrib/provider-checkly/tree/main/examples/scenarios) for real-world patterns.
