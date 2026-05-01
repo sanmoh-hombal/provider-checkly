@@ -354,6 +354,18 @@ All commits must include a `Signed-off-by` line (DCO). Use `git commit -s` to ad
 > `crossplane-contrib/provider-checkly`. CI badges and container pushes will
 > fail until the transfer completes and GitHub redirects take effect, at which
 > point everything self-resolves — no further code changes needed.
+>
+> **Post-transfer checklist:**
+>
+> - [x] Update Go module path to `github.com/crossplane-contrib/provider-checkly`
+> - [x] Update container image registry to `ghcr.io/crossplane-contrib`
+> - [x] Update README badges and references
+> - [x] Update OWNERS.md and CODEOWNERS per crossplane-contrib governance
+> - [ ] Verify CI/CD pipelines work under the new org
+> - [ ] Configure org secrets for XPKG mirroring
+> - [ ] Publish first release under crossplane-contrib
+> - [ ] Apply least-privilege workflow permissions
+> - [ ] Register with CNCF maintainers list
 
 <br />
 

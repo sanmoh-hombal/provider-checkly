@@ -50,6 +50,18 @@
       "depNameTemplate": "docker/buildx"
     },
     {
+      // We want a PR to bump the upstream Checkly Terraform provider version in
+      // the Makefile, taking it from the official Github repository releases.
+      // After merging the PR, run `make generate` to regenerate schemas/CRDs.
+      "customType": "regex",
+      "description": "Bump Checkly Terraform provider version in the Makefile",
+      "fileMatch": ["^Makefile$"],
+      "matchStrings": ["TERRAFORM_PROVIDER_VERSION\\s+:=\\s+(?<currentValue>[\\d.]+)"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "checkly/terraform-provider-checkly",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
       // We want a PR to bump golangci-lint versions used through make variables in
       // the Makefile, taking it from the official Github repository releases.
       "customType": "regex",
