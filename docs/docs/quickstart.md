@@ -30,7 +30,7 @@ helm install crossplane crossplane-stable/crossplane \
 ## 3. Install provider-checkly
 
 ```bash
-crossplane xpkg install provider ghcr.io/crossplane-contrib/provider-checkly:v0.1.0
+crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-checkly:v0.1.0
 ```
 
 Wait for the provider to become healthy:

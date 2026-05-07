@@ -62,7 +62,7 @@ Under the hood, the provider is generated with [Upjet](https://github.com/crossp
 > **Prerequisites:** A running Kubernetes cluster with [Crossplane](https://docs.crossplane.io/latest/software/install/) **v2.x** installed.
 
 ```bash
-crossplane xpkg install provider ghcr.io/crossplane-contrib/provider-checkly:v0.1.1
+crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-checkly:v0.1.1
 ```
 
 Or apply the install manifest directly:
@@ -99,7 +99,7 @@ helm install crossplane crossplane-stable/crossplane \
 ### 3. Install provider-checkly
 
 ```bash
-crossplane xpkg install provider ghcr.io/crossplane-contrib/provider-checkly:v0.1.1
+crossplane xpkg install provider xpkg.crossplane.io/crossplane-contrib/provider-checkly:v0.1.1
 ```
 
 Wait for the provider to become healthy:
@@ -358,7 +358,7 @@ All commits must include a `Signed-off-by` line (DCO). Use `git commit -s` to ad
 > **Post-transfer checklist:**
 >
 > - [x] Update Go module path to `github.com/crossplane-contrib/provider-checkly`
-> - [x] Update container image registry to `ghcr.io/crossplane-contrib`
+> - [x] Update container image registry to `ghcr.io/crossplane-contrib` (pulls via `xpkg.crossplane.io`)
 > - [x] Update README badges and references
 > - [x] Update OWNERS.md and CODEOWNERS per crossplane-contrib governance
 > - [ ] Verify CI/CD pipelines work under the new org
